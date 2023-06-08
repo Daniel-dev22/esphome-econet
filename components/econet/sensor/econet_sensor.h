@@ -78,6 +78,11 @@ class EconetSensor : public PollingComponent, public EconetClient {
 	sensor::Sensor *evap_temp_sensor_{nullptr};
 	sensor::Sensor *suction_temp_sensor_{nullptr};
 	sensor::Sensor *discharge_temp_sensor_{nullptr};
+
+	sensor::Sensor *cc_hvacmode_sensor_{nullptr};
+	sensor::Sensor *cc_spt_stat_sensor_{nullptr};
+	sensor::Sensor *cc_coolsetp_sensor_{nullptr};
+	sensor::Sensor *cc_automode_sensor_{nullptr};
 };
 
 }  // namespace econet
