@@ -43,6 +43,11 @@ CONF_EVAPTEMP = "evap_temp"
 CONF_SUCTIONT = "suction_temp"
 CONF_DISCTEMP = "discharge_temp"
 
+CONF_CC_HVACMODE = "cc_hvacmode"
+CONF_CC_SPT_STAT = "cc_spt_stat"
+CONF_CC_COOLSETP = "cc_coolsetp"
+CONF_CC_AUTOMODE = "cc_automode"
+
 CONFIG_SCHEMA = (
     cv.COMPONENT_SCHEMA.extend(
         {
