@@ -258,9 +258,17 @@ void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector
 			// data[1 - 10] = 0
 			cc_blower_cfm = (data[16] << 8) + data[17];
 			cc_blower_rpm = (data[20] << 8) + data[21];
+			uint16_t testone = (data[22] << 8) + data[23];
+			uint16_t testtwo = (data[36] << 8) + data[37];
+			uint16_t testthree = (data[57] << 8) + data[58];
+			uint16_t testfour = (data[73] << 8) + data[74];
 			
 			
-			ESP_LOGI("econet", "  FanCFM? : %d cfm", cc_blower_cfm);
+			ESP_LOGI("econet", "  TestOne : %d ", testone);
+			ESP_LOGI("econet", "  TestTwo : %d ", testwo);
+			ESP_LOGI("econet", "  TestThree : %d ", testthree);
+			ESP_LOGI("econet", "  TestFour : %d ", testfour);
+			
 			ESP_LOGI("econet", "  FanRPM? : %d rpm", cc_blower_rpm);
 		}
 	}
