@@ -163,8 +163,8 @@ class Econet : public Component {
 	float cc_statmode = 0;
 	float cc_fan_mode = 0;
 	float cc_rel_hum = 0;
-	float cc_blower_cfm = 0;
-	float cc_blower_rpm = 0;
+	uint16_t cc_blower_cfm = 0;
+	uint16_t cc_blower_rpm = 0;
 	
 	uint8_t req_id = 0;
 	uint32_t last_request_{0};
