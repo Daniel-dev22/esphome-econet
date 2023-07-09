@@ -250,6 +250,21 @@ void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector
 			ESP_LOGI("econet", "  FanCFM? : %d cfm", fan_cfm);
 		}
 	}
+	else if(src_adr == 0x3c0)
+	{
+		if(obj_string == "AIRHSTAT")
+		{
+			// data[0] = 4
+			// data[1 - 10] = 0
+			uint16_t fan_cfm = (((uint16_t)data[16]) * 256) + data[17];
+			uint16_t fan_rpm = (((uint16_t)data[20]) * 256) + data[21];
+			
+
+			
+			ESP_LOGI("econet", "  FanCFM? : %d cfm", fan_cfm);
+			ESP_LOGI("econet", "  FanRPM? : %d rpm", fan_rpm);
+		}
+	}
 }
 void Econet::make_request()
 {	
