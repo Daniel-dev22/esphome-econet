@@ -265,7 +265,7 @@ void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector
 			
 			
 			ESP_LOGI("econet", "  TestOne : %d ", testone);
-			ESP_LOGI("econet", "  TestTwo : %d ", testwo);
+			ESP_LOGI("econet", "  TestTwo : %d ", testtwo);
 			ESP_LOGI("econet", "  TestThree : %d ", testthree);
 			ESP_LOGI("econet", "  TestFour : %d ", testfour);
 			
