@@ -49,8 +49,8 @@ CONF_CC_SPT_STAT = "cc_spt_stat"
 CONF_CC_COOLSETP = "cc_coolsetp"
 CONF_CC_AUTOMODE = "cc_automode"
 CONF_CC_REL_HUM = "cc_rel_hum"
-CONF_CC_REL_HUM = "cc_blower_cfm"
-CONF_CC_REL_HUM = "cc_blower_rpm"
+CONF_CC_BLOWER_CFM = "cc_blower_cfm"
+CONF_CC_BLOWER_RPM = "cc_blower_rpm"
 
 CONFIG_SCHEMA = (
     cv.COMPONENT_SCHEMA.extend(
