@@ -49,6 +49,8 @@ CONF_CC_SPT_STAT = "cc_spt_stat"
 CONF_CC_COOLSETP = "cc_coolsetp"
 CONF_CC_AUTOMODE = "cc_automode"
 CONF_CC_REL_HUM = "cc_rel_hum"
+CONF_CC_REL_HUM = "cc_blower_cfm"
+CONF_CC_REL_HUM = "cc_blower_rpm"
 
 CONFIG_SCHEMA = (
     cv.COMPONENT_SCHEMA.extend(
@@ -228,7 +230,7 @@ CONFIG_SCHEMA = (
                 accuracy_decimals=0,
             )
         },
-    {
+		{
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_CC_REL_HUM): sensor.sensor_schema(
                 unit_of_measurement="%",
@@ -236,6 +238,20 @@ CONFIG_SCHEMA = (
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_HUMIDITY,
                 state_class=STATE_CLASS_MEASUREMENT,
+            )
+        },
+		{
+            cv.GenerateID(): cv.declare_id(EconetSensor),
+            cv.Optional(CONF_CC_BLOWER_CFM): sensor.sensor_schema(
+                unit_of_measurement="",
+                accuracy_decimals=0,
+            )
+        },
+		{
+            cv.GenerateID(): cv.declare_id(EconetSensor),
+            cv.Optional(CONF_CC_BLOWER_RPM): sensor.sensor_schema(
+                unit_of_measurement="",
+                accuracy_decimals=0,
             )
         }
     )
@@ -317,3 +333,9 @@ async def to_code(config):
     if CONF_CC_REL_HUM in config:
         sens = await sensor.new_sensor(config[CONF_CC_REL_HUM])
         cg.add(var.set_cc_rel_hum_sensor(sens))
+    if CONF_CC_BLOWER_CFM in config:
+        sens = await sensor.new_sensor(config[CONF_CC_BLOWER_CFM])
+        cg.add(var.set_cc_blower_cfm_sensor(sens))
+    if CONF_CC_BLOWER_RPM in config:
+        sens = await sensor.new_sensor(config[CONF_CC_BLOWER_RPM])
+        cg.add(var.set_cc_blower_rpm_sensor(sens))
