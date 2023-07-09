@@ -95,8 +95,10 @@ class Econet : public Component {
 	float get_cc_automode() { return this->cc_automode; }
 	float get_cc_statmode() { return this->cc_statmode; }
 	float get_cc_fan_mode() { return this->cc_fan_mode; }
-        float get_cc_rel_hum() { return this->cc_rel_hum; }
-	
+	float get_cc_rel_hum() { return this->cc_rel_hum; }
+	float get_cc_blower_cfm() { return this->cc_blower_cfm; }
+	float get_cc_blower_rpm() { return this->cc_blower_rpm; }
+
 	void register_listener(uint8_t datapoint_id, const std::function<void(float)> &func);
 	
  protected:
@@ -160,7 +162,9 @@ class Econet : public Component {
 	float cc_automode = 0;
 	float cc_statmode = 0;
 	float cc_fan_mode = 0;
-        float cc_rel_hum = 0;
+	float cc_rel_hum = 0;
+	float cc_blower_cfm = 0;
+	float cc_blower_rpm = 0;
 	
 	uint8_t req_id = 0;
 	uint32_t last_request_{0};
