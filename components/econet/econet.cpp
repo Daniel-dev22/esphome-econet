@@ -231,7 +231,7 @@ void Econet::handle_text(uint32_t src_adr, std::string obj_string, std::string t
 	{
 		if(obj_string == "HVACMODE")
 		{
-			std::string hvacmode_text = text;
+			#define hvacmode_text = text;
 			ESP_LOGI("econet", "  TextTest : %s ", hvacmode_text);
 		}
 	}
