@@ -229,10 +229,10 @@ void Econet::handle_text(uint32_t src_adr, std::string obj_string, std::string t
 	}
 	else if(src_adr == 0x380)
 	{
-		if(obj_string == "AUTOMODE")
+		if(obj_string == "HVACMODE")
 		{
-			std::string automode_text = text;
-			ESP_LOGI("econet", "  TextTest : %s ", automode_text);
+			std::string hvacmode_text = text;
+			ESP_LOGI("econet", "  TextTest : %s ", hvacmode_text);
 		}
 	}
 }
