@@ -225,15 +225,15 @@ void Econet::handle_text(uint32_t src_adr, std::string obj_string, std::string t
 {
 	if(src_adr == 0x1040)
 	{
+	
+	}
+	else if(src_adr == 0x380)
+	{
 		if(obj_string == "AUTOMODE")
 		{
 			std::string automode_text = text;
 			ESP_LOGI("econet", "  TextTest : %s ", automode_text);
 		}
-	}
-	else if(src_adr == 0x380)
-	{
-
 	}
 }
 void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector<uint8_t> data)
