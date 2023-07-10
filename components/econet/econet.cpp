@@ -225,7 +225,11 @@ void Econet::handle_text(uint32_t src_adr, std::string obj_string, std::string t
 {
 	if(src_adr == 0x1040)
 	{
-	// text sensors would go here
+		if(obj_string == "AUTOMODE")
+		{
+			automode_text = text;
+			ESP_LOGI("econet", "  TextTest : %s ", automode_text);
+		}
 	}
 	else if(src_adr == 0x380)
 	{
@@ -262,7 +266,7 @@ void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector
 			uint16_t testtwo = (data[36] << 8) + data[37];
 			uint16_t testthree = (data[57] << 8) + data[58];
 			uint16_t testfour = (data[73] << 8) + data[74];
-			
+			// testtwo has something to do with the unit running when its off its 0
 			
 			ESP_LOGI("econet", "  TestOne : %d ", testone);
 			ESP_LOGI("econet", "  TestTwo : %d ", testtwo);
