@@ -227,7 +227,7 @@ void Econet::handle_text(uint32_t src_adr, std::string obj_string, std::string t
 	{
 		if(obj_string == "AUTOMODE")
 		{
-			automode_text = text;
+			std::string automode_text = text;
 			ESP_LOGI("econet", "  TextTest : %s ", automode_text);
 		}
 	}
