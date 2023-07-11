@@ -12,7 +12,7 @@ void EconetTextSensor::update() {
 	// ESP_LOGD("econet", "econet->get_type_id() = %d", this->econet->get_type_id());
 	
 	if (this->cc_hvacmode_text_text_sensor_ != nullptr) {
-		this->cc_hvacmode_text_text_sensor_->publish_state(this->econet->get_cc_hvacmode_text());
+		this->cc_hvacmode_text_text_sensor_->publish_state(this->econet->cc_hvacmode_text());
 	}
 }
 
