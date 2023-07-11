@@ -55,5 +55,5 @@ async def to_code(config):
     cg.add(var.set_econet(econet_var))
 
     if CONF_CC_HVACMODE_TEXT in config:
-        sens = await text_sensor.new_sensor(config[CONF_CC_HVACMODE_TEXT])
+        sens = await text_sensor.new_text_sensor(config[CONF_CC_HVACMODE_TEXT])
         cg.add(var.set_cc_hvacmode_text_text_sensor(sens))
