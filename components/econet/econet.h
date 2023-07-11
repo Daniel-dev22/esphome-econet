@@ -98,6 +98,7 @@ class Econet : public Component {
 	float get_cc_rel_hum() { return this->cc_rel_hum; }
 	float get_cc_blower_cfm() { return this->cc_blower_cfm; }
 	float get_cc_blower_rpm() { return this->cc_blower_rpm; }
+  std::string get_cc_hvacmode_text() { return this->cc_hvacmode_text; }
 
 	void register_listener(uint8_t datapoint_id, const std::function<void(float)> &func);
 	
