@@ -12,7 +12,7 @@ class EconetTextSensor : public PollingComponent, public EconetClient {
 	void dump_config() override;
 
 
-	void set_cc_hvacmode_text_sensor(text_sensor::TextSensor *text_sensor) {
+	void set_cc_hvacmode_text_sensor(sensor::TextSensor *text_sensor) {
 		this->cc_hvacmode_text_sensor_ = text_sensor;
 	}
 
