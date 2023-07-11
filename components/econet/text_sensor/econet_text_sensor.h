@@ -6,7 +6,7 @@
 namespace esphome {
 namespace econet {
 
-class EconetSensor : public PollingComponent, public EconetClient {
+class EconetTextSensor : public PollingComponent, public EconetClient {
  public:
 	void update() override;
 	void dump_config() override;
