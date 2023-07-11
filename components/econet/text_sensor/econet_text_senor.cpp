@@ -5,7 +5,7 @@ namespace econet {
 
 static const char *const TAG = "econet.text_sensor";
 
-void EconetSensor::update() {
+void EconetTextSensor::update() {
 	if (!this->econet->is_ready())
 		return;
 	
@@ -16,7 +16,7 @@ void EconetSensor::update() {
 	}
 }
 
-void EconetSensor::dump_config() {
+void EconetTextSensor::dump_config() {
 	ESP_LOGCONFIG(TAG, "Econet Text Sensors:");
 	// LOG_SENSOR("  ", "temp_in", this->temp_in_sensor_);
 	// LOG_SENSOR("  ", "temp_out", this->temp_out_sensor_);
