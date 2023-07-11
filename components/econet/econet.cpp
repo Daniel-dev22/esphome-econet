@@ -206,8 +206,7 @@ void Econet::handle_enumerated_text(uint32_t src_adr, std::string obj_string, ui
 		if(obj_string == "HVACMODE")
 		{
 			cc_hvacmode = value;
-			cc_hvacmode_text = text.extract_string().get();;
-			
+			cc_hvacmode_text = text.extract_string().get();
 			ESP_LOGI("econet", "  TextHVACMode : %s ", text.c_str());
 		}
 		else if(obj_string == "AUTOMODE")
