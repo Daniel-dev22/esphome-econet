@@ -22,8 +22,8 @@ from .. import (
     EconetClient,
 )
 
-EconetSensor = econet_ns.class_(
-    "EconetSensor", cg.PollingComponent, EconetClient
+EconetTextSensor = econet_ns.class_(
+    "EconetTextSensor", cg.PollingComponent, EconetClient
 )
 
 CONF_ECONET_ID = "econet"
@@ -33,7 +33,7 @@ CONF_CC_HVACMODE_TEXT = "cc_hvacmode_text"
 CONFIG_SCHEMA = (
     cv.COMPONENT_SCHEMA.extend(
         {
-            cv.GenerateID(): cv.declare_id(EconetSensor),
+            cv.GenerateID(): cv.declare_id(EconetTextSensor),
             cv.Optional(CONF_CC_HVACMODE_TEXT): text_sensor.text_sensor_schema(
 
             )
