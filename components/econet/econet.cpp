@@ -184,7 +184,7 @@ void Econet::handle_float(uint32_t src_adr, std::string obj_string, float value)
 						}
 						
 	*/
-void Econet::handle_enumerated_text(uint32_t src_adr, std::string obj_string, uint8_t value, text)
+void Econet::handle_enumerated_text(uint32_t src_adr, std::string obj_string, uint8_t value, std::string text)
 {
 	if(src_adr == SMARTEC_TRANSLATOR)
 	{
