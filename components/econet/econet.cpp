@@ -184,7 +184,7 @@ void Econet::handle_float(uint32_t src_adr, std::string obj_string, float value)
 						}
 						
 	*/
-void Econet::handle_enumerated_text(uint32_t src_adr, std::string obj_string, uint8_t value, std::string text)
+void Econet::handle_enumerated_text(uint32_t src_adr, std::string obj_string, uint8_t value, text)
 {
 	if(src_adr == SMARTEC_TRANSLATOR)
 	{
@@ -206,7 +206,7 @@ void Econet::handle_enumerated_text(uint32_t src_adr, std::string obj_string, ui
 		if(obj_string == "HVACMODE")
 		{
 			cc_hvacmode = value;
-			cc_hvacmode_text = const std::string text;
+			cc_hvacmode_text = text;
 			ESP_LOGI("econet", "  TextHVACMode : %s ", text.c_str());
 		}
 		else if(obj_string == "AUTOMODE")
