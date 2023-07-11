@@ -165,7 +165,7 @@ class Econet : public Component {
 	float cc_rel_hum = 0;
 	float cc_blower_cfm = 0;
 	float cc_blower_rpm = 0;
-	const std::string cc_hvacmode_text = 'n';
+	const std::string cc_hvacmode_text = "unknown";
 	
 	uint8_t req_id = 0;
 	uint32_t last_request_{0};
