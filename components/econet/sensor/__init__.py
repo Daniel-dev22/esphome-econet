@@ -11,6 +11,7 @@ from esphome.const import (
     ICON_THERMOMETER,
     DEVICE_CLASS_SPEED,
     DEVICE_CLASS_TEMPERATURE,
+    DEVICE_CLASS_HUMIDITY,
     STATE_CLASS_MEASUREMENT,
 )
 
@@ -47,6 +48,9 @@ CONF_CC_HVACMODE = "cc_hvacmode"
 CONF_CC_SPT_STAT = "cc_spt_stat"
 CONF_CC_COOLSETP = "cc_coolsetp"
 CONF_CC_AUTOMODE = "cc_automode"
+CONF_CC_REL_HUM = "cc_rel_hum"
+CONF_CC_BLOWER_CFM = "cc_blower_cfm"
+CONF_CC_BLOWER_RPM = "cc_blower_rpm"
 
 CONFIG_SCHEMA = (
     cv.COMPONENT_SCHEMA.extend(
@@ -225,6 +229,30 @@ CONFIG_SCHEMA = (
                 unit_of_measurement="",
                 accuracy_decimals=0,
             )
+        },
+		{
+            cv.GenerateID(): cv.declare_id(EconetSensor),
+            cv.Optional(CONF_CC_REL_HUM): sensor.sensor_schema(
+                unit_of_measurement="%",
+                icon=ICON_THERMOMETER,
+                accuracy_decimals=1,
+                device_class=DEVICE_CLASS_HUMIDITY,
+                state_class=STATE_CLASS_MEASUREMENT,
+            )
+        },
+		{
+            cv.GenerateID(): cv.declare_id(EconetSensor),
+            cv.Optional(CONF_CC_BLOWER_CFM): sensor.sensor_schema(
+                unit_of_measurement="",
+                accuracy_decimals=0,
+            )
+        },
+		{
+            cv.GenerateID(): cv.declare_id(EconetSensor),
+            cv.Optional(CONF_CC_BLOWER_RPM): sensor.sensor_schema(
+                unit_of_measurement="",
+                accuracy_decimals=0,
+            )
         }
     )
     .extend(ECONET_CLIENT_SCHEMA)
@@ -290,3 +318,24 @@ async def to_code(config):
     if CONF_DISCTEMP in config:
         sens = await sensor.new_sensor(config[CONF_DISCTEMP])
         cg.add(var.set_discharge_temp_sensor(sens))
+    if CONF_CC_HVACMODE in config:
+        sens = await sensor.new_sensor(config[CONF_CC_HVACMODE])
+        cg.add(var.set_cc_hvacmode_sensor(sens))
+    if CONF_CC_SPT_STAT in config:
+        sens = await sensor.new_sensor(config[CONF_CC_SPT_STAT])
+        cg.add(var.set_cc_spt_stat_sensor(sens))
+    if CONF_CC_COOLSETP in config:
+        sens = await sensor.new_sensor(config[CONF_CC_COOLSETP])
+        cg.add(var.set_cc_coolsetp_sensor(sens))
+    if CONF_CC_AUTOMODE in config:
+        sens = await sensor.new_sensor(config[CONF_CC_AUTOMODE])
+        cg.add(var.set_cc_automode_sensor(sens))
+    if CONF_CC_REL_HUM in config:
+        sens = await sensor.new_sensor(config[CONF_CC_REL_HUM])
+        cg.add(var.set_cc_rel_hum_sensor(sens))
+    if CONF_CC_BLOWER_CFM in config:
+        sens = await sensor.new_sensor(config[CONF_CC_BLOWER_CFM])
+        cg.add(var.set_cc_blower_cfm_sensor(sens))
+    if CONF_CC_BLOWER_RPM in config:
+        sens = await sensor.new_sensor(config[CONF_CC_BLOWER_RPM])
+        cg.add(var.set_cc_blower_rpm_sensor(sens))

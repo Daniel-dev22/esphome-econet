@@ -50,8 +50,13 @@ class Econet : public Component {
 	void parse_rx_message();
 	void parse_tx_message();
 	void set_enable_state(bool state);
+	
 	void set_new_setpoint(float setpoint);
+	void set_new_setpoint_low(float setpoint);
+	void set_new_setpoint_high(float setpoint);
+	
 	void set_new_mode(float mode);
+	void set_new_fan_mode(float fan_mode);
 	
 	uint8_t get_type_id() { return this->type_id_; }
 	float get_temp_in() { return this->temp_in; }
@@ -86,9 +91,15 @@ class Econet : public Component {
 	float get_cc_hvacmode() { return this->cc_hvacmode; }
 	float get_cc_spt_stat() { return this->cc_spt_stat; }
 	float get_cc_cool_setpoint() { return this->cc_cool_setpoint; }
+	float get_cc_heat_setpoint() { return this->cc_heat_setpoint; }
 	float get_cc_automode() { return this->cc_automode; }
 	float get_cc_statmode() { return this->cc_statmode; }
-	
+	float get_cc_fan_mode() { return this->cc_fan_mode; }
+	float get_cc_rel_hum() { return this->cc_rel_hum; }
+	float get_cc_blower_cfm() { return this->cc_blower_cfm; }
+	float get_cc_blower_rpm() { return this->cc_blower_rpm; }
+  std::string get_cc_hvacmode_text() { return this->cc_hvacmode_text; }
+
 	void register_listener(uint8_t datapoint_id, const std::function<void(float)> &func);
 	
  protected:
@@ -102,7 +113,9 @@ class Econet : public Component {
 
 	void handle_float(uint32_t src_adr, std::string obj_string, float value);
 	void handle_enumerated_text(uint32_t src_adr, std::string obj_string, uint8_t value, std::string text);
+	
 	void handle_text(uint32_t src_adr, std::string obj_string, std::string text);
+	void handle_binary(uint32_t src_adr, std::string obj_string, std::vector<uint8_t> data);
 	
 	void transmit_message(std::vector<uint8_t> data);
 	void transmit_sync();
@@ -145,8 +158,15 @@ class Econet : public Component {
 	float cc_hvacmode = 0;
 	float cc_spt_stat = 0;
 	float cc_cool_setpoint = 0;
+	
+	float cc_heat_setpoint = 0;
 	float cc_automode = 0;
 	float cc_statmode = 0;
+	float cc_fan_mode = 0;
+	float cc_rel_hum = 0;
+	float cc_blower_cfm = 0;
+	float cc_blower_rpm = 0;
+	std::string cc_hvacmode_text = "unknown";
 	
 	uint8_t req_id = 0;
 	uint32_t last_request_{0};
@@ -163,11 +183,20 @@ class Econet : public Component {
 	bool send_enable_disable = false;	
 	bool enable_disable_cmd = false;
 	
+	bool send_new_setpoint_low = false;
+	float new_setpoint_low = 100;
+	
+	bool send_new_setpoint_high = false;
+	float new_setpoint_high = 100;
+	
 	bool send_new_setpoint = false;
 	float new_setpoint = 100;
 	
 	bool send_new_mode = false;
 	float new_mode = 0;
+	
+	bool send_new_fan_mode = false;
+	float new_fan_mode = 0;
 	
 	uint8_t wbuffer[max_message_size];
 	uint16_t wmsg_len = 0;
