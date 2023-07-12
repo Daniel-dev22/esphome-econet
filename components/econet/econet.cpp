@@ -206,6 +206,8 @@ void Econet::handle_enumerated_text(uint32_t src_adr, std::string obj_string, ui
 		if(obj_string == "HVACMODE")
 		{
 			cc_hvacmode = value;
+			cc_hvacmode_text = text.c_str();
+			ESP_LOGI("econet", "  TextHVACMode : %s ", text.c_str());
 		}
 		else if(obj_string == "AUTOMODE")
 		{
@@ -225,11 +227,53 @@ void Econet::handle_text(uint32_t src_adr, std::string obj_string, std::string t
 {
 	if(src_adr == 0x1040)
 	{
-
+	
 	}
-	else if(src_adr == 0x380)
+	else if(src_adr == CONTROL_CENTER)	
 	{
+	
+	}
 
+}
+void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector<uint8_t> data)
+{
+	if(src_adr == 0x1c0)
+	{
+		if(obj_string == "HWSTATUS")
+		{
+			// data[0] = 4
+			// data[1 - 10] = 0
+			uint8_t heatcmd = data[11]; // 0 to 100 [0, 70, 100]
+			uint8_t coolcmd = data[12]; // [0, 2] Maybe 1 for 1st Stage?
+			uint16_t fan_cfm = (((uint16_t)data[13]) * 256) + data[14];
+			
+			ESP_LOGI("econet", "  HeatCmd : %d %", heatcmd);
+			ESP_LOGI("econet", "  CoolCmd : %d %", coolcmd);
+			
+			ESP_LOGI("econet", "  FanCFM? : %d cfm", fan_cfm);
+		}
+	}
+	else if(src_adr == 0x3c0)
+	{
+		if(obj_string == "AIRHSTAT")
+		{
+			// data[0] = 4
+			// data[1 - 10] = 0
+			cc_blower_cfm = (data[16] << 8) + data[17];
+			cc_blower_rpm = (data[20] << 8) + data[21];
+			uint16_t testone = (data[22] << 8) + data[23];
+			uint16_t testtwo = (data[36] << 8) + data[37];
+			uint16_t testthree = (data[57] << 8) + data[58];
+			uint16_t testfour = (data[73] << 8) + data[74];
+			// testtwo has something to do with the unit running when its off its 0
+			
+			ESP_LOGI("econet", "  TestOne : %d ", testone);
+			ESP_LOGI("econet", "  TestTwo : %d ", testtwo);
+			ESP_LOGI("econet", "  TestThree : %d ", testthree);
+			ESP_LOGI("econet", "  TestFour : %d ", testfour);
+			
+			ESP_LOGI("econet", "  FanRPM? : %d rpm", cc_blower_rpm);
+		}
 	}
 }
 void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector<uint8_t> data)
