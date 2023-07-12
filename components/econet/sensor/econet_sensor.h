@@ -59,7 +59,6 @@ class EconetSensor : public PollingComponent, public EconetClient {
 	void set_discharge_temp_sensor(sensor::Sensor *sensor) {
 		this->discharge_temp_sensor_ = sensor;
 	}
-
 	void set_cc_hvacmode_sensor(sensor::Sensor *sensor) {
 		this->cc_hvacmode_sensor_ = sensor;
 	}
@@ -81,7 +80,8 @@ class EconetSensor : public PollingComponent, public EconetClient {
 	void set_cc_blower_rpm_sensor(sensor::Sensor *sensor) {
 		this->cc_blower_rpm_sensor_ = sensor;
 	}
- 
+
+	
  protected:
 	sensor::Sensor *temp_in_sensor_{nullptr};
 	sensor::Sensor *temp_out_sensor_{nullptr};
@@ -92,7 +92,7 @@ class EconetSensor : public PollingComponent, public EconetClient {
 	sensor::Sensor *ignition_cycles_sensor_{nullptr};
 	sensor::Sensor *instant_btus_sensor_{nullptr};
 	sensor::Sensor *hot_water_sensor_{nullptr};
-  
+	
 	sensor::Sensor *ambient_temp_sensor_{nullptr};
 	sensor::Sensor *lower_water_heater_temp_sensor_{nullptr};
 	sensor::Sensor *upper_water_heater_temp_sensor_{nullptr};
@@ -100,7 +100,7 @@ class EconetSensor : public PollingComponent, public EconetClient {
 	sensor::Sensor *evap_temp_sensor_{nullptr};
 	sensor::Sensor *suction_temp_sensor_{nullptr};
 	sensor::Sensor *discharge_temp_sensor_{nullptr};
-
+	
 	sensor::Sensor *cc_hvacmode_sensor_{nullptr};
 	sensor::Sensor *cc_spt_stat_sensor_{nullptr};
 	sensor::Sensor *cc_coolsetp_sensor_{nullptr};
@@ -108,7 +108,6 @@ class EconetSensor : public PollingComponent, public EconetClient {
 	sensor::Sensor *cc_rel_hum_sensor_{nullptr};
 	sensor::Sensor *cc_blower_cfm_sensor_{nullptr};
 	sensor::Sensor *cc_blower_rpm_sensor_{nullptr};
-  sensor::Sensor *cc_rel_hum_sensor_{nullptr};
 };
 
 }  // namespace econet
