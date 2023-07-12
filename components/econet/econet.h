@@ -158,7 +158,6 @@ class Econet : public Component {
 	float cc_hvacmode = 0;
 	float cc_spt_stat = 0;
 	float cc_cool_setpoint = 0;
-	
 	float cc_heat_setpoint = 0;
 	float cc_automode = 0;
 	float cc_statmode = 0;
@@ -167,6 +166,7 @@ class Econet : public Component {
 	float cc_blower_cfm = 0;
 	float cc_blower_rpm = 0;
 	std::string cc_hvacmode_text = "unknown";
+
 	
 	uint8_t req_id = 0;
 	uint32_t last_request_{0};
