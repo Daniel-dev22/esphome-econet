@@ -276,25 +276,6 @@ void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector
 		}
 	}
 }
-void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector<uint8_t> data)
-{
-	if(src_adr == 0x1c0)
-	{
-		if(obj_string == "HWSTATUS")
-		{
-			// data[0] = 4
-			// data[1 - 10] = 0
-			uint8_t heatcmd = data[11]; // 0 to 100 [0, 70, 100]
-			uint8_t coolcmd = data[12]; // [0, 2] Maybe 1 for 1st Stage?
-			uint16_t fan_cfm = (((uint16_t)data[13]) * 256) + data[14];
-			
-			ESP_LOGI("econet", "  HeatCmd : %d %", heatcmd);
-			ESP_LOGI("econet", "  CoolCmd : %d %", coolcmd);
-			
-			ESP_LOGI("econet", "  FanCFM? : %d cfm", fan_cfm);
-		}
-	}
-}
 void Econet::make_request()
 {	
 	uint32_t dst_adr = SMARTEC_TRANSLATOR;
