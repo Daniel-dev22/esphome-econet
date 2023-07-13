@@ -265,12 +265,14 @@ void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector
 			uint16_t testtwo = (data[36] << 8) + data[37];
 			uint16_t testthree = (data[57] << 8) + data[58];
 			uint16_t testfour = (data[73] << 8) + data[74];
+			uint16_t testfive = (data[95] << 8) + data[96];
 			// testtwo has something to do with the unit running when its off its 0
 			
 			ESP_LOGI("econet", "  TestOne : %d ", testone);
 			ESP_LOGI("econet", "  TestTwo : %d ", testtwo);
 			ESP_LOGI("econet", "  TestThree : %d ", testthree);
 			ESP_LOGI("econet", "  TestFour : %d ", testfour);
+			ESP_LOGI("econet", "  TestFive : %d ", testfive);
 			
 			ESP_LOGI("econet", "  FanRPM? : %d rpm", cc_blower_rpm);
 		}
