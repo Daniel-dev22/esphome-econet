@@ -266,6 +266,12 @@ void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector
 			uint16_t testthree = (data[57] << 8) + data[58];
 			uint16_t testfour = (data[73] << 8) + data[74];
 			uint16_t testfive = (data[95] << 8) + data[96];
+			uint16_t testsix = (data[20] << 8) + data[21];
+			uint16_t testseven = (data[22] << 8) + data[22];
+			uint16_t testeight = (data[35] << 8) + data[36];
+			uint16_t testnine = (data[56] << 8) + data[57];
+			uint16_t testten = (data[72] << 8) + data[73];
+			uint16_t testeleven = (data[94] << 8) + data[95];
 			// testtwo has something to do with the unit running when its off its 0
 			
 			ESP_LOGI("econet", "  TestOne : %d ", testone);
@@ -273,6 +279,12 @@ void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector
 			ESP_LOGI("econet", "  TestThree : %d ", testthree);
 			ESP_LOGI("econet", "  TestFour : %d ", testfour);
 			ESP_LOGI("econet", "  TestFive : %d ", testfive);
+			ESP_LOGI("econet", "  TestSix : %d ", testsix);
+			ESP_LOGI("econet", "  TestSeven : %d ", testseven);
+			ESP_LOGI("econet", "  TestEight : %d ", testeight);
+			ESP_LOGI("econet", "  TestNine : %d ", testnine);
+			ESP_LOGI("econet", "  TestTen : %d ", testten);
+			ESP_LOGI("econet", "  TestEleven : %d ", testeleven);
 			
 			ESP_LOGI("econet", "  FanRPM? : %d rpm", cc_blower_rpm);
 		}
