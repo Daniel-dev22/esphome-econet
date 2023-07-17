@@ -124,6 +124,3 @@ https://github.com/syssi/esphome-solax-x1-mini
 
 https://github.com/glmnet/esphome_devices
 
-Donate:
-
-https://www.paypal.com/donate/?hosted_button_id=NKVWX2AJRLDT2
