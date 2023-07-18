@@ -52,7 +52,7 @@ Three econet based water heater types are supported.  Each has its own `yaml` co
 
 **Tankless Water Heater**
 
-- [econet_tankless_water_heater.yaml](econet_tankless_wtater_heater.yaml)
+- [econet_tankless_water_heater.yaml](econet_tankless_water_heater.yaml)
 
 **Heat Pump Water Heater**
 
