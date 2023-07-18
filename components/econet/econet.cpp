@@ -265,12 +265,36 @@ void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector
 			uint16_t testtwo = (data[36] << 8) + data[37];
 			uint16_t testthree = (data[57] << 8) + data[58];
 			uint16_t testfour = (data[73] << 8) + data[74];
+			uint16_t testfive = (data[95] << 8) + data[96];
+			uint16_t testsix = (data[20] << 8) + data[21];
+			uint16_t testseven = (data[22] << 8) + data[22];
+			uint16_t testeight = (data[35] << 8) + data[36];
+			uint16_t testnine = (data[56] << 8) + data[57];
+			uint16_t testten = (data[72] << 8) + data[73];
+			uint16_t testeleven = (data[94] << 8) + data[95];
+			uint16_t testtwelve = (data[26] << 8) + data[27];
+			uint16_t testthirteen = (data[102] << 8) + data[103];
+			uint16_t testfourteen = (data[106] << 8) + data[107];
+			uint16_t testfifteen = (data[140] << 8) + data[141];
+			uint16_t testsixteen = (data[150] << 8) + data[151];
 			// testtwo has something to do with the unit running when its off its 0
 			
 			ESP_LOGI("econet", "  TestOne : %d ", testone);
 			ESP_LOGI("econet", "  TestTwo : %d ", testtwo);
 			ESP_LOGI("econet", "  TestThree : %d ", testthree);
 			ESP_LOGI("econet", "  TestFour : %d ", testfour);
+			ESP_LOGI("econet", "  TestFive : %d ", testfive);
+			ESP_LOGI("econet", "  TestSix : %d ", testsix);
+			ESP_LOGI("econet", "  TestSeven : %d ", testseven);
+			ESP_LOGI("econet", "  TestEight : %d ", testeight);
+			ESP_LOGI("econet", "  TestNine : %d ", testnine);
+			ESP_LOGI("econet", "  TestTen : %d ", testten);
+			ESP_LOGI("econet", "  TestEleven : %d ", testeleven);
+			ESP_LOGI("econet", "  TestTwelve : %d ", testtwelve);
+			ESP_LOGI("econet", "  TestThirteen : %d ", testthirteen);
+			ESP_LOGI("econet", "  TestFourteen : %d ", testfourteen);
+			ESP_LOGI("econet", "  TestFifteen : %d ", testfifteen);
+			ESP_LOGI("econet", "  TestSixteen : %d ", testsixteen);
 			
 			ESP_LOGI("econet", "  FanRPM? : %d rpm", cc_blower_rpm);
 		}
