@@ -62,7 +62,7 @@ Three econet based water heater types are supported.  Each has its own `yaml` co
 - Not Currently Supported
 
 **HVAC**
-- [econet_hvac.yaml](econet_hvac yaml)
+- [econet_hvac.yaml](econet_hvac.yaml)
 
 ### Compiling and Uploading esphome-econet ###
 
