@@ -8,7 +8,7 @@ esphome:
   name: ${name}
   comment: ${device_description}
   project:
-    name: "stockmopar.econet"
+    name: "daniel-dev22.econet"
     version: 0.1.0
 
 esp32:
