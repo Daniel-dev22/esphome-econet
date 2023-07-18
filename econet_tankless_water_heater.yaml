@@ -8,7 +8,7 @@ esphome:
   name: ${name}
   comment: ${device_description}
   project:
-    name: "stockmopar.econet"
+    name: "daniel-dev22.econet"
     version: 0.1.0
 
 esp32:
@@ -33,7 +33,6 @@ external_components:
   - source: github://stockmopar/esphome-econet
 #  - source: components
 
-
 uart:
   id: uart_0
   baud_rate: 38400
@@ -46,7 +45,7 @@ uart:
 # The base UART communication hub.
 econet:
   uart: uart_0
-  model: "Heatpump"
+  model: "Tankless"
 
 climate:
   - platform: econet
@@ -55,33 +54,27 @@ climate:
 # Optional additional sensors.
 sensor:
   - platform: econet
-    hot_water:
-      name: "Hot Water"
-    ambient_temp:
-      name: "Ambient Temperature"
-    lower_water_heater_temp:
-      name: "Lower Tank Temperature"
-    upper_water_heater_temp:
-      name: "Upper Tank Temperature"
-    power_watt:
-      name: "Power"
-    evap_temp:
-      name: "Evaporator Temperature"
-    suction_temp:
-      name: "Suction Temperature"
-    discharge_temp:
-      name: "Discharge Temperature"
+    temp_in:
+      name: "Temperature In"
+    temp_out:
+      name: "Temperature Out"
+    setpoint:
+      name: "Set Point Temperature"
+    btus_used:
+      name: "BTUs Used"
+    water_used:
+      name: "Water Used"
+    flow_rate:
+      name: "Flow Rate"
+    ignition_cycles:
+      name: "Ignition Cycles"
+    instant_btus:
+      name: "Instant BTUs"
 
 binary_sensor:
   - platform: econet
     enable_state:
       name: "Water Heater Enabled (Sensor)"
-    heatctrl:
-      name: "Heater Control"
-    fan_ctrl:
-      name: "Fan Control"
-    comp_rly:
-      name: "Compressor Relay"
 
 switch:
   - platform: econet

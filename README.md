@@ -1,6 +1,8 @@
 # esphome-econet
 
-This ESPHome package creates a local network connection to econet-based devices, currently water heaters like the Rheem Heat Pump Water Heater (HPWH), and creates entities in Home Assistant to control and monitor the devices.  This package also provides more and more detailed sensors than does the Rheem econet cloud-based integration available in Home Assistant.  However, both can coexist.  At present, this package does not support mode-switching; use the Rheem integration for that.
+This project is a fork of [Stockmopar's Repo](https://github.com/stockmopar/esphome-econet) It has been modified with additional features that the original project does not have. I also want to thank Stockmopar for his work on laying the foundation for this project and decoding the protocol as none of this would have existed without his help.
+
+This ESPHome package creates a local network connection to econet-based devices, such as an HVAC system orwater heaters like the Rheem Heat Pump Water Heater (HPWH), and creates entities in Home Assistant to control and monitor the devices.  This package also provides more detailed sensors than the Rheem econet cloud-based integration available in Home Assistant.  However, both can coexist.
 
 ## Hardware ##
 
@@ -50,15 +52,17 @@ Three econet based water heater types are supported.  Each has its own `yaml` co
 
 **Tankless Water Heater**
 
-- TBD
+- [econet_tankless_water_heater.yaml](econet_tankless_water_heater.yaml)
 
 **Heat Pump Water Heater**
 
-- econet_heatpump.yaml
+- [econet_heatpump_water_heater.yaml](econet_heatpump_water_heater.yaml)
 
 **Electric Water Heater**
+- Not Currently Supported
 
-- TBD
+**HVAC**
+- [econet_hvac.yaml](econet_hvac.yaml)
 
 ### Compiling and Uploading esphome-econet ###
 
@@ -90,40 +94,12 @@ Open Home Assistant and Add a New ESPHome Integration choosing esphome-econet.  
 
 ## Protocol Documentation ##
 
-Example commands to change a heat pump water heater settings here: https://github.com/stockmopar/esphome-econet/blob/main/m5atom-rs485-econet.yaml
+Example commands to change a heat pump water heater settings [here](https://github.com/daniel-dev22/esphome-econet/blob/main/m5atom-rs485-econet.yaml)
 
-Decode this into Charcode here:  https://gchq.github.io/CyberChef/#recipe=From_Charcode('Space',16)Strings('Single%20byte',4,'Alphanumeric%20%2B%20punctuation%20(A)',false,false,false/disabled)&input=MHg4MCwgMHgwMCwgMHgxMiwgMHg4MCwgMHgwMCwgMHg4MCwgMHgwMCwgMHgwMywgMHg0MCwgMHgwMCwgMHgxMiwgMHgwMCwgMHgwMCwgMHgxRiwgMHgwMSwgMHgwMSwgMHgwMCwgMHgwNywgMHgwMCwgMHgwMCwgMHg1NywgMHg0OCwgMHg1NCwgMHg1MiwgMHg1MywgMHg0NSwgMHg1NCwgMHg1MCwgMHg0MiwgMHhGOCwgMHgwMCwgMHgwMCwgMHhFNCwgMHhFRQ
-
-
-Addresses
-
-Commands
-* READ_COMMAND (30)
-* ACK (6)
-* WRITE_COMMAND (31)
-
-Object Strings
-
-| String        | Units         | Gas Tankless | Heat Pump    | Electric | Values     |
-| ------------- | ------------- |------------- |------------- |--------- |------------|
-| WHTRENAB      |               | Y            |Y             |          | 1,0        |
-| WHTRSETP      |               | Y            |Y             |          |            |
-| WHTRMODE      |               | Y            |              |          |            |
-| WHTRCNFG      |               |              |Y             |          | 0,1,2,3,4  |
-| FLOWRATE      |               | Y            |              |          |            |
-| TEMP_OUT      |               | Y            |              |          |            |
-| TEMP__IN      |               | Y            |              |          |            |
-| WTR_USED      |               | Y            |              |          |            |
-| WTR_BTUS      |               | Y            |              |          |            |
-| IGNCYCLS      |               | Y            |              |          |            |
-| BURNTIME      |               | Y            |              |          |            |
+Decode this into Charcode [here](https://gchq.github.io/CyberChef/#recipe=From_Charcode('Space',16)Strings('Single%20byte',4,'Alphanumeric%20%2B%20punctuation%20(A)',false,false,false/disabled)&input=MHg4MCwgMHgwMCwgMHgxMiwgMHg4MCwgMHgwMCwgMHg4MCwgMHgwMCwgMHgwMywgMHg0MCwgMHgwMCwgMHgxMiwgMHgwMCwgMHgwMCwgMHgxRiwgMHgwMSwgMHgwMSwgMHgwMCwgMHgwNywgMHgwMCwgMHgwMCwgMHg1NywgMHg0OCwgMHg1NCwgMHg1MiwgMHg1MywgMHg0NSwgMHg1NCwgMHg1MCwgMHg0MiwgMHhGOCwgMHgwMCwgMHgwMCwgMHhFNCwgMHhFRQ)
 
 Credits:
 
 https://github.com/syssi/esphome-solax-x1-mini
 
 https://github.com/glmnet/esphome_devices
-
-Donate:
-
-https://www.paypal.com/donate/?hosted_button_id=NKVWX2AJRLDT2
