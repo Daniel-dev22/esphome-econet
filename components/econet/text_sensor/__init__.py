@@ -37,7 +37,7 @@ CONFIG_SCHEMA = (
             cv.Optional(CONF_CC_HVACMODE_TEXT): text_sensor.text_sensor_schema(
 
             )
-        }
+        },
         {
             cv.GenerateID(): cv.declare_id(EconetTextSensor),
             cv.Optional(CONF_CC_AUTOMODE_TEXT): text_sensor.text_sensor_schema(
