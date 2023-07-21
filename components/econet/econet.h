@@ -99,6 +99,7 @@ class Econet : public Component {
 	float get_cc_blower_cfm() { return this->cc_blower_cfm; }
 	float get_cc_blower_rpm() { return this->cc_blower_rpm; }
   std::string get_cc_hvacmode_text() { return this->cc_hvacmode_text; }
+  std::string get_cc_automode_text() { return this->cc_automode_text; }
 
 	void register_listener(uint8_t datapoint_id, const std::function<void(float)> &func);
 	
@@ -166,7 +167,7 @@ class Econet : public Component {
 	float cc_blower_cfm = 0;
 	float cc_blower_rpm = 0;
 	std::string cc_hvacmode_text = "unknown";
-
+	std::string cc_automode_text = "unknown";
 	
 	uint8_t req_id = 0;
 	uint32_t last_request_{0};
