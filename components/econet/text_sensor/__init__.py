@@ -29,6 +29,7 @@ EconetTextSensor = econet_ns.class_(
 CONF_ECONET_ID = "econet"
 
 CONF_CC_HVACMODE_TEXT = "cc_hvacmode_text"
+CONF_CC_AUTOMODE_TEXT = "cc_automode_text"
 
 CONFIG_SCHEMA = (
     cv.COMPONENT_SCHEMA.extend(
