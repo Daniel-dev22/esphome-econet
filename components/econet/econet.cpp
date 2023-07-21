@@ -418,7 +418,10 @@ void Econet::make_request()
 			}
 			else if(type_id_ == 2)
 			{
-				// str_ids.push_back("AIRHSTAT");
+				str_ids.push_back("DHUMSETP");
+				str_ids.push_back("DHUMENAB");
+				str_ids.push_back("DH_DRAIN");
+				str_ids.push_back("OAT_TEMP");
 				/*
 				str_ids.push_back("AAUX1CFM");
 				str_ids.push_back("AAUX2CFM");
