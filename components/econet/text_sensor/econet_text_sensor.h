@@ -22,9 +22,7 @@ class EconetTextSensor : public PollingComponent, public EconetClient {
 	
  protected:
 	text_sensor::TextSensor *cc_hvacmode_text_text_sensor_{nullptr};
-};
 	text_sensor::TextSensor *cc_automode_text_text_sensor_{nullptr};
 };
-
 }  // namespace econet
 }  // namespace esphome
