@@ -14,6 +14,9 @@ void EconetTextSensor::update() {
 	if (this->cc_hvacmode_text_text_sensor_ != nullptr) {
 		this->cc_hvacmode_text_text_sensor_->publish_state(this->econet->get_cc_hvacmode_text());
 	}
+	if (this->cc_automode_text_text_sensor_ != nullptr) {
+		this->cc_automode_text_text_sensor_->publish_state(this->econet->get_cc_automode_text());
+	}
 }
 
 void EconetTextSensor::dump_config() {

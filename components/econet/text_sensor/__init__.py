@@ -38,6 +38,12 @@ CONFIG_SCHEMA = (
 
             )
         }
+        {
+            cv.GenerateID(): cv.declare_id(EconetTextSensor),
+            cv.Optional(CONF_CC_AUTOMODE_TEXT): text_sensor.text_sensor_schema(
+
+            )
+        }
     )
     .extend(ECONET_CLIENT_SCHEMA)
     .extend(cv.polling_component_schema("5s"))
@@ -57,3 +63,6 @@ async def to_code(config):
     if CONF_CC_HVACMODE_TEXT in config:
         sens = await text_sensor.new_text_sensor(config[CONF_CC_HVACMODE_TEXT])
         cg.add(var.set_cc_hvacmode_text_text_sensor(sens))
+    if CONF_CC_AUTOMODE_TEXT in config:
+        sens = await text_sensor.new_text_sensor(config[CONF_CC_AUTOMODE_TEXT])
+        cg.add(var.set_cc_automode_text_text_sensor(sens))
