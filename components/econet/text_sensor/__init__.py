@@ -29,12 +29,19 @@ EconetTextSensor = econet_ns.class_(
 CONF_ECONET_ID = "econet"
 
 CONF_CC_HVACMODE_TEXT = "cc_hvacmode_text"
+CONF_CC_AUTOMODE_TEXT = "cc_automode_text"
 
 CONFIG_SCHEMA = (
     cv.COMPONENT_SCHEMA.extend(
         {
             cv.GenerateID(): cv.declare_id(EconetTextSensor),
             cv.Optional(CONF_CC_HVACMODE_TEXT): text_sensor.text_sensor_schema(
+
+            )
+        },
+        {
+            cv.GenerateID(): cv.declare_id(EconetTextSensor),
+            cv.Optional(CONF_CC_AUTOMODE_TEXT): text_sensor.text_sensor_schema(
 
             )
         }
@@ -57,3 +64,6 @@ async def to_code(config):
     if CONF_CC_HVACMODE_TEXT in config:
         sens = await text_sensor.new_text_sensor(config[CONF_CC_HVACMODE_TEXT])
         cg.add(var.set_cc_hvacmode_text_text_sensor(sens))
+    if CONF_CC_AUTOMODE_TEXT in config:
+        sens = await text_sensor.new_text_sensor(config[CONF_CC_AUTOMODE_TEXT])
+        cg.add(var.set_cc_automode_text_text_sensor(sens))
