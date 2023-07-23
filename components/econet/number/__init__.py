@@ -62,4 +62,4 @@ async def to_code(config):
 
     if CONF_CC_DHUMSETP in config:
         sens = await number.new_number(config[CONF_CC_DHUMSETP])
-        cg.add(var.set_cc_dhumsetp_number(config[CONF_MIN_VALUE])
+        cg.add(var.set_cc_dhumsetp_number(config[CONF_MIN_VALUE]))
