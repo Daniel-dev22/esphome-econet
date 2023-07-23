@@ -40,10 +40,9 @@ CONFIG_SCHEMA = (
          {
             cv.GenerateID(): cv.declare_id(EconetNumber),
             cv.Optional(CONF_CC_DHUMSETP): number.NUMBER_SCHEMA.extend(
-            min_value = 10,
-            # cv.Optional(CONF_MAX_VALUE): cv.float_, 
-            # cv.Optional(CONF_MIN_VALUE): cv.float_, 
-            # cv.Optional(CONF_STEP): cv.positive_float, 
+            cv.Optional(CONF_MAX_VALUE): cv.float_, 
+            cv.Optional(CONF_MIN_VALUE): cv.float_, 
+            cv.Optional(CONF_STEP): cv.positive_float, 
              )
         })
         .extend(ECONET_CLIENT_SCHEMA)
