@@ -33,32 +33,38 @@ CONF_MIN_VALUE = 10
 CONF_MAX_VALUE = 80
 CONF_STEP = 1
 
-CONFIG_SCHEMA = (
-    cv.Schema(
-        {
-            cv.GenerateID(): cv.declare_id(EconetNumber),
-            cv.Optional(CONF_CC_DHUMSETP): number.NUMBER_SCHEMA.extend({
-                cv.Optional(CONF_MAX_VALUE): cv.float_,
-                cv.Optional(CONF_MIN_VALUE): cv.float_,
-                cv.Optional(CONF_STEP): cv.positive_float,
-            }),
-        }
-    )
-    .extend(ECONET_CLIENT_SCHEMA)
-    .extend(cv.polling_component_schema("5s"))
-)
 
 
+CONFIG_SCHEMA = cv.All( 
+     number.number_schema(TemplateNumber) 
+     .extend( 
+         { 
+             cv.Required(CONF_MAX_VALUE): cv.float_, 
+             cv.Required(CONF_MIN_VALUE): cv.float_, 
+             cv.Required(CONF_STEP): cv.positive_float, 
+         } 
+     ) 
+     .extend(ECONET_CLIENT_SCHEMA)
+     .extend(cv.polling_component_schema("5s")), 
+     validate_min_max, 
+     validate, 
+ )
 
-
-async def to_code(config):
-    """Generate main.cpp code"""
-
-    var = cg.new_Pvariable(config[CONF_ID])
-    await cg.register_component(var, config)
+async def to_code(config): 
+     var = cg.new_Pvariable(config[CONF_ID]) 
+     await cg.register_component(var, config) 
+     await number.register_number( 
+         var, 
+         config, 
+         min_value=config[CONF_MIN_VALUE], 
+         max_value=config[CONF_MAX_VALUE], 
+         step=config[CONF_STEP], 
+     )
     econet_var = await cg.get_variable(config[CONF_ECONET_ID])
     cg.add(var.set_econet(econet_var))
 
     if CONF_CC_DHUMSETP in config:
         sens = await number.new_number(config[CONF_CC_DHUMSETP], min_value=10, max_value=80, step=1)
         cg.add(var.set_cc_dhumsetp_number(sens))
+        
+        
