@@ -5,15 +5,16 @@ Number component for Econet
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import number
-from esphome.const import (
-    CONF_ID,
-    UNIT_CELSIUS,
-    ICON_THERMOMETER,
-    DEVICE_CLASS_SPEED,
-    DEVICE_CLASS_TEMPERATURE,
-    DEVICE_CLASS_HUMIDITY,
-    STATE_CLASS_MEASUREMENT,
-)
+from esphome.const import ( 
+     CONF_ID, 
+     CONF_INITIAL_VALUE, 
+     CONF_LAMBDA, 
+     CONF_MAX_VALUE, 
+     CONF_MIN_VALUE, 
+     CONF_OPTIMISTIC, 
+     CONF_RESTORE_VALUE, 
+     CONF_STEP, 
+ )
 
 from .. import (
     econet_ns,
@@ -39,9 +40,10 @@ CONFIG_SCHEMA = (
          {
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_CC_DHUMSETP): number.NUMBER_SCHEMA.extend(
-            cv.Optional(CONF_MAX_VALUE): cv.float_, 
-            cv.Optional(CONF_MIN_VALUE): cv.float_, 
-            cv.Optional(CONF_STEP): cv.positive_float, 
+            #min_value
+            # cv.Optional(CONF_MAX_VALUE): cv.float_, 
+            # cv.Optional(CONF_MIN_VALUE): cv.float_, 
+            # cv.Optional(CONF_STEP): cv.positive_float, 
              )
         )}
         .extend(ECONET_CLIENT_SCHEMA)
