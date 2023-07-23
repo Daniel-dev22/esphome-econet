@@ -36,7 +36,7 @@ CONF_STEP = 1
 
 
 CONFIG_SCHEMA = cv.All( 
-    number.number_schema(TemplateNumber) 
+    number.number_schema(CONF_CC_DHUMSETP) 
     .extend( 
       { 
           cv.Required(CONF_MAX_VALUE): cv.float_, 
