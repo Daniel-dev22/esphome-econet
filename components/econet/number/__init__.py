@@ -39,9 +39,9 @@ CONFIG_SCHEMA = cv.All(
     number.number_schema(CONF_CC_DHUMSETP) 
     .extend( 
       { 
-          cv.Required(CONF_MAX_VALUE): cv.float_, 
-          cv.Required(CONF_MIN_VALUE): cv.float_, 
-          cv.Required(CONF_STEP): cv.positive_float, 
+          cv.Optional(CONF_MAX_VALUE): cv.float_, 
+          cv.Optional(CONF_MIN_VALUE): cv.float_, 
+          cv.Optional(CONF_STEP): cv.positive_float, 
          } 
      ) 
      .extend(ECONET_CLIENT_SCHEMA)
