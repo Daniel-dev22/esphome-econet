@@ -22,8 +22,8 @@ from .. import (
     EconetClient,
 )
 
-EconetTextSensor = econet_ns.class_(
-    "EconetTextSensor", cg.PollingComponent, EconetClient
+EconetNumber = econet_ns.class_(
+    "EconetNumber", cg.PollingComponent, EconetClient
 )
 
 CONF_ECONET_ID = "econet"
