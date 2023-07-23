@@ -44,10 +44,12 @@ CONFIG_SCHEMA = (
             cv.Optional(CONF_MIN_VALUE): cv.float_, 
             cv.Optional(CONF_STEP): cv.positive_float, 
              )
-        })
+         }
+     )
         .extend(ECONET_CLIENT_SCHEMA)
         .extend(cv.polling_component_schema("5s")), 
  )
+
 
 
 async def to_code(config): 
