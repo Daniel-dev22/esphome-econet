@@ -32,11 +32,12 @@ CONF_CC_DHUMSETP = "cc_dhumsetp"
 CONF_MIN_VALUE = 10
 CONF_MAX_VALUE = 80
 CONF_STEP = 1
-
+CONF_MODE = "slider"
 
 CONFIG_SCHEMA = (
     cv.COMPONENT_SCHEMA.extend(
          {
+            cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_CC_DHUMSETP): number.NUMBER_SCHEMA.extend(
             cv.Optional(CONF_MAX_VALUE): cv.float_, 
             cv.Optional(CONF_MIN_VALUE): cv.float_, 
@@ -57,6 +58,7 @@ async def to_code(config):
         min_value=config[CONF_MIN_VALUE], 
         max_value=config[CONF_MAX_VALUE], 
         step=config[CONF_STEP], 
+        mode=config[CONF_MODE],
      )
     econet_var = await cg.get_variable(config[CONF_ECONET_ID])
     cg.add(var.set_econet(econet_var))
