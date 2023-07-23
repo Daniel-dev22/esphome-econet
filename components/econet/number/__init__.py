@@ -56,7 +56,7 @@ async def to_code(config):
 
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
-    sens = await number.register_number(config, min_value=config[CONF_MIN_VALUE], max_value=config[CONF_MAX_VALUE], step=config[CONF_STEP])
+    sens = await number.register_number(config, min_value=10, max_value=80, step=1)
     econet_var = await cg.get_variable(config[CONF_ECONET_ID])
     cg.add(var.set_econet(econet_var))
 
