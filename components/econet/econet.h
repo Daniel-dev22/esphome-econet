@@ -98,6 +98,7 @@ class Econet : public Component {
 	float get_cc_rel_hum() { return this->cc_rel_hum; }
 	float get_cc_blower_cfm() { return this->cc_blower_cfm; }
 	float get_cc_blower_rpm() { return this->cc_blower_rpm; }
+	float get_dhumsetp() { return this->cc_dhumsetp; }
   std::string get_cc_hvacmode_text() { return this->cc_hvacmode_text; }
   std::string get_cc_automode_text() { return this->cc_automode_text; }
 
@@ -166,6 +167,7 @@ class Econet : public Component {
 	float cc_rel_hum = 0;
 	float cc_blower_cfm = 0;
 	float cc_blower_rpm = 0;
+	float cc_hvacmode_text = 0;
 	std::string cc_hvacmode_text = "unknown";
 	std::string cc_automode_text = "unknown";
 	

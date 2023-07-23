@@ -160,6 +160,10 @@ void Econet::handle_float(uint32_t src_adr, std::string obj_string, float value)
 		{
 			cc_rel_hum = value;
 		}
+		else if(obj_string == "DHUMSETP")
+		{
+			cc_dhumsetp = value;
+		}
 	}
 }
 	/*
@@ -379,6 +383,15 @@ void Econet::make_request()
 		}
 		
 		send_new_fan_mode = false;
+	}
+	else if(send_new_dhumsetp == true)
+	{
+		if(this->type_id_ == 2)
+		{
+			this->write_value(dst_adr, src_adr, "DHUMSETP", FLOAT, new_dhumsetp);
+		}
+		
+		send_new_dhumsetp = false;
 	}
 	else
 	{
