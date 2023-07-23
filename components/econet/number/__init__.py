@@ -56,10 +56,10 @@ async def to_code(config):
 
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
-    await number.register_number(var, config, min_value=config[CONF_MIN_VALUE], max_value=config[CONF_MAX_VALUE], step=config[CONF_STEP])
+    sens = await number.register_number(config, min_value=config[CONF_MIN_VALUE], max_value=config[CONF_MAX_VALUE], step=config[CONF_STEP])
     econet_var = await cg.get_variable(config[CONF_ECONET_ID])
     cg.add(var.set_econet(econet_var))
 
     if CONF_CC_DHUMSETP in config:
         sens = await number.new_number(config[CONF_CC_DHUMSETP])
-        cg.add(var.set_cc_dhumsetp_number(config[CONF_MIN_VALUE]))
+        cg.add(var.set_cc_dhumsetp_number(sens))
