@@ -29,15 +29,18 @@ EconetNumber = econet_ns.class_(
 CONF_ECONET_ID = "econet"
 
 CONF_CC_DHUMSETP = "cc_dhumsetp"
+CONF_MIN_VALUE = 10
+CONF_MAX_VALUE = 80
+CONF_STEP = 1
 
 CONFIG_SCHEMA = (
     cv.Schema(
         {
             cv.GenerateID(): cv.declare_id(EconetNumber),
             cv.Optional(CONF_CC_DHUMSETP): number.NUMBER_SCHEMA.extend({
-                cv.Optional(CONF_MAX_VALUE, default=10): cv.float_,
-                cv.Optional(CONF_MIN_VALUE, default=-80): cv.float_,
-                cv.Optional(CONF_STEP, default=1): cv.positive_float,
+                cv.Optional(CONF_MAX_VALUE): cv.float_,
+                cv.Optional(CONF_MIN_VALUE): cv.float_,
+                cv.Optional(CONF_STEP): cv.positive_float,
             }),
         }
     )
