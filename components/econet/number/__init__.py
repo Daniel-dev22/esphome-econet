@@ -29,9 +29,9 @@ EconetNumber = econet_ns.class_(
 CONF_ECONET_ID = "econet"
 
 CONF_CC_DHUMSETP = "cc_dhumsetp"
-float CONF_MIN_VALUE = 10
-float CONF_MAX_VALUE = 80
-float CONF_STEP = 1
+CONF_MIN_VALUE = 10
+CONF_MAX_VALUE = 80
+CONF_STEP = 1
 
 CONFIG_SCHEMA = (
     cv.Schema(
