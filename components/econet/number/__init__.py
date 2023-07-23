@@ -35,15 +35,13 @@ CONF_MAX_VALUE = 80
 CONF_STEP = 1
 CONF_MODE = "slider"
 
-CONFIG_SCHEMA = (
-    cv.COMPONENT_SCHEMA.extend(
-         {
-            cv.GenerateID(): cv.declare_id(EconetNumber),
-            cv.Optional(CONF_CC_DHUMSETP): number.NUMBER_SCHEMA.extend(
-            cv.Optional(CONF_MAX_VALUE): cv.float_, 
-            cv.Optional(CONF_MIN_VALUE): cv.float_, 
-            cv.Optional(CONF_STEP): cv.positive_float, 
-             )
+CONFIG_SCHEMA = cv.All( 
+    number.number_schema(EconetNumber) 
+    .extend( 
+        { 
+            cv.Required(CONF_MAX_VALUE): cv.float_, 
+            cv.Required(CONF_MIN_VALUE): cv.float_, 
+            cv.Required(CONF_STEP): cv.positive_float,
          }
      )
         .extend(ECONET_CLIENT_SCHEMA)
