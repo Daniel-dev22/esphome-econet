@@ -38,7 +38,7 @@ CONF_MODE = "slider"
 CONFIG_SCHEMA = (
     cv.COMPONENT_SCHEMA.extend(
          {
-            cv.GenerateID(): cv.declare_id(EconetSensor),
+            cv.GenerateID(): cv.declare_id(EconetNumber),
             cv.Optional(CONF_CC_DHUMSETP): number.NUMBER_SCHEMA.extend(
             #min_value
             # cv.Optional(CONF_MAX_VALUE): cv.float_, 
