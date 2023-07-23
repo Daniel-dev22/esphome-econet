@@ -46,8 +46,6 @@ CONFIG_SCHEMA = cv.All(
      ) 
      .extend(ECONET_CLIENT_SCHEMA)
      .extend(cv.polling_component_schema("5s")), 
-     validate_min_max, 
-     validate, 
  )
 
 async def to_code(config): 
