@@ -60,5 +60,5 @@ async def to_code(config):
     cg.add(var.set_econet(econet_var))
 
     if CONF_CC_DHUMSETP in config:
-        sens = await number.new_number(config[CONF_CC_DHUMSETP], min_value=10, max_value=80, step=1))
+        sens = await number.new_number(config[CONF_CC_DHUMSETP], min_value=10, max_value=80, step=1)
         cg.add(var.set_cc_dhumsetp_number(sens))
