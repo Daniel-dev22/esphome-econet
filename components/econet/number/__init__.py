@@ -49,18 +49,28 @@ CONF_CC_DHUMSETP = "cc_dhumsetp"
 #        .extend(cv.polling_component_schema("5s")), 
 # )
 
-CONFIG_SCHEMA = (
-    cv.COMPONENT_SCHEMA.extend(
-        {
-            cv.GenerateID(): cv.declare_id(EconetNumber),
-            cv.Optional(CONF_CC_DHUMSETP): number.number_schema(
+ECONET_NUMBER_SCHEMA = number.NUMBER_SCHEMA.extend(
+    {
+        cv.GenerateID(): cv.declare_id(EconetNumber),
+        cv.Optional(CONF_ICON, default=ICON_EMPTY): cv.icon,
+        cv.Optional(CONF_STEP, default=0.01): cv.float_,
+        cv.Optional(CONF_MODE, default="SLIDER"): cv.enum(number.NUMBER_MODES, upper=True),
+    }
+).extend(cv.COMPONENT_SCHEMA)
 
-            )
-        }
-    )
-    .extend(ECONET_CLIENT_SCHEMA)
-    .extend(cv.polling_component_schema("5s"))
+CONFIG_SCHEMA = ECONET_NUMBER_COMPONENT_SCHEMA.extend(
+    {
+        cv.Optional(CONF_CC_DHUMSETP): ECONET_NUMBER_SCHEMA.extend(
+            {
+                cv.Optional(CONF_MIN_VALUE, default=10): cv.float_,
+                cv.Optional(CONF_MAX_VALUE, default=80): cv.float_,
+                cv.Optional(CONF_STEP, default=1): cv.float_,
+            }
+        ),
+    }
 )
+
+
 
 
 async def to_code(config): 
