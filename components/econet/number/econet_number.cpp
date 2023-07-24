@@ -18,16 +18,16 @@ void EconetNumber::dump_config() {
   this->dump_traits_(TAG);
 }
 
-number::NumberTraits EconetNumber::traits() {
-	auto traits = number::NumberTraits();
+// number::NumberTraits EconetNumber::traits() {
+	// auto traits = number::NumberTraits();
 	
 	// traits.set_min_value(20);
 	// traits.set_max_value(70);
 	// traits.set_step(1);
-	traits.set_mode("slider");
+	// traits.set_mode("slider");
 	
-return traits;
-}
+// return traits;
+// }
 
 void EconetNumber::update() {
 	if (this->econet->is_ready())

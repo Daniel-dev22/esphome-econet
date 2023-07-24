@@ -19,7 +19,7 @@ class EconetNumber : public PollingComponent, public EconetClient {
 	}
 	
  protected:
-  number::NumberTraits traits() override;
+  // number::NumberTraits traits() override;
   number::Number *cc_dhumsetp_number_{nullptr};
 };
 
