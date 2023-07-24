@@ -41,7 +41,6 @@ ECONET_NUMBER_SCHEMA = number.number_schema(EconetNumber).extend(
         cv.Required(CONF_MAX_VALUE): cv.float_, 
         cv.Required(CONF_MIN_VALUE): cv.float_, 
         cv.Required(CONF_STEP): cv.positive_float,
-        cv.Required(CONF_MODE): cv.string,
     }
 )
 
@@ -62,5 +61,5 @@ async def to_code(config):
 
     if CONF_CC_DHUMSETP in config:
       conf = config[CONF_CC_DHUMSETP]
-      sens = await number.new_number(conf, min_value=conf[CONF_MIN_VALUE], max_value=conf[CONF_MAX_VALUE], step=conf[CONF_STEP], mode=conf[CONF_MODE])
+      sens = await number.new_number(conf, min_value=conf[CONF_MIN_VALUE], max_value=conf[CONF_MAX_VALUE], step=conf[CONF_STEP])
       cg.add(var.set_cc_dhumsetp_number(sens))
