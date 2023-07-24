@@ -48,7 +48,7 @@ CONFIG_SCHEMA = ECONET_CLIENT_SCHEMA.extend(
     {
         cv.GenerateID(): cv.declare_id(cg.Component),
         cv.Optional(CONF_CC_DHUMSETP): ECONET_NUMBER_SCHEMA,
-        cv.Optional(CONF_CC_SOMETHING): ECONET_NUMBER_SCHEMA,
+        #cv.Optional(CONF_CC_SOMETHING): ECONET_NUMBER_SCHEMA,
     }
 )
 
