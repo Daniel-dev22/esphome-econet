@@ -74,7 +74,7 @@ CONFIG_SCHEMA = ECONET_CLIENT_SCHEMA.extend(
 
 
 async def to_code(config): 
-    var = cg.new_Pvariable("DHUMSETPOINT",'47473')
+    var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config) 
     await number.register_number( 
         var, 
