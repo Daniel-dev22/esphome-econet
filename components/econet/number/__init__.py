@@ -30,10 +30,10 @@ EconetNumber = econet_ns.class_(
 CONF_ECONET_ID = "econet"
 
 CONF_CC_DHUMSETP = "cc_dhumsetp"
-CONF_MIN_VALUE = 10
-CONF_MAX_VALUE = 80
-CONF_STEP = 1
-CONF_MODE = "slider"
+# CONF_MIN_VALUE = min_value
+# CONF_MAX_VALUE = max_value
+# CONF_STEP = step
+# CONF_MODE = "slider"
 
 CONFIG_SCHEMA = cv.All( 
     number.number_schema(EconetNumber) 
