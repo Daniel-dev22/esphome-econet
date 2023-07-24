@@ -46,7 +46,6 @@ ECONET_NUMBER_SCHEMA = number.number_schema(EconetNumber).extend(
 
 CONFIG_SCHEMA = ECONET_CLIENT_SCHEMA.extend(
     {
-        cv.GenerateID(): cv.declare_id(cg.Component),
         cv.Optional(CONF_CC_DHUMSETP): ECONET_NUMBER_SCHEMA,
         #cv.Optional(CONF_CC_SOMETHING): ECONET_NUMBER_SCHEMA,
     }
@@ -56,21 +55,10 @@ CONFIG_SCHEMA = ECONET_CLIENT_SCHEMA.extend(
 
 
 
+
 async def to_code(config): 
-    var = cg.new_Pvariable(config[CONF_ID])
-    await cg.register_component(var, config) 
-    await number.register_number( 
-        var, 
-        config, 
-        min_value=config[CONF_MIN_VALUE], 
-        max_value=config[CONF_MAX_VALUE], 
-        step=config[CONF_STEP], 
-        mode=config[CONF_MODE],
-     )
-    econet_var = await cg.get_variable(config[CONF_ECONET_ID])
-    cg.add(var.set_econet(econet_var))
+    var = await cg.get_variable(config[CONF_ECONET_ID])
 
     if CONF_CC_DHUMSETP in config:
       sens = await number.new_number(config[CONF_CC_DHUMSETP], min_value=10, max_value=80, step=1)
-    cg.add(var.set_cc_dhumsetp_number(sens))
-
+      cg.add(var.set_cc_dhumsetp_number(sens))
