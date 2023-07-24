@@ -9,15 +9,18 @@
 namespace esphome {
 namespace econet {
 
-class EconetNumber : public number_::Number, public PollingComponent {
+class EconetNumber : public PollingComponent, public EconetClient {
  public:
 	void update() override;
 	void dump_config() override;
-	void write_state(float state) override;
 	
-  
+	void set_cc_dhumsetp_number(number::Number *number) {
+		this->cc_dhumsetp_number_ = number;
+	}
+	
  protected:
   number::NumberTraits traits() override;
+  number::Number *cc_dhumsetp_number_{nullptr}
 };
 
 }  // namespace daikin_s21
