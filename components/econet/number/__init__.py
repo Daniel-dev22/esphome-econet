@@ -38,7 +38,7 @@ CONF_CC_DHUMSETP = "cc_dhumsetp"
 
 ECONET_NUMBER_SCHEMA = number.number_schema(EconetNumber).extend( 
     { 
-        cv.GenerateID(): cv.declare_id(EconetSensor),
+        cv.GenerateID(): cv.declare_id(EconetNumber),
         cv.Required(CONF_MAX_VALUE): cv.float_, 
         cv.Required(CONF_MIN_VALUE): cv.float_, 
         cv.Required(CONF_STEP): cv.positive_float,
