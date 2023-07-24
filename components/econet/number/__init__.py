@@ -36,37 +36,18 @@ CONF_CC_DHUMSETP = "cc_dhumsetp"
 # CONF_STEP = step
 # CONF_MODE = "slider"
 
-#CONFIG_SCHEMA = cv.All( 
-#    number.number_schema(EconetNumber) 
-#    .extend( 
-#        { 
-#            cv.Optional(CONF_CC_DHUMSETP),
-#            cv.Required(CONF_MAX_VALUE): cv.float_, 
-#            cv.Required(CONF_MIN_VALUE): cv.float_, 
-#            cv.Required(CONF_STEP): cv.positive_float,
-#         }
-#     )
-#        .extend(ECONET_CLIENT_SCHEMA)
-#        .extend(cv.polling_component_schema("5s")), 
-# )
-
-ECONET_NUMBER_SCHEMA = number.NUMBER_SCHEMA.extend(
-    {
-        cv.GenerateID(): cv.declare_id(EconetNumber),
-        cv.Optional(CONF_STEP, default=0.01): cv.float_,
-        cv.Optional(CONF_MODE, default="SLIDER"): cv.enum(number.NUMBER_MODES, upper=True),
+ECONET_NUMBER_SCHEMA = number.number_schema(EconetNumber).extend( 
+    { 
+        cv.Required(CONF_MAX_VALUE): cv.float_, 
+        cv.Required(CONF_MIN_VALUE): cv.float_, 
+        cv.Required(CONF_STEP): cv.positive_float,
     }
-).extend(cv.COMPONENT_SCHEMA)
+)
 
 CONFIG_SCHEMA = ECONET_CLIENT_SCHEMA.extend(
     {
-        cv.Optional(CONF_CC_DHUMSETP): ECONET_NUMBER_SCHEMA.extend(
-            {
-                cv.Optional(CONF_MIN_VALUE, default=10): cv.float_,
-                cv.Optional(CONF_MAX_VALUE, default=80): cv.float_,
-                cv.Optional(CONF_STEP, default=1): cv.float_,
-            }
-        ),
+        cv.Optional(CONF_CC_DHUMSETP): ECONET_NUMBER_SCHEMA,
+        #cv.Optional(CONF_CC_SOMETHING): ECONET_NUMBER_SCHEMA,
     }
 )
 
