@@ -14,6 +14,7 @@ from esphome.const import (
      CONF_OPTIMISTIC, 
      CONF_RESTORE_VALUE, 
      CONF_STEP, 
+     CONF_MODE, 
  )
 
 from .. import (
