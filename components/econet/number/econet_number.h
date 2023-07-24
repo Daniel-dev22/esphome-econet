@@ -9,7 +9,7 @@
 namespace esphome {
 namespace econet {
 
-class EconetNumber : public PollingComponent, public EconetClient {
+class EconetNumber : public number::Number, public PollingComponent, public EconetClient {
  public:
 	void update() override;
 	void dump_config() override;
