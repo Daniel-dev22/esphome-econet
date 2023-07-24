@@ -6,6 +6,7 @@
 #include "esphome/components/number/number_call.h"
 #include "esphome/components/number/number_traits.h"
  
+namespace esphome {
 namespace econet {
 
 class EconetNumber : public number_::Number, public PollingComponent {
