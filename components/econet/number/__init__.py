@@ -41,6 +41,7 @@ ECONET_NUMBER_SCHEMA = number.number_schema(EconetNumber).extend(
         cv.Required(CONF_MAX_VALUE): cv.float_, 
         cv.Required(CONF_MIN_VALUE): cv.float_, 
         cv.Required(CONF_STEP): cv.positive_float,
+        cv.Required(CONF_MODE): cv.string,
     }
 )
 
