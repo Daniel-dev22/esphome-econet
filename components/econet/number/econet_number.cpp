@@ -11,9 +11,7 @@ namespace econet {
 static const char *const TAG = "econet.number";
 
 void EconetNumber::dump_config() {
-  ESP_LOGCONFIG(TAG, "EconetNumber:");
-  ESP_LOGCONFIG(TAG, "  Update interval: %u", this->get_update_interval());
-  this->dump_traits_(TAG);
+	LOG_NUMBER("", "EconetNumber:", this);
 }
 
 // number::NumberTraits EconetNumber::traits() {
