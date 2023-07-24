@@ -20,7 +20,7 @@ class EconetNumber : public PollingComponent, public EconetClient {
 	
  protected:
   number::NumberTraits traits() override;
-  number::Number *cc_dhumsetp_number_{nullptr}
+  number::Number *cc_dhumsetp_number_{nullptr};
 };
 
 }  // namespace daikin_s21
