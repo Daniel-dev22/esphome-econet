@@ -5,6 +5,7 @@
 #include "esphome/core/helpers.h"
 #include "esphome/components/number/number_call.h"
 #include "esphome/components/number/number_traits.h"
+#include "../econet.h"
  
 namespace esphome {
 namespace econet {
