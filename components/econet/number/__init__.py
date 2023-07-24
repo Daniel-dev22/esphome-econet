@@ -35,20 +35,32 @@ CONF_CC_DHUMSETP = "cc_dhumsetp"
 # CONF_STEP = step
 # CONF_MODE = "slider"
 
-CONFIG_SCHEMA = cv.All( 
-    number.number_schema(EconetNumber) 
-    .extend( 
-        { 
-            cv.Optional(CONF_CC_DHUMSETP),
-            cv.Required(CONF_MAX_VALUE): cv.float_, 
-            cv.Required(CONF_MIN_VALUE): cv.float_, 
-            cv.Required(CONF_STEP): cv.positive_float,
-         }
-     )
-        .extend(ECONET_CLIENT_SCHEMA)
-        .extend(cv.polling_component_schema("5s")), 
- )
+#CONFIG_SCHEMA = cv.All( 
+#    number.number_schema(EconetNumber) 
+#    .extend( 
+#        { 
+#            cv.Optional(CONF_CC_DHUMSETP),
+#            cv.Required(CONF_MAX_VALUE): cv.float_, 
+#            cv.Required(CONF_MIN_VALUE): cv.float_, 
+#            cv.Required(CONF_STEP): cv.positive_float,
+#         }
+#     )
+#        .extend(ECONET_CLIENT_SCHEMA)
+#        .extend(cv.polling_component_schema("5s")), 
+# )
 
+CONFIG_SCHEMA = (
+    cv.COMPONENT_SCHEMA.extend(
+        {
+            cv.GenerateID(): cv.declare_id(EconetNumber),
+            cv.Optional(CONF_CC_DHUMSETP): number.number_schema(
+
+            )
+        }
+    )
+    .extend(ECONET_CLIENT_SCHEMA)
+    .extend(cv.polling_component_schema("5s"))
+)
 
 
 async def to_code(config): 
