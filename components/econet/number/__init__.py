@@ -52,7 +52,6 @@ CONF_CC_DHUMSETP = "cc_dhumsetp"
 ECONET_NUMBER_SCHEMA = number.NUMBER_SCHEMA.extend(
     {
         cv.GenerateID(): cv.declare_id(EconetNumber),
-        cv.Optional(CONF_ICON, default=ICON_EMPTY): cv.icon,
         cv.Optional(CONF_STEP, default=0.01): cv.float_,
         cv.Optional(CONF_MODE, default="SLIDER"): cv.enum(number.NUMBER_MODES, upper=True),
     }
