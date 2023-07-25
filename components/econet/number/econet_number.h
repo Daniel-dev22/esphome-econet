@@ -3,8 +3,6 @@
 #include "esphome/core/component.h"
 #include "esphome/core/entity_base.h"
 #include "esphome/core/helpers.h"
-#include "esphome/components/number/number_call.h"
-#include "esphome/components/number/number_traits.h"
 #include "esphome/components/number/number.h"
 #include "../econet.h"
  
