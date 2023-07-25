@@ -1,3 +1,4 @@
+#pragma once
 #include "econet_number.h"
 #include "esphome/core/log.h"
 #include "esphome/components/number/number_call.h"
