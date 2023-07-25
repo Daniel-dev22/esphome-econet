@@ -1,10 +1,6 @@
-#include "esphome/core/entity_base.h"
-#include "esphome/core/helpers.h"
 #include "econet_number.h"
 #include "esphome/core/log.h"
-#include "esphome/components/number/number_traits.h"
-#include "esphome/components/number/number_call.h"
-#include "esphome/components/number/number.h"
+
  
 namespace esphome {
 namespace econet {
@@ -24,8 +20,8 @@ void EconetNumber::dump_config() {
 	traits.set_mode("slider");
 	
  return traits;
-*/// }
-
+}
+*/
 void EconetNumber::update() {
 	if (this->econet->is_ready())
 		{
