@@ -4,6 +4,7 @@
 #include "esphome/core/log.h"
 #include "esphome/components/number/number_traits.h"
 #include "esphome/components/number/number_call.h"
+#include "esphome/components/number/number.h"
  
 namespace esphome {
 namespace econet {
@@ -14,7 +15,7 @@ void EconetNumber::dump_config() {
 	LOG_NUMBER("", "EconetNumber:", this);
 }
 
- number::NumberTraits EconetNumber::traits() {
+ /* number::NumberTraits EconetNumber::traits() {
 	auto traits = number::NumberTraits();
 	
 	traits.set_min_value(min_value);
@@ -23,7 +24,7 @@ void EconetNumber::dump_config() {
 	traits.set_mode("slider");
 	
  return traits;
- }
+*/// }
 
 void EconetNumber::update() {
 	if (this->econet->is_ready())
