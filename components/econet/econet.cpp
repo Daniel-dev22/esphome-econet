@@ -1566,6 +1566,11 @@ void Econet::set_new_fan_mode(float fan_mode)
 	send_new_fan_mode = true;
 	new_fan_mode = fan_mode;
 }
+void Econet::set_new_dhumsetp(float setpoint)
+{
+	send_new_dhumsetp = true;
+	new_dhumsetp = setpoint;
+}
 void Econet::dump_state() {
   
 }
