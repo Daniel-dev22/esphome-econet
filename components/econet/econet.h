@@ -54,6 +54,7 @@ class Econet : public Component {
 	void set_new_setpoint(float setpoint);
 	void set_new_setpoint_low(float setpoint);
 	void set_new_setpoint_high(float setpoint);
+	void set_new_dhumsetp(float setpoint);
 	
 	void set_new_mode(float mode);
 	void set_new_fan_mode(float fan_mode);
