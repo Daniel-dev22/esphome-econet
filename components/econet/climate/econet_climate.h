@@ -4,8 +4,7 @@
 #include "esphome/components/climate/climate.h"
 #include "esphome/components/uart/uart.h"
 #include "esphome/core/component.h"
-#ifndef "../econet.h"
-#define "../econet.h"
+#include "../econet.h"
 
 namespace esphome {
 namespace econet {
@@ -29,4 +28,3 @@ class EconetClimate : public climate::Climate,
 
 }  // namespace daikin_s21
 }  // namespace esphome
-#endif
