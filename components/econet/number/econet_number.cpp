@@ -31,7 +31,7 @@ void EconetNumber::update() {
 		}
 }
 
-void EconetNumber::write_state(float new_dhumsetp) {
+void EconetNumber::publish_state(float new_dhumsetp) {
 	if(this->econet != nullptr)
 	{
 		this->econet->set_new_dhumsetp(new_dhumsetp);
