@@ -4,6 +4,8 @@
 #include "esphome/core/component.h"
 #include "esphome/core/helpers.h"
 #include <map>
+#ifndef MAINECONETH
+#define MAINECONETH
 
 namespace esphome {
 namespace econet {
@@ -100,8 +102,8 @@ class Econet : public Component {
 	float get_cc_blower_cfm() { return this->cc_blower_cfm; }
 	float get_cc_blower_rpm() { return this->cc_blower_rpm; }
 	float get_dhumsetp() { return this->cc_dhumsetp; }
-  std::string get_cc_hvacmode_text() { return this->cc_hvacmode_text; }
-  std::string get_cc_automode_text() { return this->cc_automode_text; }
+	std::string get_cc_hvacmode_text() { return this->cc_hvacmode_text; }
+	std::string get_cc_automode_text() { return this->cc_automode_text; }
 
 	void register_listener(uint8_t datapoint_id, const std::function<void(float)> &func);
 	
@@ -196,6 +198,9 @@ class Econet : public Component {
 	bool send_new_setpoint = false;
 	float new_setpoint = 100;
 	
+	bool send_new_dhumsetp = false;
+	float new_dhumsetp = 100;
+	
 	bool send_new_mode = false;
 	float new_mode = 0;
 	
@@ -244,3 +249,4 @@ class EconetClient {
 
 }  // namespace econet
 }  // namespace esphome
+#endif
