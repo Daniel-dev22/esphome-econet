@@ -13,7 +13,7 @@ class EconetNumber : public number::Number, PollingComponent, public EconetClien
  public:
 	void update() override;
 	void dump_config() override;
-	
+	void control(float new_dhumsetp) override;
 	void set_cc_dhumsetp_number(number::Number *number) {
 		this->cc_dhumsetp_number_ = number;
 	}
