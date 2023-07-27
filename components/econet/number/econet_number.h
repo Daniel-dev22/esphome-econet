@@ -4,8 +4,9 @@
 #include "esphome/core/entity_base.h"
 #include "esphome/core/helpers.h"
 #include "esphome/components/number/number.h"
-#include "../econet.h"
- 
+#ifndef "../econet.h"
+#define "../econet.h"
+
 namespace esphome {
 namespace econet {
 
@@ -25,3 +26,4 @@ class EconetNumber : public number::Number, PollingComponent, public EconetClien
 
 }  // namespace daikin_s21
 }  // namespace esphome
+#endif
