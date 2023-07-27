@@ -33,6 +33,7 @@ enum class EconetClimateMode : uint8_t {
   Heat = '4',
   Fan = '6',
 };
+
 	
 struct DatapointListener {
   uint8_t datapoint_id;
@@ -101,7 +102,7 @@ class Econet : public Component {
 	float get_cc_rel_hum() { return this->cc_rel_hum; }
 	float get_cc_blower_cfm() { return this->cc_blower_cfm; }
 	float get_cc_blower_rpm() { return this->cc_blower_rpm; }
-	float get_dhumsetp() { return this->cc_dhumsetp; }
+	float get_cc_dhumsetp() { return this->cc_dhumsetp; }
 	std::string get_cc_hvacmode_text() { return this->cc_hvacmode_text; }
 	std::string get_cc_automode_text() { return this->cc_automode_text; }
 
