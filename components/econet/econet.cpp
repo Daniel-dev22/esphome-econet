@@ -435,6 +435,14 @@ void Econet::make_request()
 				str_ids.push_back("DHUMENAB");
 				str_ids.push_back("DH_DRAIN");
 				str_ids.push_back("OAT_TEMP");
+				str_ids.push_back("COOLSETP");
+				str_ids.push_back("HEATSETP");
+				str_ids.push_back("STATNFAN");
+				str_ids.push_back("STATMODE");
+				str_ids.push_back("AUTOMODE");
+				str_ids.push_back("HVACMODE");
+				str_ids.push_back("RELH7005");
+				str_ids.push_back("SPT_STAT");
 				request_strings(dst_adr, src_adr, str_ids);
 				/*
 				str_ids.push_back("AAUX1CFM");
