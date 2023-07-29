@@ -164,7 +164,6 @@ void Econet::handle_float(uint32_t src_adr, std::string obj_string, float value)
 		{
 			cc_dhumsetp = value;
 			ESP_LOGI("econet", "  DHUMSETPCONFRIMED : %f ", cc_dhumsetp);
-			ESP_LOGI("econet", "  DHUMSETPCONFRIMEDVA : %f ", value);
 		}
 	}
 }
