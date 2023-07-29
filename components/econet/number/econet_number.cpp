@@ -28,7 +28,7 @@ void EconetNumber::update() {
 	if (this->econet->is_ready())
 		{
 			this->publish_state(this->econet->get_cc_dhumsetp());
-			ESP_LOGD("econet", "number update sent: %f", get_cc_dhumsetp());
+			ESP_LOGD("econet", "number update sent: %f", this->econet->get_cc_dhumsetp());
 		}
 }
 
