@@ -28,14 +28,16 @@ void EconetNumber::update() {
 	if (this->econet->is_ready())
 		{
 			this->publish_state(this->econet->get_cc_dhumsetp());
+			ESP_LOGD("econet", "number update sent: %f", get_cc_dhumsetp());
 		}
 }
 
 void EconetNumber::control(float new_dhumsetp) {
-	if(this->econet != nullptr)
+	if (this->econet != nullptr)
 	{
 		this->econet->set_new_dhumsetp(new_dhumsetp);
 		this->publish_state(new_dhumsetp);
+		ESP_LOGD("econet", "number command sent: %f", new_dhumsetp);
 	}
 }
  
