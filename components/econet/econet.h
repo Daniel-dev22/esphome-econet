@@ -200,7 +200,7 @@ class Econet : public Component {
 	float new_setpoint = 100;
 	
 	bool send_new_dhumsetp = false;
-	float new_dhumsetp = 100;
+	float new_dhumsetp = 0;
 	
 	bool send_new_mode = false;
 	float new_mode = 0;
