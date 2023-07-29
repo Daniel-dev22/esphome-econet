@@ -171,7 +171,7 @@ class Econet : public Component {
 	float cc_rel_hum = 0;
 	float cc_blower_cfm = 0;
 	float cc_blower_rpm = 0;
-	float cc_dhumsetp = 0;
+	float cc_dhumsetp = 30;
 	std::string cc_hvacmode_text = "unknown";
 	std::string cc_automode_text = "unknown";
 	
@@ -200,7 +200,7 @@ class Econet : public Component {
 	float new_setpoint = 100;
 	
 	bool send_new_dhumsetp = false;
-	float new_dhumsetp = 0;
+	float new_dhumsetp = 100;
 	
 	bool send_new_mode = false;
 	float new_mode = 0;
