@@ -13,8 +13,10 @@ class EconetNumber : public number::Number, PollingComponent, public EconetClien
  public:
 	void update() override;
 	void dump_config() override;
-	void control(float new_dhumsetp) override;
+	// void control(float new_dhumsetp) override;
 	
+	protected:
+	  void control(float new_dhumsetp) override;
 };
 
 }  // namespace daikin_s21
