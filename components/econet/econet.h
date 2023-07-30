@@ -211,6 +211,9 @@ class Econet : public Component {
 	uint32_t HEAT_PUMP_WATER_HEATER =       0x1280; // 80 00 12 80
 	uint32_t AIR_HANDLER = 					0x3c0;	// 80 00 03 C0
 	uint32_t CONTROL_CENTER = 				0x380;	// 80 00 03 80
+	uint32_t ZONE_THERMOSTAT_2 =            0x680;
+	uint32_t ZONE_THERMOSTAT_3 =            0x681;
+	uint32_t ZONE_CONTROL =                 0x540;
 
 	uint8_t DST_ADR_POS = 0;
 	uint8_t SRC_ADR_POS = 5;
