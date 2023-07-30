@@ -13,19 +13,9 @@ void EconetNumber::dump_config() {
 	LOG_NUMBER("", "EconetNumber:", this);
 }
 
- /* number::NumberTraits EconetNumber::traits() {
-	auto traits = number::NumberTraits();
-	
-	traits.set_min_value(min_value);
-	traits.set_max_value(max_value);
-	traits.set_step(step);
-	traits.set_mode("slider");
-	
- return traits;
-}
-*/
+
 void EconetNumber::update() {
-	if (this->econet->is_ready())
+	if (!this->econet->is_ready())
 		{
 			this->publish_state(this->econet->get_cc_dhumsetp());
 			ESP_LOGD("econet", "number update sent: %f", this->econet->get_cc_dhumsetp());
@@ -43,5 +33,3 @@ void EconetNumber::control(float new_dhumsetp) {
  
 }  // namespace econet
 }  // namespace esphome
- 
-// https://esphome.io/api/number__call_8cpp_source.html
