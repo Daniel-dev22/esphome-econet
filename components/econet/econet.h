@@ -123,7 +123,10 @@ class Econet : public Component {
 	void transmit_message(uint32_t dst_adr, uint32_t src_adr, uint8_t command, std::vector<uint8_t> data);
 	void request_strings(uint32_t dst_adr, uint32_t src_adr, std::vector<std::string> objects);
 	void write_value(uint32_t dst_adr, uint32_t src_adr, std::string object, uint8_t type, float value);
-	
+	std::string get_readable_hardware_name(uint32_t device);
+	std::string get_readable_command_name(uint8_t command);
+
+
 	uart::UARTComponent *econet_uart{nullptr};
 	bool ready = true;
 	
@@ -214,7 +217,7 @@ class Econet : public Component {
 	uint32_t ZONE_THERMOSTAT_2 =            0x680;
 	uint32_t ZONE_THERMOSTAT_3 =            0x681;
 	uint32_t ZONE_CONTROL =                 0x540;
-	uint32_t UNKNOWN =                      0x600;
+	// uint32_t UNKNOWN =                      0x600;
 
 	uint8_t DST_ADR_POS = 0;
 	uint8_t SRC_ADR_POS = 5;

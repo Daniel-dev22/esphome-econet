@@ -463,6 +463,30 @@ void Econet::parse_rx_message()
 {
 	this->parse_message(false);
 }
+std::string Econet::get_readable_hardware_name(uint32_t device){
+  if(device == COMPUTER) return "COMPUTER";
+  else if (device == FURNACE) return "FURNACE";
+  else if (device == UNKNOWN_HANDLER) return "UNKNOWN_HANDLER";
+  else if (device == WIFI_MODULE) return "WIFI_MODULE";
+  else if (device == SMARTEC_TRANSLATOR ) return "SMARTEC_TRANSLATOR";
+  else if (device == INTERNAL  		) return	         "INTERNAL";  			          
+  else if (device == HEAT_PUMP_WATER_HEATER) return "HEAT_PUMP_WATER_HEATER";
+  else if (device == AIR_HANDLER ) return			     "AIR_HANDLER";
+  else if (device == CONTROL_CENTER) return 	   "CONTROL_CENTER"; 		      
+  else if (device == ZONE_THERMOSTAT_2) return     "ZONE_THERMOSTAT_2";  
+  else if (device == ZONE_THERMOSTAT_3) return    "ZONE_THERMOSTAT_3"  ;   
+  else if (device == ZONE_CONTROL) return "ZONE_CONTROL"     ;
+  else return "UNKNOWN";
+  // else if (device == UNKNOWN) return               "UNKNOWN"  ;
+
+  }
+std::string Econet::get_readable_command_name(uint8_t command){
+  if(command == ACK) return "ACK  ";
+  else if (command == READ_COMMAND) return "READ ";
+  else if (command == WRITE_COMMAND) return "WRITE";
+  else return "UNK  ";
+  }
+
 void Econet::parse_message(bool is_tx)
 {     
 	bool logvals = true;
@@ -543,7 +567,7 @@ void Econet::parse_message(bool is_tx)
 	ESP_LOGI("econet", "  Dst Adr : 0x%x", dst_adr);
 	ESP_LOGI("econet", "  Src Adr : 0x%x", src_adr);
 	ESP_LOGI("econet", "  Length  : %d", data_len);
-	ESP_LOGI("econet", "  Command : %d", command);
+	ESP_LOGI("econet", "  Command : %d %s", command, this->get_readable_command_name(command).c_str());
 	ESP_LOGI("econet", "  Data    : %s", format_hex_pretty((const uint8_t *) pdata, data_len).c_str());
 	
 	// Track Read Requests
@@ -551,7 +575,8 @@ void Econet::parse_message(bool is_tx)
 	{
 		uint8_t type = pdata[0];
 		uint8_t prop_type = pdata[1];
-		
+  	ESP_LOGI("econet", "  Read    : short: 0x%x:0x%x [%s:%s] : %s",src_adr,dst_adr,this->get_readable_hardware_name(src_adr).c_str(),this->get_readable_hardware_name(dst_adr).c_str(),format_hex_pretty((const uint8_t *) pdata, data_len).c_str());
+
 		ESP_LOGI("econet", "  Type    : %d", type);
 		ESP_LOGI("econet", "  PropType: %d", prop_type);
 		
@@ -589,7 +614,7 @@ void Econet::parse_message(bool is_tx)
 		{
 			if(prop_type == 1)
 			{
-        read_req.command_name = "UNSUPPORTED";
+        read_req.command_name = "READ";
 				int start = 4;
 				int end = -1;
 				int str_len = -1;
@@ -622,7 +647,7 @@ void Econet::parse_message(bool is_tx)
 							}
 
 							std::string s(char_arr, sizeof(char_arr));
-              read_req.command_name = s.c_str();
+              // read_req.command_name = s.c_str();
 
 							obj_names.push_back(s);
 
@@ -659,7 +684,7 @@ void Econet::parse_message(bool is_tx)
 
 		if(read_req.dst_adr == src_adr && read_req.src_adr == dst_adr && read_req.awaiting_res == true)
 		{
-	ESP_LOGI("econet", "  Ack    : 0x%x:0x%x:%s:%s",src_adr,dst_adr,read_req.command_name.c_str(), format_hex_pretty((const uint8_t *) pdata, data_len).c_str());
+	ESP_LOGI("econet", "  Ack     : short: 0x%x:0x%x [%s:%s] %s : %s",src_adr,dst_adr,this->get_readable_hardware_name(src_adr).c_str(),this->get_readable_hardware_name(dst_adr).c_str(),read_req.command_name.c_str(), format_hex_pretty((const uint8_t *) pdata, data_len).c_str());
 
 			if(read_req.obj_names.size() == 1)
 			{
@@ -764,7 +789,8 @@ void Econet::parse_message(bool is_tx)
 	{
 		uint8_t type = pdata[0];
 		uint8_t prop_type = pdata[1];
-		
+  	ESP_LOGI("econet", "  Write   : short: 0x%x:0x%x [%s:%s] : %s",src_adr,dst_adr,this->get_readable_hardware_name(src_adr).c_str(),this->get_readable_hardware_name(dst_adr).c_str(),format_hex_pretty((const uint8_t *) pdata, data_len).c_str());
+
 		ESP_LOGI("econet", "  ClssType: %d", type);
 		ESP_LOGI("econet", "  PropType: %d", prop_type);
 		
@@ -1164,11 +1190,13 @@ void Econet::read_buffer(int bytes_available) {
 
 	uint8_t bytes[bytes_to_read];
 
+	uint32_t start_read_time = millis();
 	// Read multiple bytes at the same time
 	if(econet_uart->read_array(bytes,bytes_to_read) == false)
 	{
 		return; 
 	}
+		ESP_LOGI("econet", "read in ms: %d", millis() -start_read_time);
 
 	for(int i=0;i<bytes_to_read;i++)
 	{
@@ -1221,8 +1249,10 @@ void Econet::read_buffer(int bytes_available) {
 			pos++;	
 		}
 
+
 		if(pos == msg_len && msg_len != 0 && pos != 0)
 		{
+  		ESP_LOGI("econet", "parse in ms: %d", millis() -start_read_time);
 			// We have a full message
 			this->parse_rx_message();
 			pos = 0;
@@ -1234,6 +1264,8 @@ void Econet::read_buffer(int bytes_available) {
 			ESP_LOGD("econet", "This would have cuased problems");
 		}
 	}
+  		ESP_LOGI("econet", "loop in ms: %d", millis() -start_read_time);
+
 }
 void Econet::loop() {
 	const uint32_t now = millis();
@@ -1255,11 +1287,11 @@ void Econet::loop() {
 		}
 		else
 		{
-			// ESP_LOGI("econet", "--- millis()=%d", now);
+		//	 ESP_LOGI("econet", "--- millis()=%d", now);
 		}
 		if (now - this->last_read_data_ > 100)
 		{
-			// ESP_LOGI("econet", "request ms=%d", now);
+			 //ESP_LOGI("econet", "request ms=%d", now);
 			
 			// Bus is Assumbed Available For Sending
 			// This currently attempts a request every 1000ms
