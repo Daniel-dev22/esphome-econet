@@ -236,6 +236,12 @@ void Econet::handle_text(uint32_t src_adr, std::string obj_string, std::string t
 	}
 
 }
+
+uint16_t convert_vector_to_uint16(uint16_t pos, std::vector<uint8_t> data)
+{
+  return (((uint16_t)data[pos]) * 256) + data[pos+1];
+}
+
 void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector<uint8_t> data)
 {
 	if(src_adr == 0x1c0)
@@ -246,12 +252,20 @@ void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector
 			// data[1 - 10] = 0
 			uint8_t heatcmd = data[11]; // 0 to 100 [0, 70, 100]
 			uint8_t coolcmd = data[12]; // [0, 2] Maybe 1 for 1st Stage?
-			uint16_t fan_cfm = (((uint16_t)data[13]) * 256) + data[14];
-			
+			uint16_t fan_cfm = convert_vector_to_uint16(13,data);
+			uint16_t fan_rpm = convert_vector_to_uint16(17,data);
+      uint16_t max_cfm = convert_vector_to_uint16(41,data);
+
 			ESP_LOGI("econet", "  HeatCmd : %d %", heatcmd);
 			ESP_LOGI("econet", "  CoolCmd : %d %", coolcmd);
 			
-			ESP_LOGI("econet", "  FanCFM? : %d cfm", fan_cfm);
+			ESP_LOGI("econet", "  FanCFM  : %d cfm", fan_cfm);
+ 			ESP_LOGI("econet", "  FanRPM  : %d rpm", fan_rpm);
+ 			ESP_LOGI("econet", "  MaxCFM  : %d cfm", max_cfm);
+
+      ESP_LOGI("econet", "  MaxCFM  : %d cfm", max_cfm);
+
+
 		}
 	}
 	else if(src_adr == 0x3c0)
@@ -556,13 +570,14 @@ void Econet::parse_message(bool is_tx)
 				}
 
 				std::string s(char_arr, sizeof(char_arr));
-
+        read_req.command_name = s.c_str();
 				obj_names.push_back(s);
 
 				ESP_LOGI("econet", "  %s", s.c_str());
 			}
 			else
 			{
+        read_req.command_name = "UNSUPPORTED";
 				ESP_LOGI("econet", "  Don't Currently Support This Property Type", prop_type);
 			}
 			read_req.dst_adr = dst_adr;
@@ -574,6 +589,7 @@ void Econet::parse_message(bool is_tx)
 		{
 			if(prop_type == 1)
 			{
+        read_req.command_name = "UNSUPPORTED";
 				int start = 4;
 				int end = -1;
 				int str_len = -1;
@@ -606,6 +622,7 @@ void Econet::parse_message(bool is_tx)
 							}
 
 							std::string s(char_arr, sizeof(char_arr));
+              read_req.command_name = s.c_str();
 
 							obj_names.push_back(s);
 
@@ -638,8 +655,12 @@ void Econet::parse_message(bool is_tx)
 	}
 	else if(command == ACK)
 	{
+
+
 		if(read_req.dst_adr == src_adr && read_req.src_adr == dst_adr && read_req.awaiting_res == true)
 		{
+	ESP_LOGI("econet", "  Ack    : 0x%x:0x%x:%s:%s",src_adr,dst_adr,read_req.command_name.c_str(), format_hex_pretty((const uint8_t *) pdata, data_len).c_str());
+
 			if(read_req.obj_names.size() == 1)
 			{
 				uint8_t item_type = pdata[0] & 0x7F;

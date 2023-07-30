@@ -19,7 +19,7 @@ class ReadRequest {
 		bool awaiting_res = false;
 		// uint8_t read_class;
 		// uint8_t read_prop;
-		
+		std::string command_name;
 		std::vector<std::string> obj_names;
 };
 	
@@ -214,6 +214,7 @@ class Econet : public Component {
 	uint32_t ZONE_THERMOSTAT_2 =            0x680;
 	uint32_t ZONE_THERMOSTAT_3 =            0x681;
 	uint32_t ZONE_CONTROL =                 0x540;
+	uint32_t UNKNOWN =                      0x600;
 
 	uint8_t DST_ADR_POS = 0;
 	uint8_t SRC_ADR_POS = 5;
