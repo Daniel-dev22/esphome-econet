@@ -63,3 +63,4 @@ async def to_code(config):
       conf = config[CONF_CC_DHUMSETP]
       sens = await number.new_number(conf, min_value=conf[CONF_MIN_VALUE], max_value=conf[CONF_MAX_VALUE], step=conf[CONF_STEP])
       await cg.register_component(sens, conf)
+      cg.add(sens.set_econet(var))
