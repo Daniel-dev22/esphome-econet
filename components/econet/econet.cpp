@@ -1196,6 +1196,9 @@ void Econet::read_buffer(int bytes_available) {
 	{
 		return; 
 	}
+    	ESP_LOGI("econet", "  DBG     : %s",format_hex_pretty((const uint8_t *) bytes, bytes_to_read).c_str());
+
+
 		ESP_LOGI("econet", "read in ms: %d", millis() -start_read_time);
 
 	for(int i=0;i<bytes_to_read;i++)
@@ -1291,7 +1294,7 @@ void Econet::loop() {
 		}
 		if (now - this->last_read_data_ > 100)
 		{
-			 //ESP_LOGI("econet", "request ms=%d", now);
+			 ESP_LOGI("econet", "request ms=%d", now);
 			
 			// Bus is Assumbed Available For Sending
 			// This currently attempts a request every 1000ms
