@@ -4,6 +4,8 @@
 #include "esphome/core/component.h"
 #include "esphome/core/helpers.h"
 #include <map>
+#ifndef MAINECONETH
+#define MAINECONETH
 
 namespace esphome {
 namespace econet {
@@ -31,6 +33,7 @@ enum class EconetClimateMode : uint8_t {
   Heat = '4',
   Fan = '6',
 };
+
 	
 struct DatapointListener {
   uint8_t datapoint_id;
@@ -54,6 +57,7 @@ class Econet : public Component {
 	void set_new_setpoint(float setpoint);
 	void set_new_setpoint_low(float setpoint);
 	void set_new_setpoint_high(float setpoint);
+	void set_new_dhumsetp(float setpoint);
 	
 	void set_new_mode(float mode);
 	void set_new_fan_mode(float fan_mode);
@@ -98,8 +102,9 @@ class Econet : public Component {
 	float get_cc_rel_hum() { return this->cc_rel_hum; }
 	float get_cc_blower_cfm() { return this->cc_blower_cfm; }
 	float get_cc_blower_rpm() { return this->cc_blower_rpm; }
-  std::string get_cc_hvacmode_text() { return this->cc_hvacmode_text; }
-  std::string get_cc_automode_text() { return this->cc_automode_text; }
+	float get_cc_dhumsetp() { return this->cc_dhumsetp; }
+	std::string get_cc_hvacmode_text() { return this->cc_hvacmode_text; }
+	std::string get_cc_automode_text() { return this->cc_automode_text; }
 
 	void register_listener(uint8_t datapoint_id, const std::function<void(float)> &func);
 	
@@ -166,6 +171,7 @@ class Econet : public Component {
 	float cc_rel_hum = 0;
 	float cc_blower_cfm = 0;
 	float cc_blower_rpm = 0;
+	float cc_dhumsetp = 0;
 	std::string cc_hvacmode_text = "unknown";
 	std::string cc_automode_text = "unknown";
 	
@@ -192,6 +198,9 @@ class Econet : public Component {
 	
 	bool send_new_setpoint = false;
 	float new_setpoint = 100;
+	
+	bool send_new_dhumsetp = false;
+	float new_dhumsetp = 100;
 	
 	bool send_new_mode = false;
 	float new_mode = 0;
@@ -241,3 +250,4 @@ class EconetClient {
 
 }  // namespace econet
 }  // namespace esphome
+#endif
