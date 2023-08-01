@@ -564,11 +564,11 @@ void Econet::parse_message(bool is_tx)
 		ESP_LOGI("econet", ">>> %s", format_hex_pretty((const uint8_t *) wbuffer, pmsg_len).c_str());
 	}
 	
-	ESP_LOGI("econet", "  Dst Adr : 0x%x", dst_adr);
-	ESP_LOGI("econet", "  Src Adr : 0x%x", src_adr);
-	ESP_LOGI("econet", "  Length  : %d", data_len);
-	ESP_LOGI("econet", "  Command : %d %s", command, this->get_readable_command_name(command).c_str());
-	ESP_LOGI("econet", "  Data    : %s", format_hex_pretty((const uint8_t *) pdata, data_len).c_str());
+//	ESP_LOGI("econet", "  Dst Adr : 0x%x", dst_adr);
+//	ESP_LOGI("econet", "  Src Adr : 0x%x", src_adr);
+//	ESP_LOGI("econet", "  Length  : %d", data_len);
+//	ESP_LOGI("econet", "  Command : %d %s", command, this->get_readable_command_name(command).c_str());
+//	ESP_LOGI("econet", "  Data    : %s", format_hex_pretty((const uint8_t *) pdata, data_len).c_str());
 	
 	// Track Read Requests
 	if(command == READ_COMMAND)
@@ -684,7 +684,7 @@ void Econet::parse_message(bool is_tx)
 
 		if(read_req.dst_adr == src_adr && read_req.src_adr == dst_adr && read_req.awaiting_res == true)
 		{
-	ESP_LOGI("econet", "  Ack     : short: 0x%x:0x%x [%s:%s] %s : %s",src_adr,dst_adr,this->get_readable_hardware_name(src_adr).c_str(),this->get_readable_hardware_name(dst_adr).c_str(),read_req.command_name.c_str(), format_hex_pretty((const uint8_t *) pdata, data_len).c_str());
+	    ESP_LOGI("econet", "  Ack     : short: 0x%x:0x%x [%s:%s] %s : %s",src_adr,dst_adr,this->get_readable_hardware_name(src_adr).c_str(),this->get_readable_hardware_name(dst_adr).c_str(),read_req.command_name.c_str(), format_hex_pretty((const uint8_t *) pdata, data_len).c_str());
 
 			if(read_req.obj_names.size() == 1)
 			{
@@ -1196,67 +1196,44 @@ void Econet::read_buffer(int bytes_available) {
 	{
 		return; 
 	}
-    	ESP_LOGI("econet", "  DBG     : %s",format_hex_pretty((const uint8_t *) bytes, bytes_to_read).c_str());
+    	ESP_LOGI("econet", "-- %s",format_hex_pretty((const uint8_t *) bytes, bytes_to_read).c_str());
 
 
-		ESP_LOGI("econet", "read in ms: %d", millis() -start_read_time);
+	ESP_LOGI("econet", "read in ms: %d", millis() -start_read_time);
 
+  // loop through and process all bytes.  note that a request/response may appear in the same buffer, so they are processed separately.
+  // i refers to position of input buffer.  may contain 0x00's repeated.
+  // pos refers to position in memory buffer of message.
 	for(int i=0;i<bytes_to_read;i++)
 	{
 		uint8_t byte = bytes[i];
-		if(pos == DST_ADR_POS)
+    bool override_pos_to_zero = false;
+		buffer[pos] = byte;
+ 				
+		if(pos == DST_ADR_POS || pos == SRC_ADR_POS)
 		{
-			if(byte == 0x80)
+			if(byte != 0x80)
 			{
-				buffer[pos] = byte;
-				pos++;
-			}
-			else
-			{
-				buffer[pos] = byte;
-				pos++;
-				// Not the byte we are looking for
-				// ESP_LOGI("econet", "<<< %s", format_hex_pretty((const uint8_t *) buffer, pos).c_str());
-				pos = 0;
-			}
-		}
-		else if(pos == SRC_ADR_POS)
-		{
-			if(byte == 0x80)
-			{
-				buffer[pos] = byte;
-				pos++;
-			}
-			else
-			{
-				buffer[pos] = byte;
-				pos++;
 				// Not the byte we are looking for
 				// ESP_LOGI("econet", "<<< %s", format_hex_pretty((const uint8_t *) buffer, pos).c_str());
 				// Not the byte we are looking for	
 				// TODO
 				// Loop through and check if we were off by a couple bytes
-				pos = 0;
+				override_pos_to_zero=true;
 			}
 		}
 		else if(pos == LEN_POS)
 		{
 			data_len = byte;
 			msg_len = data_len + MSG_HEADER_SIZE + MSG_CRC_SIZE;
-			buffer[pos] = byte;
-			pos++;
 		}
-		else
-		{
-			buffer[pos] = byte;
-			pos++;	
-		}
-
+    pos++;
+    if(override_pos_to_zero) pos=0;
 
 		if(pos == msg_len && msg_len != 0 && pos != 0)
 		{
   		ESP_LOGI("econet", "parse in ms: %d", millis() -start_read_time);
-			// We have a full message
+			// We have a full message.  This is where the message get parsed
 			this->parse_rx_message();
 			pos = 0;
 			msg_len = 0;
@@ -1267,7 +1244,7 @@ void Econet::read_buffer(int bytes_available) {
 			ESP_LOGD("econet", "This would have cuased problems");
 		}
 	}
-  		ESP_LOGI("econet", "loop in ms: %d", millis() -start_read_time);
+	ESP_LOGI("econet", "loop in ms: %d", millis() -start_read_time);
 
 }
 void Econet::loop() {
@@ -1294,19 +1271,19 @@ void Econet::loop() {
 		}
 		if (now - this->last_read_data_ > 100)
 		{
-			 ESP_LOGI("econet", "request ms=%d", now);
+			// ESP_LOGI("econet", "request ms=%d", now);
 			
 			// Bus is Assumbed Available For Sending
 			// This currently attempts a request every 1000ms
 			if (now - this->last_request_ > 500)
 			{
-				ESP_LOGI("econet", "request ms=%d", now);
+				// ESP_LOGI("econet", "request ms=%d", now);
 				this->last_request_ = now;
 				this->make_request();
 				req_id++;
 				if(req_id > 1)
 				{
-					ESP_LOGI("econet", "request ms=%d", now);
+				//	ESP_LOGI("econet", "request ms=%d", now);
 					this->last_request_ = now;
 					this->make_request();
 					req_id++;
