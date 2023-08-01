@@ -682,8 +682,9 @@ void Econet::parse_message(bool is_tx)
 	{
 
 
-		if(read_req.dst_adr == src_adr && read_req.src_adr == dst_adr && read_req.awaiting_res == true)
-		{
+		if(read_req.dst_adr == src_adr && read_req.src_adr == dst_adr){
+      if (read_req.awaiting_res == true)
+		  {
 	    ESP_LOGI("econet", "  Ack     : short: 0x%x:0x%x [%s:%s] %s : %s",src_adr,dst_adr,this->get_readable_hardware_name(src_adr).c_str(),this->get_readable_hardware_name(dst_adr).c_str(),read_req.command_name.c_str(), format_hex_pretty((const uint8_t *) pdata, data_len).c_str());
 
 			if(read_req.obj_names.size() == 1)
@@ -783,8 +784,15 @@ void Econet::parse_message(bool is_tx)
 				// ESP_LOGI("econet", "  ValName : %s", read_req.obj_names[a].c_str());
 			// }
 			read_req.awaiting_res = false;			
-		}
-	}
+		  }
+      else {
+	      ESP_LOGI("econet", "  AckMatch: short: 0x%x:0x%x [%s:%s] : %s",src_adr,dst_adr,this->get_readable_hardware_name(src_adr).c_str(),this->get_readable_hardware_name(dst_adr).c_str(),format_hex_pretty((const uint8_t *) pdata, data_len).c_str());
+	    }
+    }
+    else
+    	ESP_LOGI("econet", "  Ack Unk : short: 0x%x:0x%x [%s:%s] : %s",src_adr,dst_adr,this->get_readable_hardware_name(src_adr).c_str(),this->get_readable_hardware_name(dst_adr).c_str(),format_hex_pretty((const uint8_t *) pdata, data_len).c_str());
+    
+  }
 	else if(command == WRITE_COMMAND)
 	{
 		uint8_t type = pdata[0];
