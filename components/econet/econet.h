@@ -8,7 +8,7 @@
 namespace esphome {
 namespace econet {
 
-class ReadRequest {
+class EconetRequest {
 	public:
 		uint32_t dst_adr;
 		uint8_t dst_bus;
@@ -22,7 +22,9 @@ class ReadRequest {
 		std::string command_name;
 		std::vector<std::string> obj_names;
 };
-	
+
+
+
 enum class EconetClimateMode : uint8_t {
   Disabled = '0',
   Auto = '1',
@@ -106,7 +108,7 @@ class Econet : public Component {
  protected:
 	uint8_t type_id_{0};
 	std::vector<DatapointListener> listeners_;
-	ReadRequest read_req; // dst_adr
+	EconetRequest econet_req; // dst_adr
 	// std::vector<ReadRequest> read_reqs_;
 	void dump_state();
 	void check_uart_settings();
