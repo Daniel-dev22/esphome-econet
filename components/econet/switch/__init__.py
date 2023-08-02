@@ -89,5 +89,5 @@ async def to_code(config):
       conf = config[CONF_CC_DHUM_ENABLE_STATE]
       sens = await switch.new_switch(conf)
       await cg.register_component(sens, conf)
-      cg.add(var.set_switch_id(config[CONF_SWITCH_DATAPOINT])) if key == CONF_ENABLE_SWITCH else 1
+      cg.add(var.set_switch_id(1)
       cg.add(sens.set_econet(var))
