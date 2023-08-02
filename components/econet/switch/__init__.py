@@ -23,12 +23,12 @@ EconetSwitch = econet_ns.class_(
 )
 
 CONF_ENABLE_SWITCH = "enable_switch"
-CONF_CC_DHUMEBAB_ENABLE_STATE = "cc_dhumenab_enable_state"
+CONF_CC_DHUM_ENABLE_STATE = "cc_dhum_enable_state"
 CONF_DUMMY_SWITCH = "dummy_switch"
 
 SWITCHES = [
     CONF_ENABLE_SWITCH,
-    CONF_CC_DHUMEBAB_ENABLE_STATE
+    CONF_CC_DHUM_ENABLE_STATE
 ]
 
 CONFIG_SCHEMA = (
@@ -36,7 +36,7 @@ CONFIG_SCHEMA = (
     .extend(
         {
             cv.GenerateID(CONF_ECONET_ID): cv.use_id(Econet),
-            cv.Required(CONF_SWITCH_DATAPOINT): cv.uint8_t,
+            cv.Optional(CONF_SWITCH_DATAPOINT): cv.uint8_t,
         },
         {
             cv.GenerateID(CONF_ECONET_ID): cv.use_id(Econet),
