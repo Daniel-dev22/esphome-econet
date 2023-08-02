@@ -23,7 +23,13 @@ EconetSwitch = econet_ns.class_(
 )
 
 CONF_ENABLE_SWITCH = "enable_switch"
+CONF_CC_DHUMEBAB = "cc_dhumenab"
 CONF_DUMMY_SWITCH = "dummy_switch"
+
+SWITCHES = [
+    CONF_ENABLE_SWITCH,
+    CONF_CC_DHUMENAB
+]
 
 CONFIG_SCHEMA = (
     switch.switch_schema(EconetSwitch)
@@ -31,16 +37,32 @@ CONFIG_SCHEMA = (
         {
             cv.GenerateID(CONF_ECONET_ID): cv.use_id(Econet),
             cv.Required(CONF_SWITCH_DATAPOINT): cv.uint8_t,
+        },
+        {
+            cv.GenerateID(CONF_ECONET_ID): cv.use_id(Econet),
+            cv.Optional(CONF_CC_DHUMENAB): cv.uint8_t,
         }
     )
     .extend(cv.COMPONENT_SCHEMA).extend(cv.polling_component_schema("1s"))
 )
 
-async def to_code(config):
-    """Generate main.cpp code"""
-    var = await switch.new_switch(config)
+#async def to_code(config):
+  #  """Generate main.cpp code"""
+  #  var = await switch.new_switch(config)
     # var = cg.new_Pvariable(config[CONF_ID])
-    await cg.register_component(var, config)
+ #   await cg.register_component(var, config)
+ #   econet_var = await cg.get_variable(config[CONF_ECONET_ID])
+ #   cg.add(var.set_econet(econet_var))
+  #  cg.add(var.set_switch_id(config[CONF_SWITCH_DATAPOINT]))
+
+async def to_code(config):
     econet_var = await cg.get_variable(config[CONF_ECONET_ID])
-    cg.add(var.set_econet(econet_var))
-    cg.add(var.set_switch_id(config[CONF_SWITCH_DATAPOINT]))
+    for key in SWITCHES:
+        if key in config:
+            conf = config[key]
+            var = cg.new_Pvariable(conf[CONF_ID])
+            await cg.register_component(var, conf)
+            await switch.new_switch(conf)
+            #cg.add(getattr(hub, f"set_{key}_number")(var))
+            cg.add(var.set_switch_id(config[CONF_SWITCH_DATAPOINT])) if key == CONF_ENABLE_SWITCH else ''
+            cg.add(var.set_econet(econet_var))
