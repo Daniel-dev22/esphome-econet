@@ -1591,7 +1591,7 @@ void Econet::set_new_dhumsetp(float setpoint)
 	new_dhumsetp = setpoint;
 }
 
-void Econet::set_cc_dhum_enable_state(bool state)
+void Econet::set_dhum_enable_state(bool state)
 {
 	if(state)
 	{
