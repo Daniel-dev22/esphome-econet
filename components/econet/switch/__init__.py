@@ -55,6 +55,7 @@ ECONET_SWITCH_SCHEMA = switch.switch_schema(EconetSwitch).extend(
 
 CONFIG_SCHEMA = ECONET_CLIENT_SCHEMA.extend(
     {
+        cv.Optional(CONF_ENABLE_SWITCH): ECONET_SWITCH_SCHEMA,
         cv.Optional(CONF_CC_DHUM_ENABLE_STATE): ECONET_SWITCH_SCHEMA,
         #cv.Optional(CONF_CC_SOMETHING): ECONET_NUMBER_SCHEMA,
     }
@@ -76,7 +77,9 @@ async def to_code(config):
             conf = config[key]
             var = cg.new_Pvariable(conf[CONF_ID])
             await cg.register_component(var, conf)
-            await switch.new_switch(conf)
+            sens = await switch.new_switch(conf)
             #cg.add(getattr(hub, f"set_{key}_number")(var))
             cg.add(var.set_switch_id(config[CONF_SWITCH_DATAPOINT])) if key == CONF_ENABLE_SWITCH else ''
-            cg.add(var.set_econet(econet_var))
+            cg.add(sens.set_econet(econet_var))
+            #cg.add(getattr(econet_var, f"set_{key}_switch")(var))
+            
