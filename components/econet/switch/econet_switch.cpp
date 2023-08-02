@@ -7,13 +7,13 @@ static const char *const TAG = "econet.switch";
 	
 void EconetSwitch::update() {
 	if(this->econet->get_type_id() == 1)
-		return;
-	
-	this->publish_state(this->econet->get_enable_state());
+	{
+		this->publish_state(this->econet->get_enable_state());
+	}
 	else if(this->econet->get_type_id() == 2)
-		return;
-	
-	this->publish_state(this->econet->get_cc_dhum_enable_state());
+	{
+		this->publish_state(this->econet->get_cc_dhum_enable_state());
+	}
 }
 void EconetSwitch::write_state(bool state) {
 	ESP_LOGD("econet", "write_state");
