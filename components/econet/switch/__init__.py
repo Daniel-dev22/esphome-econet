@@ -23,7 +23,7 @@ EconetSwitch = econet_ns.class_(
 )
 
 CONF_ENABLE_SWITCH = "enable_switch"
-CONF_CC_DHUMEBAB = "cc_dhumenab"
+CONF_CC_DHUMEBAB_ENABLE_STATE = "cc_dhumenab_enable_state"
 CONF_DUMMY_SWITCH = "dummy_switch"
 
 SWITCHES = [
