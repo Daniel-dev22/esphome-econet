@@ -85,7 +85,7 @@ CONFIG_SCHEMA = ECONET_CLIENT_SCHEMA.extend(
 async def to_code(config): 
     var = await cg.get_variable(config[CONF_ECONET_ID])
     
-    if CONF_CC_DHUMSETP in config:
+    if CONF_CC_DHUM_ENABLE_STATE in config:
       conf = config[CONF_CC_DHUM_ENABLE_STATE]
       sens = await switch.new_switch(conf)
       await cg.register_component(sens, conf)
