@@ -31,19 +31,33 @@ SWITCHES = [
     CONF_CC_DHUM_ENABLE_STATE
 ]
 
-CONFIG_SCHEMA = (
-    switch.switch_schema(EconetSwitch)
-    .extend(
-        {
-            cv.GenerateID(CONF_ECONET_ID): cv.use_id(Econet),
-            cv.Optional(CONF_SWITCH_DATAPOINT): cv.uint8_t,
-        },
-        {
-            cv.GenerateID(CONF_ECONET_ID): cv.use_id(Econet),
-            cv.Optional(CONF_CC_DHUM_ENABLE_STATE): cv.string,
-        }
+#CONFIG_SCHEMA = (
+   # switch.switch_schema(EconetSwitch)
+  #  .extend(
+   #     {
+  #          cv.GenerateID(CONF_ECONET_ID): cv.use_id(Econet),
+  #          cv.Optional(CONF_SWITCH_DATAPOINT): cv.uint8_t,
+   #     },
+  #      {
+  #          cv.GenerateID(CONF_ECONET_ID): cv.use_id(Econet),
+   #         cv.Optional(CONF_CC_DHUM_ENABLE_STATE): cv.string,
+  #      }
     )
-    .extend(cv.COMPONENT_SCHEMA).extend(cv.polling_component_schema("1s"))
+  #  .extend(cv.COMPONENT_SCHEMA).extend(cv.polling_component_schema("1s"))
+#)
+
+ECONET_SWITCH_SCHEMA = switch.switch_schema(EconetSwitch).extend( 
+    { 
+        cv.Optional(CONF_SWITCH_DATAPOINT): cv.uint8_t, 
+        
+    }
+)
+
+CONFIG_SCHEMA = ECONET_CLIENT_SCHEMA.extend(
+    {
+        cv.Optional(CONF_CC_DHUM_ENABLE_STATE): ECONET_SWITCH_SCHEMA,
+        #cv.Optional(CONF_CC_SOMETHING): ECONET_NUMBER_SCHEMA,
+    }
 )
 
 #async def to_code(config):
