@@ -27,7 +27,7 @@ CONF_CC_DHUM_ENABLE_STATE = "cc_dhum_enable_state"
 CONF_DUMMY_SWITCH = "dummy_switch"
 
 SWITCHES = [
-    CONF_ENABLE_SWITCH,
+    #CONF_ENABLE_SWITCH,
     CONF_CC_DHUM_ENABLE_STATE
 ]
 
