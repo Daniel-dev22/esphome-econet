@@ -103,6 +103,7 @@ class Econet : public Component {
 	float get_cc_blower_cfm() { return this->cc_blower_cfm; }
 	float get_cc_blower_rpm() { return this->cc_blower_rpm; }
 	float get_cc_dhumsetp() { return this->cc_dhumsetp; }
+	bool get_cc_dhum_enable_state() { return this->cc_dhum_enable_state; }
 	std::string get_cc_hvacmode_text() { return this->cc_hvacmode_text; }
 	std::string get_cc_automode_text() { return this->cc_automode_text; }
 
@@ -172,6 +173,7 @@ class Econet : public Component {
 	float cc_blower_cfm = 0;
 	float cc_blower_rpm = 0;
 	float cc_dhumsetp = 0;
+	bool cc_dhum_enable_state = false;
 	std::string cc_hvacmode_text = "unknown";
 	std::string cc_automode_text = "unknown";
 	
@@ -207,6 +209,9 @@ class Econet : public Component {
 	
 	bool send_new_fan_mode = false;
 	float new_fan_mode = 0;
+
+	bool send_dhum_enable_disable = false;	
+	bool dhum_enable_disable_cmd = false;
 	
 	uint8_t wbuffer[max_message_size];
 	uint16_t wmsg_len = 0;

@@ -227,6 +227,10 @@ void Econet::handle_enumerated_text(uint32_t src_adr, std::string obj_string, ui
 		{
 			cc_fan_mode = value;
 		}
+		else if(obj_string == "DHUMENAB")
+		{
+			cc_dhum_enable_state = value == 1;
+		}
 	}
 }
 void Econet::handle_text(uint32_t src_adr, std::string obj_string, std::string text)
@@ -393,6 +397,12 @@ void Econet::make_request()
 		}
 		
 		send_new_dhumsetp = false;
+	}
+	else if(send_dhum_enable_disable == true)
+	{
+		this->write_value(dst_adr, src_adr, "DHUMENAB", ENUM_TEXT, static_cast<float>(dhum_enable_disable_cmd));
+		
+		send_dhum_enable_disable = false;
 	}
 	else
 	{
@@ -1580,6 +1590,21 @@ void Econet::set_new_dhumsetp(float setpoint)
 	send_new_dhumsetp = true;
 	new_dhumsetp = setpoint;
 }
+
+void Econet::set_cc_dhum_enable_state(bool state)
+{
+	if(state)
+	{
+		this->send_dhum_enable_disable = true;
+		this->dhum_enable_disable_cmd = true;
+	}
+	else
+	{
+		this->send_dhum_enable_disable = true;
+		this->dhum_enable_disable_cmd = false;
+	}
+}
+
 void Econet::dump_state() {
   
 }
