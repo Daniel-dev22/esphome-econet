@@ -40,7 +40,7 @@ CONFIG_SCHEMA = (
         },
         {
             cv.GenerateID(CONF_ECONET_ID): cv.use_id(Econet),
-            cv.Optional(CONF_CC_DHUMENAB): cv.uint8_t,
+            cv.Optional(CONF_CC_DHUMEBAB_ENABLE_STATE): cv.uint8_t,
         }
     )
     .extend(cv.COMPONENT_SCHEMA).extend(cv.polling_component_schema("1s"))
