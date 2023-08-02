@@ -42,7 +42,7 @@ SWITCHES = [
   #          cv.GenerateID(CONF_ECONET_ID): cv.use_id(Econet),
    #         cv.Optional(CONF_CC_DHUM_ENABLE_STATE): cv.string,
   #      }
-    )
+   # )
   #  .extend(cv.COMPONENT_SCHEMA).extend(cv.polling_component_schema("1s"))
 #)
 
