@@ -76,8 +76,8 @@ async def to_code(config):
     for key in SWITCHES:
         if key in config:
             conf = config[key]
-            #var = cg.new_Pvariable(conf[CONF_ID])
-            #await cg.get_variable(config[CONF_ECONET_ID])
+            var = cg.new_Pvariable(conf[CONF_ID])
+            #var = await cg.get_variable(config[CONF_ECONET_ID])
             sens = await switch.new_switch(conf)
             await cg.register_component(var, conf)
             cg.add(sens.set_econet(var))
