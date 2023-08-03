@@ -209,7 +209,6 @@ class Econet : public Component {
 	
 	uint32_t COMPUTER =      				192	;	// 80 00 00 C0
 	uint32_t FURNACE = 						0x1c0;	// 80 00 01 C0
-	uint32_t UNKNOWN_HANDLER =  			241	;	// 80 00 00 F1
 	uint32_t WIFI_MODULE =    				832	;	// 80 00 03 40
 	uint32_t SMARTEC_TRANSLATOR = 			4160;	// 80 00 10 40
 	uint32_t INTERNAL = 					4736; 	// 80 00 10 40
@@ -219,6 +218,8 @@ class Econet : public Component {
 	uint32_t ZONE_THERMOSTAT_2 =            0x680;
 	uint32_t ZONE_THERMOSTAT_3 =            0x681;
 	uint32_t ZONE_CONTROL =                 0x540;
+	uint32_t BROADCAST =                    0xf1;
+	
 	// uint32_t UNKNOWN =                      0x600;
 
 	uint8_t DST_ADR_POS = 0;

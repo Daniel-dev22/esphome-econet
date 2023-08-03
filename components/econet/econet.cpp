@@ -466,7 +466,6 @@ void Econet::parse_rx_message()
 std::string Econet::get_readable_hardware_name(uint32_t device){
   if(device == COMPUTER) return "COMPUTER";
   else if (device == FURNACE) return "FURNACE";
-  else if (device == UNKNOWN_HANDLER) return "UNKNOWN_HANDLER";
   else if (device == WIFI_MODULE) return "WIFI_MODULE";
   else if (device == SMARTEC_TRANSLATOR ) return "SMARTEC_TRANSLATOR";
   else if (device == INTERNAL  		) return	         "INTERNAL";  			          
@@ -476,6 +475,7 @@ std::string Econet::get_readable_hardware_name(uint32_t device){
   else if (device == ZONE_THERMOSTAT_2) return     "ZONE_THERMOSTAT_2";  
   else if (device == ZONE_THERMOSTAT_3) return    "ZONE_THERMOSTAT_3"  ;   
   else if (device == ZONE_CONTROL) return "ZONE_CONTROL"     ;
+  else if (device == BROADCAST) return "BROADCAST"     ;
   else return "UNKNOWN";
   // else if (device == UNKNOWN) return               "UNKNOWN"  ;
 
@@ -1052,12 +1052,12 @@ void Econet::parse_message(bool is_tx)
 		}
 		// publish_state(format_hex_pretty((const uint8_t *) buffer, msg_len));
 	}
-	else if(dst_adr == UNKNOWN_HANDLER)
+	else if(dst_adr == BROADCAST)
 	{
 		// Filter these for now
 		recognized = false;
 	}
-	else if(src_adr == UNKNOWN_HANDLER)
+	else if(src_adr == BROADCAST)
 	{
 		// Filter these for now
 		recognized = false;
