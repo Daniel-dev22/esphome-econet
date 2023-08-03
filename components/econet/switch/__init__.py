@@ -33,20 +33,6 @@ SWITCHES = [
     CONF_CC_DHUM_ENABLE_STATE
 ]
 
-#CONFIG_SCHEMA = (
-   # switch.switch_schema(EconetSwitch)
-  #  .extend(
-   #     {
-  #          cv.GenerateID(CONF_ECONET_ID): cv.use_id(Econet),
-  #          cv.Optional(CONF_SWITCH_DATAPOINT): cv.uint8_t,
-   #     },
-  #      {
-  #          cv.GenerateID(CONF_ECONET_ID): cv.use_id(Econet),
-   #         cv.Optional(CONF_CC_DHUM_ENABLE_STATE): cv.string,
-  #      }
-   # )
-  #  .extend(cv.COMPONENT_SCHEMA).extend(cv.polling_component_schema("1s"))
-#)
 
 ECONET_SWITCH_SCHEMA = switch.switch_schema(EconetSwitch).extend( 
     { 
@@ -64,14 +50,6 @@ CONFIG_SCHEMA = (
     )
     .extend(cv.COMPONENT_SCHEMA).extend(cv.polling_component_schema("5s"))
 )
-#async def to_code(config):
-  #  """Generate main.cpp code"""
-  #  var = await switch.new_switch(config)
-    # var = cg.new_Pvariable(config[CONF_ID])
- #   await cg.register_component(var, config)
- #   econet_var = await cg.get_variable(config[CONF_ECONET_ID])
- #   cg.add(var.set_econet(econet_var))
-  #  cg.add(var.set_switch_id(config[CONF_SWITCH_DATAPOINT]))
 
 #async def to_code(config):
    # econet_id = await cg.get_variable(config[CONF_ECONET_ID])
