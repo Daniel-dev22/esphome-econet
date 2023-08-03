@@ -177,6 +177,11 @@ class Econet : public Component {
 	float cc_blower_cfm = 0;
 	float cc_blower_rpm = 0;
 	float cc_dhumsetp = 0;
+	float cc_outdoor_air_temp = 0;
+    bool cc_dehumidifier_enabled = false;
+	float cc_dehumidifier_drain = 0.0;
+
+
 	std::string cc_hvacmode_text = "unknown";
 	std::string cc_automode_text = "unknown";
 	

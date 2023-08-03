@@ -170,10 +170,11 @@ void Econet::handle_float(uint32_t src_adr, std::string obj_string, float value)
 			cc_dhumsetp = value;
 			ESP_LOGI("econet", "  DHUMSETPCONFRIMED : %f ", cc_dhumsetp);
 		}
-    else if (obj_string == "DHUMENAB")
-    {
-      // cc_dhumenab = value; // boolean 1/0
-    }
+    else if (obj_string == "OAT_TEMP")
+       cc_outdoor_air_temp = value;
+    else if (obj_string == "DH_DRAIN")
+       cc_dehumidifier_drain = value;
+
     else{
    		ESP_LOGI("econet", "  %s : not supported yet", obj_string.c_str());
 
@@ -243,6 +244,9 @@ void Econet::handle_enumerated_text(uint32_t src_adr, std::string obj_string, ui
 		{
 			cc_fan_mode = value;
 		}
+    else if (obj_string == "DHUMENAB")
+			cc_dehumidifier_enabled = value == 1;
+      
 else
     		ESP_LOGI("econet", "  %s : not supported yet", obj_string.c_str());
 
