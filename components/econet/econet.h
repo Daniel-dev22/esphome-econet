@@ -8,7 +8,7 @@
 namespace esphome {
 namespace econet {
 
-class ReadRequest {
+class EconetRequest {
 	public:
 		uint32_t dst_adr;
 		uint8_t dst_bus;
@@ -19,10 +19,12 @@ class ReadRequest {
 		bool awaiting_res = false;
 		// uint8_t read_class;
 		// uint8_t read_prop;
-		
+		std::string command_name;
 		std::vector<std::string> obj_names;
 };
-	
+
+
+
 enum class EconetClimateMode : uint8_t {
   Disabled = '0',
   Auto = '1',
@@ -106,7 +108,7 @@ class Econet : public Component {
  protected:
 	uint8_t type_id_{0};
 	std::vector<DatapointListener> listeners_;
-	ReadRequest read_req; // dst_adr
+	EconetRequest econet_req; // dst_adr
 	// std::vector<ReadRequest> read_reqs_;
 	void dump_state();
 	void check_uart_settings();
@@ -123,7 +125,10 @@ class Econet : public Component {
 	void transmit_message(uint32_t dst_adr, uint32_t src_adr, uint8_t command, std::vector<uint8_t> data);
 	void request_strings(uint32_t dst_adr, uint32_t src_adr, std::vector<std::string> objects);
 	void write_value(uint32_t dst_adr, uint32_t src_adr, std::string object, uint8_t type, float value);
-	
+	std::string get_readable_hardware_name(uint32_t device);
+	std::string get_readable_command_name(uint8_t command);
+
+
 	uart::UARTComponent *econet_uart{nullptr};
 	bool ready = true;
 	
@@ -211,6 +216,10 @@ class Econet : public Component {
 	uint32_t HEAT_PUMP_WATER_HEATER =       0x1280; // 80 00 12 80
 	uint32_t AIR_HANDLER = 					0x3c0;	// 80 00 03 C0
 	uint32_t CONTROL_CENTER = 				0x380;	// 80 00 03 80
+	uint32_t ZONE_THERMOSTAT_2 =            0x680;
+	uint32_t ZONE_THERMOSTAT_3 =            0x681;
+	uint32_t ZONE_CONTROL =                 0x540;
+	// uint32_t UNKNOWN =                      0x600;
 
 	uint8_t DST_ADR_POS = 0;
 	uint8_t SRC_ADR_POS = 5;

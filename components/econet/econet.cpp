@@ -236,6 +236,12 @@ void Econet::handle_text(uint32_t src_adr, std::string obj_string, std::string t
 	}
 
 }
+
+uint16_t convert_vector_to_uint16(uint16_t pos, std::vector<uint8_t> data)
+{
+  return (((uint16_t)data[pos]) * 256) + data[pos+1];
+}
+
 void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector<uint8_t> data)
 {
 	if(src_adr == 0x1c0)
@@ -246,12 +252,20 @@ void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector
 			// data[1 - 10] = 0
 			uint8_t heatcmd = data[11]; // 0 to 100 [0, 70, 100]
 			uint8_t coolcmd = data[12]; // [0, 2] Maybe 1 for 1st Stage?
-			uint16_t fan_cfm = (((uint16_t)data[13]) * 256) + data[14];
-			
+			uint16_t fan_cfm = convert_vector_to_uint16(13,data);
+			uint16_t fan_rpm = convert_vector_to_uint16(17,data);
+      uint16_t max_cfm = convert_vector_to_uint16(41,data);
+
 			ESP_LOGI("econet", "  HeatCmd : %d %", heatcmd);
 			ESP_LOGI("econet", "  CoolCmd : %d %", coolcmd);
 			
-			ESP_LOGI("econet", "  FanCFM? : %d cfm", fan_cfm);
+			ESP_LOGI("econet", "  FanCFM  : %d cfm", fan_cfm);
+ 			ESP_LOGI("econet", "  FanRPM  : %d rpm", fan_rpm);
+ 			ESP_LOGI("econet", "  MaxCFM  : %d cfm", max_cfm);
+
+      ESP_LOGI("econet", "  MaxCFM  : %d cfm", max_cfm);
+
+
 		}
 	}
 	else if(src_adr == 0x3c0)
@@ -449,6 +463,30 @@ void Econet::parse_rx_message()
 {
 	this->parse_message(false);
 }
+std::string Econet::get_readable_hardware_name(uint32_t device){
+  if(device == COMPUTER) return "COMPUTER";
+  else if (device == FURNACE) return "FURNACE";
+  else if (device == UNKNOWN_HANDLER) return "UNKNOWN_HANDLER";
+  else if (device == WIFI_MODULE) return "WIFI_MODULE";
+  else if (device == SMARTEC_TRANSLATOR ) return "SMARTEC_TRANSLATOR";
+  else if (device == INTERNAL  		) return	         "INTERNAL";  			          
+  else if (device == HEAT_PUMP_WATER_HEATER) return "HEAT_PUMP_WATER_HEATER";
+  else if (device == AIR_HANDLER ) return			     "AIR_HANDLER";
+  else if (device == CONTROL_CENTER) return 	   "CONTROL_CENTER"; 		      
+  else if (device == ZONE_THERMOSTAT_2) return     "ZONE_THERMOSTAT_2";  
+  else if (device == ZONE_THERMOSTAT_3) return    "ZONE_THERMOSTAT_3"  ;   
+  else if (device == ZONE_CONTROL) return "ZONE_CONTROL"     ;
+  else return "UNKNOWN";
+  // else if (device == UNKNOWN) return               "UNKNOWN"  ;
+
+  }
+std::string Econet::get_readable_command_name(uint8_t command){
+  if(command == ACK) return "ACK  ";
+  else if (command == READ_COMMAND) return "READ ";
+  else if (command == WRITE_COMMAND) return "WRITE";
+  else return "UNK  ";
+  }
+
 void Econet::parse_message(bool is_tx)
 {     
 	bool logvals = true;
@@ -529,21 +567,25 @@ void Econet::parse_message(bool is_tx)
 	ESP_LOGI("econet", "  Dst Adr : 0x%x", dst_adr);
 	ESP_LOGI("econet", "  Src Adr : 0x%x", src_adr);
 	ESP_LOGI("econet", "  Length  : %d", data_len);
-	ESP_LOGI("econet", "  Command : %d", command);
+	ESP_LOGI("econet", "  Command : %d %s", command, this->get_readable_command_name(command).c_str());
 	ESP_LOGI("econet", "  Data    : %s", format_hex_pretty((const uint8_t *) pdata, data_len).c_str());
 	
 	// Track Read Requests
+  // TODO write requests also need tracking.  seems like the econet_req isn't fully reset after a match is found.
 	if(command == READ_COMMAND)
 	{
-		uint8_t type = pdata[0];
+		uint8_t class_type= pdata[0];
 		uint8_t prop_type = pdata[1];
-		
-		ESP_LOGI("econet", "  Type    : %d", type);
+
+
+  	ESP_LOGI("econet", "  Read    : short: 0x%x:0x%x [%s:%s] : %s",src_adr,dst_adr,this->get_readable_hardware_name(src_adr).c_str(),this->get_readable_hardware_name(dst_adr).c_str(),format_hex_pretty((const uint8_t *) pdata, data_len).c_str());
+
+		ESP_LOGI("econet", "  CType   : %d", class_type);
 		ESP_LOGI("econet", "  PropType: %d", prop_type);
 		
 		std::vector<std::string> obj_names;
 		
-		if(type == 1)
+		if(class_type == 1)
 		{
 			if(prop_type == 1)
 			{
@@ -556,24 +598,26 @@ void Econet::parse_message(bool is_tx)
 				}
 
 				std::string s(char_arr, sizeof(char_arr));
-
+        econet_req.command_name = s.c_str();
 				obj_names.push_back(s);
 
 				ESP_LOGI("econet", "  %s", s.c_str());
 			}
 			else
 			{
+        econet_req.command_name = "UNSUPPORTED";
 				ESP_LOGI("econet", "  Don't Currently Support This Property Type", prop_type);
 			}
-			read_req.dst_adr = dst_adr;
-			read_req.src_adr = src_adr;
-			read_req.obj_names = obj_names;
-			read_req.awaiting_res = true;
+			econet_req.dst_adr = dst_adr;
+			econet_req.src_adr = src_adr;
+			econet_req.obj_names = obj_names;
+			econet_req.awaiting_res = true;
 		}
-		else if(type == 2)
+		else if(class_type == 2)
 		{
 			if(prop_type == 1)
 			{
+        econet_req.command_name = "READ";
 				int start = 4;
 				int end = -1;
 				int str_len = -1;
@@ -620,27 +664,30 @@ void Econet::parse_message(bool is_tx)
 				ESP_LOGI("econet", "  Don't Currently Support This Property Type", prop_type);
 			}
 			
-			read_req.dst_adr = dst_adr;
-			read_req.src_adr = src_adr;
-			read_req.obj_names = obj_names;
-			read_req.awaiting_res = true;
+			econet_req.dst_adr = dst_adr;
+			econet_req.src_adr = src_adr;
+			econet_req.obj_names = obj_names;
+			econet_req.awaiting_res = true;
 		}
 		else
 		{
-			ESP_LOGI("econet", "  Don't Currently Support This Class Type", type);
+			ESP_LOGI("econet", "  Don't Currently Support This Class Type", class_type);
 		}
 		// tuple<uint32_t, uint32_t> req_tup(dst_adr,src_adr);
 		
-		// read_reqs
+		// econet_reqs
 		// This is a read request so let's track it so that when an ACK/response comes to this we know what data it is!
 		// for(
-		// read_reqs_
+		// econet_reqs_
 	}
 	else if(command == ACK)
 	{
-		if(read_req.dst_adr == src_adr && read_req.src_adr == dst_adr && read_req.awaiting_res == true)
-		{
-			if(read_req.obj_names.size() == 1)
+		if(econet_req.dst_adr == src_adr && econet_req.src_adr == dst_adr){
+      if (econet_req.awaiting_res == true)
+		  {
+	    ESP_LOGI("econet", "  Ack     : short: 0x%x:0x%x [%s:%s] %s : %s",src_adr,dst_adr,this->get_readable_hardware_name(src_adr).c_str(),this->get_readable_hardware_name(dst_adr).c_str(),econet_req.command_name.c_str(), format_hex_pretty((const uint8_t *) pdata, data_len).c_str());
+
+			if(econet_req.obj_names.size() == 1)
 			{
 				uint8_t item_type = pdata[0] & 0x7F;
 				if(item_type == 4)
@@ -651,7 +698,7 @@ void Econet::parse_message(bool is_tx)
 					{
 						dest.push_back(pdata[i]);
 					}
-					handle_binary(src_adr, read_req.obj_names[0], dest);
+					handle_binary(src_adr, econet_req.obj_names[0], dest);
 				}
 			}
 			else
@@ -668,10 +715,10 @@ void Econet::parse_message(bool is_tx)
 					{
 						float item_value = bytesToFloat(pdata[tpos+4],pdata[tpos+5],pdata[tpos+6],pdata[tpos+7]);
 						
-						if(item_num < read_req.obj_names.size())
+						if(item_num < econet_req.obj_names.size())
 						{
-							handle_float(src_adr, read_req.obj_names[item_num], item_value);
-							ESP_LOGI("econet", "  %s : %f", read_req.obj_names[item_num].c_str(), item_value);
+							handle_float(src_adr, econet_req.obj_names[item_num], item_value);
+							ESP_LOGI("econet", "  %s : %f", econet_req.obj_names[item_num].c_str(), item_value);
 						}
 					}
 					else if(item_type == 1)
@@ -692,10 +739,10 @@ void Econet::parse_message(bool is_tx)
 							
 							std::string s(char_arr, sizeof(char_arr));
 							
-							if(item_num < read_req.obj_names.size())
+							if(item_num < econet_req.obj_names.size())
 							{
-								handle_text(src_adr, read_req.obj_names[item_num], s);
-								ESP_LOGI("econet", "  %s : (%s)", read_req.obj_names[item_num].c_str(), s.c_str());
+								handle_text(src_adr, econet_req.obj_names[item_num], s);
+								ESP_LOGI("econet", "  %s : (%s)", econet_req.obj_names[item_num].c_str(), s.c_str());
 							}
 						}
 					}
@@ -719,10 +766,10 @@ void Econet::parse_message(bool is_tx)
 							}
 
 							std::string s(char_arr, sizeof(char_arr));
-							if(item_num < read_req.obj_names.size())
+							if(item_num < econet_req.obj_names.size())
 							{
-								handle_enumerated_text(src_adr, read_req.obj_names[item_num], item_value, s);
-								ESP_LOGI("econet", "  %s : %d (%s)", read_req.obj_names[item_num].c_str(), item_value, s.c_str());
+								handle_enumerated_text(src_adr, econet_req.obj_names[item_num], item_value, s);
+								ESP_LOGI("econet", "  %s : %d (%s)", econet_req.obj_names[item_num].c_str(), item_value, s.c_str());
 							}
 						}
 					}
@@ -732,22 +779,50 @@ void Econet::parse_message(bool is_tx)
 			}
 			// This is likely the response to our request and now we "know" what was requested!
 			// ESP_LOGI("econet", "  RESPONSE RECEIVED!!!");
-			// for(int a = 0; a < read_req.obj_names.size(); a++)
+			// for(int a = 0; a < econet_req.obj_names.size(); a++)
 			// {
-				// ESP_LOGI("econet", "  ValName : %s", read_req.obj_names[a].c_str());
+				// ESP_LOGI("econet", "  ValName : %s", econet_req.obj_names[a].c_str());
 			// }
-			read_req.awaiting_res = false;			
-		}
-	}
+			econet_req.awaiting_res = false;			
+		  }
+      else {
+	      ESP_LOGI("econet", "  AckMatch: short: 0x%x:0x%x [%s:%s] : %s",src_adr,dst_adr,this->get_readable_hardware_name(src_adr).c_str(),this->get_readable_hardware_name(dst_adr).c_str(),format_hex_pretty((const uint8_t *) pdata, data_len).c_str());
+	    }
+    }
+    else
+    	ESP_LOGI("econet", "  Ack Unk : short: 0x%x:0x%x [%s:%s] : %s",src_adr,dst_adr,this->get_readable_hardware_name(src_adr).c_str(),this->get_readable_hardware_name(dst_adr).c_str(),format_hex_pretty((const uint8_t *) pdata, data_len).c_str());
+    
+  }
 	else if(command == WRITE_COMMAND)
 	{
-		uint8_t type = pdata[0];
+
+		econet_req.dst_adr = dst_adr;
+		econet_req.src_adr = src_adr;
+		std::vector<std::string> obj_names;
+		econet_req.obj_names = obj_names;
+
+		// econet_req.awaiting_res = true;
+
+		uint8_t class_type= pdata[0];
 		uint8_t prop_type = pdata[1];
-		
-		ESP_LOGI("econet", "  ClssType: %d", type);
+    // uint8_t pdata_withouttypes[255];
+
+		// 		for (int a = 0; a < data_len ; a++) {
+		// 			pdata_withouttypes[a] = pdata[a+2];
+		// 		}
+    
+  	// ESP_LOGI("econet", "  Write   : short: 0x%x:0x%x [%s:%s] [ct:%d,pt:%d]: %s",src_adr,dst_adr,
+    //     class_type, prop_type,
+    //     this->get_readable_hardware_name(src_adr).c_str(),
+    //     this->get_readable_hardware_name(dst_adr).c_str(),
+    //     format_hex_pretty((const uint8_t *) pdata_withouttypes, data_len-2).c_str());
+
+  	ESP_LOGI("econet", "  Write   : short: 0x%x:0x%x [%s:%s] : %s",src_adr,dst_adr,this->get_readable_hardware_name(src_adr).c_str(),this->get_readable_hardware_name(dst_adr).c_str(),format_hex_pretty((const uint8_t *) pdata, data_len).c_str());
+
+		ESP_LOGI("econet", "  ClssType: %d", class_type);
 		ESP_LOGI("econet", "  PropType: %d", prop_type);
 		
-		if(type == 1)
+		if(class_type == 1)
 		{
 			// WRITE DATA
 			uint8_t datatype = pdata[2];
@@ -811,12 +886,12 @@ void Econet::parse_message(bool is_tx)
 				ESP_LOGI("econet", "  DataType: %d", datatype);
 			}
 		}
-		else if(type == 7)
+		else if(class_type == 7)
 		{
 			// TIME AND DATA	
 		}
 		
-		else if(type == 9)
+		else if(class_type == 9)
 		{
 			// SYSTEM HANDLER - LISTING OF ADDRESSES ON BUS	
 			// 09.01.00.00.03.80.00.00.03.40.00.00.05.00
@@ -1001,10 +1076,10 @@ void Econet::parse_message(bool is_tx)
 			if(command == 30)
 			{
 				// READ
-				uint8_t type = pdata[0];
-				ESP_LOGI("econet", "  Type    : %d", type);
+				uint8_t class_type= pdata[0];
+				ESP_LOGI("econet", "  class_type   : %d", class_type);
 
-				if(type == 1)
+				if(class_type == 1)
 				{
 					char char_arr[data_len - 6];
 
@@ -1016,7 +1091,7 @@ void Econet::parse_message(bool is_tx)
 
 					ESP_LOGD("econet", "  ValName : %s", s.c_str());
 				}
-				else if(type == 2)
+				else if(class_type == 2)
 				{
 					int tpos = 0;
 					uint8_t item_num = 1;
@@ -1067,15 +1142,15 @@ void Econet::parse_message(bool is_tx)
 			{
 				// ACK
 
-				uint8_t type = pdata[0] & 0x7F;
+				uint8_t class_type= pdata[0] & 0x7F;
 
 				// 
-				if(type == 0)
+				if(class_type == 0)
 				{
 					float item_value = bytesToFloat(pdata[11],pdata[12],pdata[13],pdata[14]);
 					ESP_LOGD("econet", "  ItemVal : %f", item_value);
 				}
-				else if(type == 2)
+				else if(class_type == 2)
 				{
 					int tpos = 0;
 					uint8_t item_num = 1;
@@ -1143,66 +1218,50 @@ void Econet::read_buffer(int bytes_available) {
 
 	uint8_t bytes[bytes_to_read];
 
+	uint32_t start_read_time = millis();
 	// Read multiple bytes at the same time
 	if(econet_uart->read_array(bytes,bytes_to_read) == false)
 	{
 		return; 
 	}
+    	ESP_LOGI("econet", "-- %s",format_hex_pretty((const uint8_t *) bytes, bytes_to_read).c_str());
 
+
+	ESP_LOGI("econet", "read in ms: %d", millis() -start_read_time);
+
+  // loop through and process all bytes.  note that a request/response may appear in the same buffer, so they are processed separately.
+  // i refers to position of input buffer.  may contain 0x00's repeated.
+  // pos refers to position in memory buffer of message.
 	for(int i=0;i<bytes_to_read;i++)
 	{
 		uint8_t byte = bytes[i];
-		if(pos == DST_ADR_POS)
+    bool override_pos_to_zero = false;
+		buffer[pos] = byte;
+ 				
+		if(pos == DST_ADR_POS || pos == SRC_ADR_POS)
 		{
-			if(byte == 0x80)
+			if(byte != 0x80)
 			{
-				buffer[pos] = byte;
-				pos++;
-			}
-			else
-			{
-				buffer[pos] = byte;
-				pos++;
-				// Not the byte we are looking for
-				// ESP_LOGI("econet", "<<< %s", format_hex_pretty((const uint8_t *) buffer, pos).c_str());
-				pos = 0;
-			}
-		}
-		else if(pos == SRC_ADR_POS)
-		{
-			if(byte == 0x80)
-			{
-				buffer[pos] = byte;
-				pos++;
-			}
-			else
-			{
-				buffer[pos] = byte;
-				pos++;
 				// Not the byte we are looking for
 				// ESP_LOGI("econet", "<<< %s", format_hex_pretty((const uint8_t *) buffer, pos).c_str());
 				// Not the byte we are looking for	
 				// TODO
 				// Loop through and check if we were off by a couple bytes
-				pos = 0;
+				override_pos_to_zero=true;
 			}
 		}
 		else if(pos == LEN_POS)
 		{
 			data_len = byte;
 			msg_len = data_len + MSG_HEADER_SIZE + MSG_CRC_SIZE;
-			buffer[pos] = byte;
-			pos++;
 		}
-		else
-		{
-			buffer[pos] = byte;
-			pos++;	
-		}
+    pos++;
+    if(override_pos_to_zero) pos=0;
 
 		if(pos == msg_len && msg_len != 0 && pos != 0)
 		{
-			// We have a full message
+  		ESP_LOGI("econet", "parse in ms: %d", millis() -start_read_time);
+			// We have a full message.  This is where the message get parsed
 			this->parse_rx_message();
 			pos = 0;
 			msg_len = 0;
@@ -1213,6 +1272,8 @@ void Econet::read_buffer(int bytes_available) {
 			ESP_LOGD("econet", "This would have cuased problems");
 		}
 	}
+	ESP_LOGI("econet", "loop in ms: %d", millis() -start_read_time);
+
 }
 void Econet::loop() {
 	const uint32_t now = millis();
