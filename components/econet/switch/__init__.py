@@ -27,8 +27,8 @@ CONF_CC_DHUM_ENABLE_STATE = "cc_dhum_enable_state"
 CONF_DUMMY_SWITCH = "dummy_switch"
 
 SWITCHES = [
-    CONF_CC_DHUM_ENABLE_STATE,
     CONF_ENABLE_SWITCH,
+    CONF_CC_DHUM_ENABLE_STATE
 ]
 
 #CONFIG_SCHEMA = (
@@ -72,15 +72,15 @@ CONFIG_SCHEMA = (
   #  cg.add(var.set_switch_id(config[CONF_SWITCH_DATAPOINT]))
 
 async def to_code(config):
-    var = await cg.get_variable(config[CONF_ECONET_ID])
+    econet_id = await cg.get_variable(config[CONF_ECONET_ID])
     for key in SWITCHES:
         if key in config:
             conf = config[key]
-            #var = cg.new_Pvariable(conf[CONF_ID])
+            var = cg.new_Pvariable(conf[CONF_ID])
             #var = await cg.get_variable(conf[CONF_ID])
             sens = await switch.new_switch(conf)
             await cg.register_component(var, conf)
-            cg.add(sens.set_econet(var))
+            cg.add(sens.set_econet(econet_id))
            # cg.add(getattr(hub, f"set_{key}_number")(var))
             #cg.add(var.set_switch_id(config[CONF_SWITCH_DATAPOINT])) if key == CONF_ENABLE_SWITCH else ''
             #cg.add(sens.set_econet(var))
