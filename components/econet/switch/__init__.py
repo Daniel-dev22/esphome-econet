@@ -72,12 +72,12 @@ CONFIG_SCHEMA = (
   #  cg.add(var.set_switch_id(config[CONF_SWITCH_DATAPOINT]))
 
 async def to_code(config):
-    #var = await cg.get_variable(config[CONF_ECONET_ID])
+    var = await cg.get_variable(config[CONF_ID])
     for key in SWITCHES:
         if key in config:
             conf = config[key]
             #var = cg.new_Pvariable(conf[CONF_ID])
-            var = await cg.get_variable(conf[CONF_ID])
+            #var = await cg.get_variable(conf[CONF_ID])
             sens = await switch.new_switch(conf)
             await cg.register_component(var, conf)
             cg.add(sens.set_econet(var))
