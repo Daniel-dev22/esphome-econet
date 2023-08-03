@@ -31,10 +31,6 @@ EconetNumber = econet_ns.class_(
 CONF_ECONET_ID = "econet"
 
 CONF_CC_DHUMSETP = "cc_dhumsetp"
-# CONF_MIN_VALUE = min_value
-# CONF_MAX_VALUE = max_value
-# CONF_STEP = step
-# CONF_MODE = "slider"
 
 ECONET_NUMBER_SCHEMA = number.number_schema(EconetNumber).extend( 
     { 
@@ -44,14 +40,15 @@ ECONET_NUMBER_SCHEMA = number.number_schema(EconetNumber).extend(
     }
 )
 
-CONFIG_SCHEMA = ECONET_CLIENT_SCHEMA.extend(
-    {
-        cv.Optional(CONF_CC_DHUMSETP): ECONET_NUMBER_SCHEMA,
-        #cv.Optional(CONF_CC_SOMETHING): ECONET_NUMBER_SCHEMA,
-    }
+CONFIG_SCHEMA = ( 
+    ECONET_CLIENT_SCHEMA.extend(
+        {
+            cv.Optional(CONF_CC_DHUMSETP): ECONET_NUMBER_SCHEMA,
+            #cv.Optional(CONF_CC_SOMETHING): ECONET_NUMBER_SCHEMA,
+        }
+    )
+    .extend(cv.polling_component_schema("5s"))
 )
-.extend(cv.polling_component_schema("5s"))
-
 
 
 
