@@ -53,14 +53,15 @@ ECONET_SWITCH_SCHEMA = switch.switch_schema(EconetSwitch).extend(
     }
 )
 
-CONFIG_SCHEMA = ECONET_CLIENT_SCHEMA.extend(
-    {
-        cv.Optional(CONF_ENABLE_SWITCH): ECONET_SWITCH_SCHEMA,
-        cv.Optional(CONF_CC_DHUM_ENABLE_STATE): ECONET_SWITCH_SCHEMA,
-    }
+CONFIG_SCHEMA = (
+    ECONET_CLIENT_SCHEMA.extend(
+        {
+            cv.Optional(CONF_ENABLE_SWITCH): ECONET_SWITCH_SCHEMA,
+            cv.Optional(CONF_CC_DHUM_ENABLE_STATE): ECONET_SWITCH_SCHEMA,
+        }
+    )
+    .extend(cv.COMPONENT_SCHEMA).extend(cv.polling_component_schema("5s"))
 )
-.extend(cv.COMPONENT_SCHEMA).extend(cv.polling_component_schema("5s"))
-
 #async def to_code(config):
   #  """Generate main.cpp code"""
   #  var = await switch.new_switch(config)
