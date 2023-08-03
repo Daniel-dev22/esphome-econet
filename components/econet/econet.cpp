@@ -319,6 +319,10 @@ void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector
 			ESP_LOGI("econet", "  FanRPM? : %d rpm", cc_blower_rpm);
 		}
 	}
+  else
+  {
+      ESP_LOGI("econet", "  %s     : %s",obj_string, format_hex_pretty((const uint8_t *) data.data(), data.size()).c_str());
+  }
 }
 void Econet::make_request()
 {	
@@ -596,6 +600,8 @@ void Econet::parse_message(bool is_tx)
 	ESP_LOGI("econet", "  Command : %d %s", command, this->get_readable_command_name(command).c_str());
 	ESP_LOGI("econet", "  Data    : %s", format_hex_pretty((const uint8_t *) pdata, data_len).c_str());
 	
+
+
 	// Track Read Requests
   // TODO write requests also need tracking.  seems like the econet_req isn't fully reset after a match is found.
 	if(command == READ_COMMAND)
@@ -604,13 +610,15 @@ void Econet::parse_message(bool is_tx)
 		uint8_t prop_type = pdata[1];
 
 
-  	ESP_LOGI("econet", "  Read    : short: 0x%x:0x%x [%s:%s] : %s",src_adr,dst_adr,this->get_readable_hardware_name(src_adr).c_str(),this->get_readable_hardware_name(dst_adr).c_str(),format_hex_pretty((const uint8_t *) pdata, data_len).c_str());
 
-		ESP_LOGI("econet", "  CType   : %d", class_type);
+		ESP_LOGI("econet", "  ClssType: %d", class_type);
 		ESP_LOGI("econet", "  PropType: %d", prop_type);
 		
 		std::vector<std::string> obj_names;
 		
+ 		std::string data_string;
+
+
 		if(class_type == 1)
 		{
 			if(prop_type == 1)
@@ -628,11 +636,13 @@ void Econet::parse_message(bool is_tx)
 				obj_names.push_back(s);
 
 				ESP_LOGI("econet", "  %s", s.c_str());
+        data_string = s;
 			}
 			else
 			{
         econet_req.command_name = "UNSUPPORTED";
 				ESP_LOGI("econet", "  Don't Currently Support This Property Type", prop_type);
+        // data_string = "c1p"+std::to_string(prop_type) + 
 			}
 			econet_req.dst_adr = dst_adr;
 			econet_req.src_adr = src_adr;
@@ -699,6 +709,9 @@ void Econet::parse_message(bool is_tx)
 		{
 			ESP_LOGI("econet", "  Don't Currently Support This Class Type", class_type);
 		}
+
+  	ESP_LOGI("econet", "  Read    : short: 0x%x:0x%x [%s:%s] : %s",src_adr,dst_adr,this->get_readable_hardware_name(src_adr).c_str(),this->get_readable_hardware_name(dst_adr).c_str(),format_hex_pretty((const uint8_t *) pdata, data_len).c_str());
+
 		// tuple<uint32_t, uint32_t> req_tup(dst_adr,src_adr);
 		
 		// econet_reqs
@@ -804,11 +817,11 @@ void Econet::parse_message(bool is_tx)
 				}
 			}
 			// This is likely the response to our request and now we "know" what was requested!
-			// ESP_LOGI("econet", "  RESPONSE RECEIVED!!!");
-			// for(int a = 0; a < econet_req.obj_names.size(); a++)
-			// {
-				// ESP_LOGI("econet", "  ValName : %s", econet_req.obj_names[a].c_str());
-			// }
+			ESP_LOGI("econet", "  RESPONSE RECEIVED!!!");
+			for(int a = 0; a < econet_req.obj_names.size(); a++)
+			{
+				ESP_LOGI("econet", "  ValName : %s", econet_req.obj_names[a].c_str());
+			}
 			econet_req.awaiting_res = false;			
 		  }
       else {
@@ -831,11 +844,11 @@ void Econet::parse_message(bool is_tx)
 
 		uint8_t class_type= pdata[0];
 		uint8_t prop_type = pdata[1];
-    // uint8_t pdata_withouttypes[255];
+    uint8_t pdata_withouttypes[255];
 
-		// 		for (int a = 0; a < data_len ; a++) {
-		// 			pdata_withouttypes[a] = pdata[a+2];
-		// 		}
+				for (int a = 0; a < data_len ; a++) {
+					pdata_withouttypes[a] = pdata[a+2];
+				}
     
   	// ESP_LOGI("econet", "  Write   : short: 0x%x:0x%x [%s:%s] [ct:%d,pt:%d]: %s",src_adr,dst_adr,
     //     class_type, prop_type,
