@@ -50,6 +50,8 @@ CONFIG_SCHEMA = ECONET_CLIENT_SCHEMA.extend(
         #cv.Optional(CONF_CC_SOMETHING): ECONET_NUMBER_SCHEMA,
     }
 )
+.extend(cv.polling_component_schema("5s"))
+
 
 
 
