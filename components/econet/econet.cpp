@@ -132,10 +132,15 @@ void Econet::handle_float(uint32_t src_adr, std::string obj_string, float value)
 		{
 			// Not Supported Yet
 		}
+    else
+    {
+ 			ESP_LOGI("econet", "  %s : not supported yet", obj_string.c_str());
+    }
 	}
 	else if(src_adr == HEAT_PUMP_WATER_HEATER)
 	{
-		
+		ESP_LOGI("econet", "  %s : not supported yet", obj_string.c_str());
+
 	}
 	else if(src_adr == CONTROL_CENTER)
 	{
@@ -165,7 +170,14 @@ void Econet::handle_float(uint32_t src_adr, std::string obj_string, float value)
 			cc_dhumsetp = value;
 			ESP_LOGI("econet", "  DHUMSETPCONFRIMED : %f ", cc_dhumsetp);
 		}
+    else{
+   		ESP_LOGI("econet", "  %s : not supported yet", obj_string.c_str());
+
+    }
 	}
+  else
+  	ESP_LOGI("econet", "  %s : not supported yet", obj_string.c_str());
+
 }
 	/*
 	
@@ -227,10 +239,20 @@ void Econet::handle_enumerated_text(uint32_t src_adr, std::string obj_string, ui
 		{
 			cc_fan_mode = value;
 		}
+else
+    		ESP_LOGI("econet", "  %s : not supported yet", obj_string.c_str());
+
 	}
+  else
+  {
+    		ESP_LOGI("econet", "  %s : not supported yet", obj_string.c_str());
+
+  }
 }
 void Econet::handle_text(uint32_t src_adr, std::string obj_string, std::string text)
 {
+  		ESP_LOGI("econet", "  %s : not supported yet", obj_string.c_str());
+
 	if(src_adr == 0x1040)
 	{
 	
@@ -321,7 +343,7 @@ void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector
 	}
   else
   {
-      ESP_LOGI("econet", "  %s     : %s",obj_string, format_hex_pretty((const uint8_t *) data.data(), data.size()).c_str());
+      ESP_LOGI("econet", "  %s     : %s",obj_string.c_str(), format_hex_pretty((const uint8_t *) data.data(), data.size()).c_str());
   }
 }
 void Econet::make_request()
@@ -756,8 +778,8 @@ void Econet::parse_message(bool is_tx)
 						
 						if(item_num < econet_req.obj_names.size())
 						{
-							handle_float(src_adr, econet_req.obj_names[item_num], item_value);
 							ESP_LOGI("econet", "  %s : %f", econet_req.obj_names[item_num].c_str(), item_value);
+							handle_float(src_adr, econet_req.obj_names[item_num], item_value);
 						}
 					}
 					else if(item_type == 1)
