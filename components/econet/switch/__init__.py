@@ -71,29 +71,30 @@ CONFIG_SCHEMA = (
  #   cg.add(var.set_econet(econet_var))
   #  cg.add(var.set_switch_id(config[CONF_SWITCH_DATAPOINT]))
 
-#async def to_code(config):
-    #econet_var = await cg.get_variable(config[CONF_ECONET_ID])
-    #for key in SWITCHES:
-        #if key in config:
-            #conf = config[key]
-            #var = cg.new_Pvariable(conf[CONF_ID])
-            #await cg.register_component(var, conf)
-            #sens = await switch.new_switch(conf)
-            #cg.add(getattr(hub, f"set_{key}_number")(var))
-            #cg.add(var.set_switch_id(config[CONF_SWITCH_DATAPOINT])) if key == CONF_ENABLE_SWITCH else ''
-            #cg.add(sens.set_econet(econet_var))
-            #cg.add(getattr(econet_var, f"set_{key}_switch")(var))
-async def to_code(config): 
+async def to_code(config):
     var = await cg.get_variable(config[CONF_ECONET_ID])
+    for key in SWITCHES:
+        if key in config:
+            conf = config[key]
+            #var = cg.new_Pvariable(conf[CONF_ID])
+            sens = await switch.new_switch(conf)
+            await cg.register_component(var, conf)
+            cg.add(sens.set_econet(var))
+           # cg.add(getattr(hub, f"set_{key}_number")(var))
+            #cg.add(var.set_switch_id(config[CONF_SWITCH_DATAPOINT])) if key == CONF_ENABLE_SWITCH else ''
+            #cg.add(sens.set_econet(var))
+            #cg.add(getattr(econet_var, f"set_{key}_switch")(var))
+#async def to_code(config): 
+    #var = await cg.get_variable(config[CONF_ECONET_ID])
     
-    if CONF_ENABLE_SWITCH in config:
-      conf = config[CONF_ENABLE_SWITCH]
-      sens = await switch.new_switch(conf)
-      await cg.register_component(sens, conf)
-      cg.add(sens.set_econet(var))
+    #if CONF_ENABLE_SWITCH in config:
+      #conf = config[CONF_ENABLE_SWITCH]
+      #sens = await switch.new_switch(conf)
+      #await cg.register_component(sens, conf)
+      #cg.add(sens.set_econet(var))
       
-    if CONF_CC_DHUM_ENABLE_STATE in config:
-      conf = config[CONF_CC_DHUM_ENABLE_STATE]
-      sens = await switch.new_switch(conf)
-      await cg.register_component(sens, conf)
-      cg.add(sens.set_econet(var))
+    #if CONF_CC_DHUM_ENABLE_STATE in config:
+      #conf = config[CONF_CC_DHUM_ENABLE_STATE]
+      #sens = await switch.new_switch(conf)
+      #await cg.register_component(sens, conf)
+      #cg.add(sens.set_econet(var))
