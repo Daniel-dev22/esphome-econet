@@ -27,7 +27,7 @@ CONF_CC_DHUM_ENABLE_STATE = "cc_dhum_enable_state"
 CONF_DUMMY_SWITCH = "dummy_switch"
 
 SWITCHES = [
-    #CONF_ENABLE_SWITCH,
+    CONF_ENABLE_SWITCH,
     CONF_CC_DHUM_ENABLE_STATE
 ]
 
@@ -57,9 +57,9 @@ CONFIG_SCHEMA = ECONET_CLIENT_SCHEMA.extend(
     {
         cv.Optional(CONF_ENABLE_SWITCH): ECONET_SWITCH_SCHEMA,
         cv.Optional(CONF_CC_DHUM_ENABLE_STATE): ECONET_SWITCH_SCHEMA,
-        #cv.Optional(CONF_CC_SOMETHING): ECONET_NUMBER_SCHEMA,
     }
 )
+.extend(cv.COMPONENT_SCHEMA).extend(cv.polling_component_schema("5s"))
 
 #async def to_code(config):
   #  """Generate main.cpp code"""
@@ -85,6 +85,12 @@ CONFIG_SCHEMA = ECONET_CLIENT_SCHEMA.extend(
 async def to_code(config): 
     var = await cg.get_variable(config[CONF_ECONET_ID])
     
+    if CONF_ENABLE_SWITCH in config:
+      conf = config[CONF_ENABLE_SWITCH]
+      sens = await switch.new_switch(conf)
+      await cg.register_component(sens, conf)
+      cg.add(sens.set_econet(var))
+      
     if CONF_CC_DHUM_ENABLE_STATE in config:
       conf = config[CONF_CC_DHUM_ENABLE_STATE]
       sens = await switch.new_switch(conf)
