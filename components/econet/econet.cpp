@@ -170,6 +170,10 @@ void Econet::handle_float(uint32_t src_adr, std::string obj_string, float value)
 			cc_dhumsetp = value;
 			ESP_LOGI("econet", "  DHUMSETPCONFRIMED : %f ", cc_dhumsetp);
 		}
+    else if (obj_string == "DHUMENAB")
+    {
+      // cc_dhumenab = value; // boolean 1/0
+    }
     else{
    		ESP_LOGI("econet", "  %s : not supported yet", obj_string.c_str());
 
@@ -223,7 +227,7 @@ void Econet::handle_enumerated_text(uint32_t src_adr, std::string obj_string, ui
 		if(obj_string == "HVACMODE")
 		{
 			cc_hvacmode = value;
-			cc_hvacmode_text = text.c_str();
+			cc_hvacmode_text = text.c_str();   //(example: 3 (High Cool))
 		//	ESP_LOGI("econet", "  TextHVACMode : %s ", text.c_str());
 		}
 		else if(obj_string == "AUTOMODE")
@@ -271,7 +275,7 @@ uint16_t convert_vector_to_uint16(uint16_t pos, std::vector<uint8_t> data)
 
 void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector<uint8_t> data)
 {
-	if(src_adr == 0x1c0)
+	if(src_adr == FURNACE)
 	{
 		if(obj_string == "HWSTATUS")
 		{
@@ -294,8 +298,13 @@ void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector
 
 
 		}
+    else
+    {
+      ESP_LOGI("econet", "  %s     : unsupported",obj_string.c_str());
+    }
+
 	}
-	else if(src_adr == 0x3c0)
+	else if(src_adr == AIR_HANDLER)
 	{
 		if(obj_string == "AIRHSTAT")
 		{
@@ -340,7 +349,23 @@ void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector
 			
 			ESP_LOGI("econet", "  FanRPM? : %d rpm", cc_blower_rpm);
 		}
+    else
+      ESP_LOGI("econet", "  %s     : unsupported",obj_string.c_str());
 	}
+  else if (src_adr==ZONE_CONTROL){
+      if (obj_string == "ZONESTAT")
+    {
+      uint8_t zone1 = data[11] * 100.0/35; // multiply by 35 for calibration
+			uint8_t zone2 = data[12] * 100.0/35; // 
+      uint8_t zone3 = data[13] * 100.0/35; // 
+    	ESP_LOGI("econet", "  Zone1Pct: %d%", zone1);
+ 			ESP_LOGI("econet", "  Zone2Pct: %d%", zone2);
+ 			ESP_LOGI("econet", "  Zone3Pct: %d%", zone3);
+    }
+        else
+      ESP_LOGI("econet", "  %s     : unsupported",obj_string.c_str());
+
+  }
   else
   {
       ESP_LOGI("econet", "  %s     : %s",obj_string.c_str(), format_hex_pretty((const uint8_t *) data.data(), data.size()).c_str());
@@ -761,6 +786,8 @@ void Econet::parse_message(bool is_tx)
 					}
 					handle_binary(src_adr, econet_req.obj_names[0], dest);
 				}
+        ESP_LOGI("econet", "  Ack     : expected item_type 4, got %d",item_type);
+
 			}
 			else
 			{
