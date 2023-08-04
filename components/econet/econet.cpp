@@ -269,8 +269,8 @@ void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector
 		{
 			// data[0] = 4
 			// data[1 - 10] = 0
-		//	cc_blower_cfm = (data[16] << 8) + data[17];
-		//	cc_blower_rpm = (data[20] << 8) + data[21];
+			cc_blower_cfm = (data[16] << 8) + data[17];
+			cc_blower_rpm = (data[20] << 8) + data[21];
 		//	uint16_t testone = (data[22] << 8) + data[23];
 		//	uint16_t testtwo = (data[36] << 8) + data[37];
 		//	uint16_t testthree = (data[57] << 8) + data[58];
