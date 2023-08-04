@@ -287,9 +287,9 @@ void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector
 		//	uint16_t testfourteen = (data[106] << 8) + data[107];
 		//	uint16_t testfifteen = (data[140] << 8) + data[141];
 		//	uint16_t testsixteen = (data[150] << 8) + data[151];
-			uint16_t testseventeen = (data[104] << 8) + data[105] / 10;
-			uint16_t testeighteen = (data[108] << 8) + data[109] / 10;
-			uint16_t testnineteen = (data[117] << 8) + data[118] / 10;
+			uint16_t testseventeen = ((data[104] << 8) + data[105]) / 10;
+			uint16_t testeighteen = ((data[108] << 8) + data[109]) / 10;
+			uint16_t testnineteen = ((data[117] << 8) + data[118]) / 10;
 			// testtwo has something to do with the unit running when its off its 0
 			
 		//	ESP_LOGI("econet", "  TestOne : %d ", testone);
