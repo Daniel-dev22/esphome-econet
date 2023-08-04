@@ -294,7 +294,7 @@ void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector
 			float outside_temp = convert_vector_to_uint16(50,data)/10.0;
 			float return_temp = convert_vector_to_uint16(52,data)/10.0;
       float supply_temp = convert_vector_to_uint16(145,data)/10.0;
-      float static_pressure = convert_vector_to_uint16(15,data)/5000.0;
+      float static_pressure = convert_vector_to_uint16(15,data)/4750.0;
 
 
 			ESP_LOGI("econet", "  HeatCmd : %d %", heatcmd);
