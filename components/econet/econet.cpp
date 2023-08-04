@@ -291,6 +291,12 @@ void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector
 			uint16_t fan_rpm = convert_vector_to_uint16(17,data);
       uint16_t max_cfm = convert_vector_to_uint16(41,data);
 
+			float outside_temp = convert_vector_to_uint16(50,data)/10.0;
+			float return_temp = convert_vector_to_uint16(52,data)/10.0;
+      float supply_temp = convert_vector_to_uint16(145,data)/10.0;
+      float static_pressure = convert_vector_to_uint16(15,data)/5000.0;
+
+
 			ESP_LOGI("econet", "  HeatCmd : %d %", heatcmd);
 			ESP_LOGI("econet", "  CoolCmd : %d %", coolcmd);
 			
@@ -298,7 +304,12 @@ void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector
  			ESP_LOGI("econet", "  FanRPM  : %d rpm", fan_rpm);
  			ESP_LOGI("econet", "  MaxCFM  : %d cfm", max_cfm);
 
-      ESP_LOGI("econet", "  MaxCFM  : %d cfm", max_cfm);
+      ESP_LOGI("econet", "  OutsidT : %f F", outside_temp);
+      ESP_LOGI("econet", "  SupplyT : %f F", supply_temp);
+      ESP_LOGI("econet", "  ReturnT : %f F", return_temp);
+
+      ESP_LOGI("econet", "  StaticP : %f inches", static_pressure);
+
 
 
 		}
