@@ -18,10 +18,10 @@ class EconetSwitch : public switch_::Switch, public PollingComponent {
 		this->this_switch_ = sensor;
 	}
 	*/
-	void set_switch_id(uint8_t switch_id) { this->switch_id_ = switch_id; }
+	// void set_switch_id(uint8_t switch_id) { this->switch_id_ = switch_id; }
 
  protected:
-	uint8_t switch_id_{0};
+	// uint8_t switch_id_{0};
 	Econet *econet;
 };
 
