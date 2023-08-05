@@ -11,6 +11,7 @@ DEPENDENCIES = ["uart"]
 CONF_UART = "uart"
 CONF_ECONET_ID = "econet"
 CONF_MODEL = "model"
+CONF_HVAC_WIFI_MODULE_CONNECTED = "hvac_wifi_module_connected"
 
 econet_ns = cg.esphome_ns.namespace("econet")
 Econet = econet_ns.class_("Econet", cg.Component)
@@ -22,7 +23,8 @@ CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(): cv.declare_id(Econet),
         cv.Required(CONF_UART): cv.use_id(UARTComponent),
-		cv.Required("model"): cv.string
+		cv.Required(CONF_MODEL): cv.string,
+		cv.Optional(CONF_HVAC_WIFI_MODULE_CONNECTED): cv.bool
     }
 )
 
@@ -44,3 +46,6 @@ async def to_code(config):
     	cg.add(var.set_type_id(1))
     if config[CONF_MODEL] == "HVAC":
     	cg.add(var.set_type_id(2))
+    if CONF_HVAC_WIFI_MODULE_CONNECTED in config
+        if config[CONF_HVAC_WIFI_MODULE_CONNECTED] == false:
+        cg.add(var.set_hvac_wifi_module_connected(true))
