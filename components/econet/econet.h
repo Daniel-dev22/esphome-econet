@@ -177,7 +177,7 @@ class Econet : public Component {
 	float cc_blower_rpm = 0;
 	float cc_dhumsetp = 0;
 	bool cc_dhum_enable_state = false;
-	bool hvac_wifi_module_connected = true;
+	bool hvac_wifi_module_connected_ = true;
 	std::string cc_hvacmode_text = "unknown";
 	std::string cc_automode_text = "unknown";
 	
