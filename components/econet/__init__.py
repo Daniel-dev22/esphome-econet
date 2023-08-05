@@ -47,5 +47,4 @@ async def to_code(config):
     if config[CONF_MODEL] == "HVAC":
     	cg.add(var.set_type_id(2))
     if CONF_HVAC_WIFI_MODULE_CONNECTED in config:
-        if config[CONF_HVAC_WIFI_MODULE_CONNECTED] == false:
-            cg.add(var.set_hvac_wifi_module_connected(true))
+        cg.add(var.set_hvac_wifi_module_connected(config[CONF_HVAC_WIFI_MODULE_CONNECTED]))
