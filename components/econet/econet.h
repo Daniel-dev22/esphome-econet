@@ -46,6 +46,7 @@ class Econet : public Component {
 	void dump_config() override;
 	void set_uart(uart::UARTComponent *econet_uart);
 	void set_type_id(uint8_t type_id) { this->type_id_ = type_id; }
+	void set_hvac_wifi_module_connected();
 	bool is_ready() { return this->ready; }
 	void make_request();
 	void read_buffer(int bytes_available);
