@@ -106,7 +106,7 @@ class Econet : public Component {
 	float get_cc_blower_rpm() { return this->cc_blower_rpm; }
 	float get_cc_dhumsetp() { return this->cc_dhumsetp; }
 	bool get_cc_dhum_enable_state() { return this->cc_dhum_enable_state; }
-	bool get_hvac_wifi_module_connected() { return this->hvac_wifi_module_connected; }
+	bool get_hvac_wifi_module_connected() { return this->hvac_wifi_module_connected_; }
 	std::string get_cc_hvacmode_text() { return this->cc_hvacmode_text; }
 	std::string get_cc_automode_text() { return this->cc_automode_text; }
 
