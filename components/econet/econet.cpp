@@ -445,7 +445,7 @@ void Econet::make_request()
 				str_ids.push_back("SUCTIONT");
 				str_ids.push_back("DISCTEMP");
 			}
-			else if(type_id_ == 2 && this->econet->get_hvac_wifi_module_connected == false)
+			else if(type_id_ == 2 && this->get_hvac_wifi_module_connected == false)
 			{
 				str_ids.push_back("DHUMSETP");
 				str_ids.push_back("DHUMENAB");
