@@ -46,6 +46,7 @@ class Econet : public Component {
 	void dump_config() override;
 	void set_uart(uart::UARTComponent *econet_uart);
 	void set_type_id(uint8_t type_id) { this->type_id_ = type_id; }
+	void set_hvac_wifi_module_connected(bool hvac_wifi_module_connected) { this->hvac_wifi_module_connected_ = hvac_wifi_module_connected; }
 	bool is_ready() { return this->ready; }
 	void make_request();
 	void read_buffer(int bytes_available);
@@ -58,6 +59,7 @@ class Econet : public Component {
 	void set_new_setpoint_low(float setpoint);
 	void set_new_setpoint_high(float setpoint);
 	void set_new_dhumsetp(float setpoint);
+	void set_dhum_enable_state(bool state);
 	
 	void set_new_mode(float mode);
 	void set_new_fan_mode(float fan_mode);
@@ -103,6 +105,8 @@ class Econet : public Component {
 	float get_cc_blower_cfm() { return this->cc_blower_cfm; }
 	float get_cc_blower_rpm() { return this->cc_blower_rpm; }
 	float get_cc_dhumsetp() { return this->cc_dhumsetp; }
+	bool get_cc_dhum_enable_state() { return this->cc_dhum_enable_state; }
+	bool get_hvac_wifi_module_connected() { return this->hvac_wifi_module_connected_; }
 	std::string get_cc_hvacmode_text() { return this->cc_hvacmode_text; }
 	std::string get_cc_automode_text() { return this->cc_automode_text; }
 
@@ -172,6 +176,8 @@ class Econet : public Component {
 	float cc_blower_cfm = 0;
 	float cc_blower_rpm = 0;
 	float cc_dhumsetp = 0;
+	bool cc_dhum_enable_state = false;
+	bool hvac_wifi_module_connected_ = true;
 	std::string cc_hvacmode_text = "unknown";
 	std::string cc_automode_text = "unknown";
 	
@@ -207,6 +213,9 @@ class Econet : public Component {
 	
 	bool send_new_fan_mode = false;
 	float new_fan_mode = 0;
+
+	bool send_dhum_enable_disable = false;	
+	bool dhum_enable_disable_cmd = false;
 	
 	uint8_t wbuffer[max_message_size];
 	uint16_t wmsg_len = 0;

@@ -227,6 +227,10 @@ void Econet::handle_enumerated_text(uint32_t src_adr, std::string obj_string, ui
 		{
 			cc_fan_mode = value;
 		}
+		else if(obj_string == "DHUMENAB")
+		{
+			cc_dhum_enable_state = value == 1;
+		}
 	}
 }
 void Econet::handle_text(uint32_t src_adr, std::string obj_string, std::string text)
@@ -267,42 +271,47 @@ void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector
 			// data[1 - 10] = 0
 			cc_blower_cfm = (data[16] << 8) + data[17];
 			cc_blower_rpm = (data[20] << 8) + data[21];
-			uint16_t testone = (data[22] << 8) + data[23];
-			uint16_t testtwo = (data[36] << 8) + data[37];
-			uint16_t testthree = (data[57] << 8) + data[58];
-			uint16_t testfour = (data[73] << 8) + data[74];
-			uint16_t testfive = (data[95] << 8) + data[96];
-			uint16_t testsix = (data[20] << 8) + data[21];
-			uint16_t testseven = (data[22] << 8) + data[22];
-			uint16_t testeight = (data[35] << 8) + data[36];
-			uint16_t testnine = (data[56] << 8) + data[57];
-			uint16_t testten = (data[72] << 8) + data[73];
-			uint16_t testeleven = (data[94] << 8) + data[95];
-			uint16_t testtwelve = (data[26] << 8) + data[27];
-			uint16_t testthirteen = (data[102] << 8) + data[103];
-			uint16_t testfourteen = (data[106] << 8) + data[107];
-			uint16_t testfifteen = (data[140] << 8) + data[141];
-			uint16_t testsixteen = (data[150] << 8) + data[151];
+		//	uint16_t testone = (data[22] << 8) + data[23];
+		//	uint16_t testtwo = (data[36] << 8) + data[37];
+		//	uint16_t testthree = (data[57] << 8) + data[58];
+		//	uint16_t testfour = (data[73] << 8) + data[74];
+		//	uint16_t testfive = (data[95] << 8) + data[96];
+		//	uint16_t testsix = (data[20] << 8) + data[21];
+		//	uint16_t testseven = (data[22] << 8) + data[22];
+		//	uint16_t testeight = (data[35] << 8) + data[36];
+		//	uint16_t testnine = (data[56] << 8) + data[57];
+		//	uint16_t testten = (data[72] << 8) + data[73];
+		//	uint16_t testeleven = (data[94] << 8) + data[95];
+		//	uint16_t testtwelve = (data[26] << 8) + data[27];
+		//	uint16_t testthirteen = (data[102] << 8) + data[103];
+		//	uint16_t testfourteen = (data[106] << 8) + data[107];
+		//	uint16_t testfifteen = (data[140] << 8) + data[141];
+		//	uint16_t testsixteen = (data[150] << 8) + data[151];
+			uint16_t testseventeen = ((data[104] << 8) + data[105]) / 10;
+			uint16_t testeighteen = ((data[108] << 8) + data[109]) / 10;
+			uint16_t testnineteen = ((data[117] << 8) + data[118]) / 10;
 			// testtwo has something to do with the unit running when its off its 0
 			
-			ESP_LOGI("econet", "  TestOne : %d ", testone);
-			ESP_LOGI("econet", "  TestTwo : %d ", testtwo);
-			ESP_LOGI("econet", "  TestThree : %d ", testthree);
-			ESP_LOGI("econet", "  TestFour : %d ", testfour);
-			ESP_LOGI("econet", "  TestFive : %d ", testfive);
-			ESP_LOGI("econet", "  TestSix : %d ", testsix);
-			ESP_LOGI("econet", "  TestSeven : %d ", testseven);
-			ESP_LOGI("econet", "  TestEight : %d ", testeight);
-			ESP_LOGI("econet", "  TestNine : %d ", testnine);
-			ESP_LOGI("econet", "  TestTen : %d ", testten);
-			ESP_LOGI("econet", "  TestEleven : %d ", testeleven);
-			ESP_LOGI("econet", "  TestTwelve : %d ", testtwelve);
-			ESP_LOGI("econet", "  TestThirteen : %d ", testthirteen);
-			ESP_LOGI("econet", "  TestFourteen : %d ", testfourteen);
-			ESP_LOGI("econet", "  TestFifteen : %d ", testfifteen);
-			ESP_LOGI("econet", "  TestSixteen : %d ", testsixteen);
+		//	ESP_LOGI("econet", "  TestOne : %d ", testone);
+		//	ESP_LOGI("econet", "  TestTwo : %d ", testtwo);
+		//	ESP_LOGI("econet", "  TestThree : %d ", testthree);
+		//	ESP_LOGI("econet", "  TestFour : %d ", testfour);
+		//	ESP_LOGI("econet", "  TestFive : %d ", testfive);
+		//	ESP_LOGI("econet", "  TestSix : %d ", testsix);
+		//	ESP_LOGI("econet", "  TestSeven : %d ", testseven);
+		//	ESP_LOGI("econet", "  TestEight : %d ", testeight);
+		//	ESP_LOGI("econet", "  TestNine : %d ", testnine);
+		//	ESP_LOGI("econet", "  TestTen : %d ", testten);
+		//	ESP_LOGI("econet", "  TestEleven : %d ", testeleven);
+		//	ESP_LOGI("econet", "  TestTwelve : %d ", testtwelve);
+		//	ESP_LOGI("econet", "  TestThirteen : %d ", testthirteen);
+		//	ESP_LOGI("econet", "  TestFourteen : %d ", testfourteen);
+		//	ESP_LOGI("econet", "  TestFifteen : %d ", testfifteen);
+			ESP_LOGI("econet", "  TestSeventeen : %d ", testseventeen);
+			ESP_LOGI("econet", "  TestEighteen : %d ", testeighteen);
+			ESP_LOGI("econet", "  TestNineteen : %d ", testnineteen);
 			
-			ESP_LOGI("econet", "  FanRPM? : %d rpm", cc_blower_rpm);
+		//	ESP_LOGI("econet", "  FanRPM? : %d rpm", cc_blower_rpm);
 		}
 	}
 }
@@ -394,6 +403,12 @@ void Econet::make_request()
 		
 		send_new_dhumsetp = false;
 	}
+	else if(send_dhum_enable_disable == true)
+	{
+		this->write_value(dst_adr, src_adr, "DHUMENAB", ENUM_TEXT, static_cast<float>(dhum_enable_disable_cmd));
+		
+		send_dhum_enable_disable = false;
+	}
 	else
 	{
 		std::vector<std::string> str_ids{};
@@ -430,7 +445,7 @@ void Econet::make_request()
 				str_ids.push_back("SUCTIONT");
 				str_ids.push_back("DISCTEMP");
 			}
-			else if(type_id_ == 2)
+			else if(type_id_ == 2 && hvac_wifi_module_connected_ == false)
 			{
 				str_ids.push_back("DHUMSETP");
 				str_ids.push_back("DHUMENAB");
@@ -1580,6 +1595,21 @@ void Econet::set_new_dhumsetp(float setpoint)
 	send_new_dhumsetp = true;
 	new_dhumsetp = setpoint;
 }
+
+void Econet::set_dhum_enable_state(bool state)
+{
+	if(state)
+	{
+		this->send_dhum_enable_disable = true;
+		this->dhum_enable_disable_cmd = true;
+	}
+	else
+	{
+		this->send_dhum_enable_disable = true;
+		this->dhum_enable_disable_cmd = false;
+	}
+}
+
 void Econet::dump_state() {
   
 }
