@@ -468,7 +468,7 @@ void Econet::make_request()
 				str_ids.push_back("EVAPTEMP");
 				str_ids.push_back("SUCTIONT");
 				str_ids.push_back("DISCTEMP");
-				str_ids.push_back("ALRMALRT");
+				//str_ids.push_back("ALRMALRT");
 				str_ids.push_back("ALARM_01");
 				str_ids.push_back("ALARM_02");
 				str_ids.push_back("ALARM_03");
