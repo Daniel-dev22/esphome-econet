@@ -469,10 +469,10 @@ void Econet::make_request()
 				str_ids.push_back("SUCTIONT");
 				str_ids.push_back("DISCTEMP");
 				//str_ids.push_back("ALRMALRT");
-				str_ids.push_back("ALARM_01");
-				str_ids.push_back("ALARM_02");
-				str_ids.push_back("ALARM_03");
-				str_ids.push_back("ALARM_04");
+				//str_ids.push_back("ALARM_01");
+				//str_ids.push_back("ALARM_02");
+				//str_ids.push_back("ALARM_03");
+				//str_ids.push_back("ALARM_04");
 			}
 			else if(type_id_ == 2 && hvac_wifi_module_connected_ == false)
 			{
