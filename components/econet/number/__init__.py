@@ -43,11 +43,10 @@ ECONET_NUMBER_SCHEMA = number.number_schema(EconetNumber).extend(
 CONFIG_SCHEMA = ( 
     ECONET_CLIENT_SCHEMA.extend(
         {
-            cv.Optional(CONF_CC_DHUMSETP): ECONET_NUMBER_SCHEMA,
+            cv.Optional(CONF_CC_DHUMSETP): ECONET_NUMBER_SCHEMA.extend(cv.polling_component_schema("5s")),
             #cv.Optional(CONF_CC_SOMETHING): ECONET_NUMBER_SCHEMA,
         }
     )
-        .extend(cv.COMPONENT_SCHEMA).extend(cv.polling_component_schema("5s"))
 )
 
 
