@@ -80,28 +80,28 @@ class EconetSensor : public PollingComponent, public EconetClient {
 	void set_cc_blower_rpm_sensor(sensor::Sensor *sensor) {
 		this->cc_blower_rpm_sensor_ = sensor;
 	}
-	void hvac_odu_outside_air_temp_sensor(sensor::Sensor *sensor) {
+	void set_hvac_odu_outside_air_temp_sensor(sensor::Sensor *sensor) {
 		this->hvac_odu_outside_air_temp_sensor_ = sensor;
 	}
-	void hvac_odu_evaporator_temp_sensor(sensor::Sensor *sensor) {
+	void set_hvac_odu_evaporator_temp_sensor(sensor::Sensor *sensor) {
 		this->hvac_odu_evaporator_temp_sensor_ = sensor;
 	}
-	void hvac_odu_inverter_crank_speed_sensor(sensor::Sensor *sensor) {
+	void set_hvac_odu_inverter_crank_speed_sensor(sensor::Sensor *sensor) {
 		this->hvac_odu_inverter_crank_speed_sensor_ = sensor;
 	}
-	void hvac_odu_crankcase_heater_temp_sensor(sensor::Sensor *sensor) {
+	void set_hvac_odu_crankcase_heater_temp_sensor(sensor::Sensor *sensor) {
 		this->hvac_odu_crankcase_heater_temp_sensor_ = sensor;
 	}
-	void hvac_odu_exv_current_position_sensor(sensor::Sensor *sensor) {
+	void set_hvac_odu_exv_current_position_sensor(sensor::Sensor *sensor) {
 		this->hvac_odu_exv_current_position_sensor_ = sensor;
 	}
-	void hvac_odu_exv_super_heat_sensor(sensor::Sensor *sensor) {
+	void set_hvac_odu_exv_super_heat_sensor(sensor::Sensor *sensor) {
 		this->hvac_odu_exv_super_heat_sensor = sensor;
 	}
-	void hvac_odu_suction_line_temp_sensor(sensor::Sensor *sensor) {
+	void set_hvac_odu_suction_line_temp_sensor(sensor::Sensor *sensor) {
 		this->hvac_odu_suction_line_temp_sensor_ = sensor;
 	}
-	void hvac_odu_pressure_suction_sensor(sensor::Sensor *sensor) {
+	void set_hvac_odu_pressure_suction_sensor(sensor::Sensor *sensor) {
 		this->hvac_odu_pressure_suction_sensor_ = sensor;
 	}
 
