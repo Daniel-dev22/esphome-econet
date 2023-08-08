@@ -83,8 +83,8 @@ class EconetSensor : public PollingComponent, public EconetClient {
 	void hvac_odu_outside_air_temp_sensor(sensor::Sensor *sensor) {
 		this->hvac_odu_outside_air_temp_sensor_ = sensor;
 	}
-	void hvac_odu_temp_evaporator_temp_sensor(sensor::Sensor *sensor) {
-		this->hvac_odu_temp_evaporator_temp_sensor_ = sensor;
+	void hvac_odu_evaporator_temp_sensor(sensor::Sensor *sensor) {
+		this->hvac_odu_evaporator_temp_sensor_ = sensor;
 	}
 	void hvac_odu_inverter_crank_speed_sensor(sensor::Sensor *sensor) {
 		this->hvac_odu_inverter_crank_speed_sensor_ = sensor;
@@ -134,7 +134,7 @@ class EconetSensor : public PollingComponent, public EconetClient {
 	sensor::Sensor *cc_blower_rpm_sensor_{nullptr};
 	
 	sensor::Sensor *hvac_odu_outside_air_temp_sensor_{nullptr};
-	sensor::Sensor *hvac_odu_temp_evaporator_temp_sensor_{nullptr};
+	sensor::Sensor *hvac_odu_evaporator_temp_sensor_{nullptr};
 	sensor::Sensor *hvac_odu_crankcase_heater_temp_sensor_{nullptr};
 	sensor::Sensor *hvac_odu_crankcase_heater_temp_sensor_{nullptr};
 	sensor::Sensor *hvac_odu_exv_current_position_sensor_{nullptr};

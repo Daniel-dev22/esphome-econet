@@ -84,8 +84,8 @@ void EconetSensor::update() {
 	if (this->hvac_odu_outside_air_temp_sensor_ != nullptr) {
 		this->hvac_odu_outside_air_temp_sensor_->publish_state(this->econet->get_hvac_odu_outside_air_temp());
 	}
-	if (this->hvac_odu_temp_evaporator_temp_sensor_ != nullptr) {
-		this->hvac_odu_temp_evaporator_temp_sensor_->publish_state(this->econet->get_hvac_odu_temp_evaporator_temp());
+	if (this->hvac_odu_evaporator_temp_sensor_ != nullptr) {
+		this->hvac_odu_evaporator_temp_sensor_->publish_state(this->econet->get_hvac_odu_evaporator_temp());
 	}
 	if (this->hvac_odu_inverter_crank_speed_sensor_ != nullptr) {
 		this->hvac_odu_inverter_crank_speed_sensor_->publish_state(this->econet->get_hvac_odu_inverter_crank_speed());
