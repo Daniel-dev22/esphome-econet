@@ -26,6 +26,17 @@ EconetSensor = econet_ns.class_(
     "EconetSensor", cg.PollingComponent, EconetClient
 )
 
+SENSORS = [
+    CONF_HVAC_ODU_OUTSIDE_AIR_TEMP,
+    CONF_HVAC_ODU_TEMP_EVAPORATOR_TEMP,
+    CONF_HVAC_ODU_INVERTER_CRANK_SPEED,
+    CONF_HVAC_ODU_CRANKCASE_HEATER_TEMP,
+    CONF_HVAC_ODU_EXV_CURRENT_POSITION,
+    CONF_HVAC_ODU_EXV_SUPER_HEAT,
+    CONF_HVAC_ODU_SUCTION_LINE_TEMP,
+    CONF_HVAC_ODU_PRESSURE_SUCTION
+]
+
 CONF_ECONET_ID = "econet"
 CONF_TEMP_IN = "temp_in"
 CONF_TEMP_OUT = "temp_out"
@@ -52,6 +63,15 @@ CONF_CC_REL_HUM = "cc_rel_hum"
 CONF_CC_BLOWER_CFM = "cc_blower_cfm"
 CONF_CC_BLOWER_RPM = "cc_blower_rpm"
 
+CONF_HVAC_ODU_OUTSIDE_AIR_TEMP = "hvac_odu_outside_air_temp"
+CONF_HVAC_ODU_TEMP_EVAPORATOR_TEMP = "hvac_odu_temp_evaporator_temp"
+CONF_HVAC_ODU_INVERTER_CRANK_SPEED = "hvac_odu_inverter_crank_speed"
+CONF_HVAC_ODU_CRANKCASE_HEATER_TEMP = "hvac_odu_crankcase_heater_temp"
+CONF_HVAC_ODU_EXV_CURRENT_POSITION = "hvac_odu_exv_current_position"
+CONF_HVAC_ODU_EXV_SUPER_HEAT = "hvac_odu_exv_super_heat"
+CONF_HVAC_ODU_SUCTION_LINE_TEMP = "hvac_odu_suction_line_temp"
+CONF_HVAC_ODU_PRESSURE_SUCTION = "hvac_odu_pressure_suction"
+
 CONFIG_SCHEMA = (
     cv.COMPONENT_SCHEMA.extend(
         {
@@ -62,6 +82,7 @@ CONFIG_SCHEMA = (
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
+                entity_category=DIAGNOSTIC,
             )
         },
         {
@@ -253,6 +274,91 @@ CONFIG_SCHEMA = (
                 unit_of_measurement="",
                 accuracy_decimals=0,
             )
+        },
+        {
+            cv.GenerateID(): cv.declare_id(EconetSensor),
+            cv.Optional(CONF_HVAC_ODU_OUTSIDE_AIR_TEMP): sensor.sensor_schema(
+                unit_of_measurement="F",
+                icon=ICON_THERMOMETER,
+                accuracy_decimals=1,
+                device_class=DEVICE_CLASS_TEMPERATURE,
+                state_class=STATE_CLASS_MEASUREMENT,
+                entity_category=DIAGNOSTIC,
+            )
+        },
+        {
+            cv.GenerateID(): cv.declare_id(EconetSensor),
+            cv.Optional(CONF_HVAC_ODU_TEMP_EVAPORATOR_TEMP): sensor.sensor_schema(
+                unit_of_measurement="F",
+                accuracy_decimals=1,
+                device_class=DEVICE_CLASS_TEMPERATURE,
+                state_class=STATE_CLASS_MEASUREMENT,
+                entity_category=DIAGNOSTIC,
+            )
+        },
+        {
+            cv.GenerateID(): cv.declare_id(EconetSensor),
+            cv.Optional(CONF_HVAC_ODU_INVERTER_CRANK_SPEED): sensor.sensor_schema(
+                unit_of_measurement="",
+                accuracy_decimals=1,
+                entity_category=DIAGNOSTIC,
+            )
+        },
+        {
+            cv.GenerateID(): cv.declare_id(EconetSensor),
+            cv.Optional(CONF_HVAC_ODU_CRANKCASE_HEATER_TEMP): sensor.sensor_schema(
+                unit_of_measurement="F",
+                accuracy_decimals=1,
+                device_class=DEVICE_CLASS_TEMPERATURE,
+                state_class=STATE_CLASS_MEASUREMENT,
+                entity_category=DIAGNOSTIC,
+            )
+        },
+        {
+            cv.GenerateID(): cv.declare_id(EconetSensor),
+            cv.Optional(CONF_HVAC_ODU_EXV_CURRENT_POSITION): sensor.sensor_schema(
+                unit_of_measurement="",
+                accuracy_decimals=1,
+                entity_category=DIAGNOSTIC,
+            )
+        },
+        {
+            cv.GenerateID(): cv.declare_id(EconetSensor),
+            cv.Optional(CONF_HVAC_ODU_EXV_CURRENT_POSITION): sensor.sensor_schema(
+                unit_of_measurement="",
+                accuracy_decimals=1,
+                entity_category=DIAGNOSTIC,
+            )
+        },
+        {
+            cv.GenerateID(): cv.declare_id(EconetSensor),
+            cv.Optional(CONF_HVAC_ODU_EXV_SUPER_HEAT): sensor.sensor_schema(
+                unit_of_measurement="F",
+                accuracy_decimals=1,
+                device_class=DEVICE_CLASS_TEMPERATURE,
+                state_class=STATE_CLASS_MEASUREMENT,
+                entity_category=DIAGNOSTIC,
+            )
+        },
+        {
+            cv.GenerateID(): cv.declare_id(EconetSensor),
+            cv.Optional(CONF_HVAC_ODU_SUCTION_LINE_TEMP): sensor.sensor_schema(
+                unit_of_measurement="F",
+                accuracy_decimals=1,
+                device_class=DEVICE_CLASS_TEMPERATURE,
+                state_class=STATE_CLASS_MEASUREMENT,
+                entity_category=DIAGNOSTIC,
+            )
+        },
+        {
+            cv.GenerateID(): cv.declare_id(EconetSensor),
+            cv.Optional(CONF_HVAC_ODU_PRESSURE_SUCTION): sensor.sensor_schema(
+                unit_of_measurement="PSI",
+                accuracy_decimals=1,
+                device_class=DEVICE_CLASS_PRESSURE,
+                state_class=STATE_CLASS_MEASUREMENT,
+                entity_category=DIAGNOSTIC,
+            )
         }
     )
     .extend(ECONET_CLIENT_SCHEMA)
@@ -339,3 +445,9 @@ async def to_code(config):
     if CONF_CC_BLOWER_RPM in config:
         sens = await sensor.new_sensor(config[CONF_CC_BLOWER_RPM])
         cg.add(var.set_cc_blower_rpm_sensor(sens))
+
+    for key in SENSORS:
+        if key in config:
+            conf = config[key]
+            sens = await sensor.new_sensor(conf)
+            cg.add(var.f"set_{key}_sensor(sens))
