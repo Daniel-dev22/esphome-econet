@@ -85,7 +85,7 @@ CONFIG_SCHEMA = (
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
-                entity_category=DIAGNOSTIC,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
         {
@@ -286,7 +286,7 @@ CONFIG_SCHEMA = (
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
-                entity_category=DIAGNOSTIC,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
         {
@@ -296,7 +296,7 @@ CONFIG_SCHEMA = (
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
-                entity_category=DIAGNOSTIC,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
         {
@@ -304,7 +304,7 @@ CONFIG_SCHEMA = (
             cv.Optional(CONF_HVAC_ODU_INVERTER_CRANK_SPEED): sensor.sensor_schema(
                 unit_of_measurement="",
                 accuracy_decimals=1,
-                entity_category=DIAGNOSTIC,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
         {
@@ -314,7 +314,7 @@ CONFIG_SCHEMA = (
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
-                entity_category=DIAGNOSTIC,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
         {
@@ -322,7 +322,7 @@ CONFIG_SCHEMA = (
             cv.Optional(CONF_HVAC_ODU_EXV_CURRENT_POSITION): sensor.sensor_schema(
                 unit_of_measurement="",
                 accuracy_decimals=1,
-                entity_category=DIAGNOSTIC,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
         {
@@ -330,7 +330,7 @@ CONFIG_SCHEMA = (
             cv.Optional(CONF_HVAC_ODU_EXV_CURRENT_POSITION): sensor.sensor_schema(
                 unit_of_measurement="",
                 accuracy_decimals=1,
-                entity_category=DIAGNOSTIC,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
         {
@@ -340,7 +340,7 @@ CONFIG_SCHEMA = (
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
-                entity_category=DIAGNOSTIC,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
         {
@@ -350,7 +350,7 @@ CONFIG_SCHEMA = (
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
-                entity_category=DIAGNOSTIC,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
         {
@@ -360,7 +360,7 @@ CONFIG_SCHEMA = (
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_PRESSURE,
                 state_class=STATE_CLASS_MEASUREMENT,
-                entity_category=DIAGNOSTIC,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         }
     )
