@@ -135,7 +135,7 @@ class EconetSensor : public PollingComponent, public EconetClient {
 	
 	sensor::Sensor *hvac_odu_outside_air_temp_sensor_{nullptr};
 	sensor::Sensor *hvac_odu_evaporator_temp_sensor_{nullptr};
-	sensor::Sensor *hvac_odu_crankcase_heater_temp_sensor_{nullptr};
+	sensor::Sensor *hvac_odu_inverter_crank_speed_sensor_{nullptr};
 	sensor::Sensor *hvac_odu_crankcase_heater_temp_sensor_{nullptr};
 	sensor::Sensor *hvac_odu_exv_current_position_sensor_{nullptr};
 	sensor::Sensor *hvac_odu_exv_super_heat_sensor_{nullptr};
