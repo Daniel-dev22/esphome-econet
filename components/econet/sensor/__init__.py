@@ -28,7 +28,7 @@ EconetSensor = econet_ns.class_(
 
 SENSORS = [
     CONF_HVAC_ODU_OUTSIDE_AIR_TEMP,
-    CONF_HVAC_ODU_TEMP_EVAPORATOR_TEMP,
+    CONF_HVAC_ODU_EVAPORATOR_TEMP,
     CONF_HVAC_ODU_INVERTER_CRANK_SPEED,
     CONF_HVAC_ODU_CRANKCASE_HEATER_TEMP,
     CONF_HVAC_ODU_EXV_CURRENT_POSITION,
@@ -64,7 +64,7 @@ CONF_CC_BLOWER_CFM = "cc_blower_cfm"
 CONF_CC_BLOWER_RPM = "cc_blower_rpm"
 
 CONF_HVAC_ODU_OUTSIDE_AIR_TEMP = "hvac_odu_outside_air_temp"
-CONF_HVAC_ODU_TEMP_EVAPORATOR_TEMP = "hvac_odu_temp_evaporator_temp"
+CONF_HVAC_ODU_EVAPORATOR_TEMP = "hvac_odu_evaporator_temp"
 CONF_HVAC_ODU_INVERTER_CRANK_SPEED = "hvac_odu_inverter_crank_speed"
 CONF_HVAC_ODU_CRANKCASE_HEATER_TEMP = "hvac_odu_crankcase_heater_temp"
 CONF_HVAC_ODU_EXV_CURRENT_POSITION = "hvac_odu_exv_current_position"
@@ -288,7 +288,7 @@ CONFIG_SCHEMA = (
         },
         {
             cv.GenerateID(): cv.declare_id(EconetSensor),
-            cv.Optional(CONF_HVAC_ODU_TEMP_EVAPORATOR_TEMP): sensor.sensor_schema(
+            cv.Optional(CONF_HVAC_ODU_EVAPORATOR_TEMP): sensor.sensor_schema(
                 unit_of_measurement="F",
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
