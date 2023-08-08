@@ -110,14 +110,14 @@ class Econet : public Component {
 	std::string get_cc_hvacmode_text() { return this->cc_hvacmode_text; }
 	std::string get_cc_automode_text() { return this->cc_automode_text; }
 
-	float get_hvac_odu_outside_air_temp_sensor() { return this->hvac_odu_outside_air_temp_sensor; }
-	float get_hvac_odu_temp_evaporator_temp_sensor() { return this->hvac_odu_temp_evaporator_temp_sensor; }
-	float get_hvac_odu_inverter_crank_speed_sensor() { return this->hvac_odu_inverter_crank_speed_sensor; }
-	float get_hvac_odu_crankcase_heater_temp_sensor() { return this->hvac_odu_crankcase_heater_temp_sensor; }
-	float get_hvac_odu_exv_current_position_sensor() { return this->hvac_odu_exv_current_position_sensor; }
-	float get_hvac_odu_exv_super_heat_sensor() { return this->hvac_odu_exv_super_heat_sensor; }
-	float get_hvac_odu_suction_line_temp_sensor() { return this->hvac_odu_suction_line_temp_sensor; }
-	float get_hvac_odu_pressure_suction_sensor() { return this->hvac_odu_pressure_suction_sensor; }
+	float get_hvac_odu_outside_air_temp() { return this->hvac_odu_outside_air_temp; }
+	float get_hvac_odu_evaporator_temp() { return this->hvac_odu_evaporator_temp; }
+	float get_hvac_odu_inverter_crank_speed() { return this->hvac_odu_inverter_crank_speed; }
+	float get_hvac_odu_crankcase_heater_temp() { return this->hvac_odu_crankcase_heater_temp; }
+	float get_hvac_odu_exv_current_position() { return this->hvac_odu_exv_current_position; }
+	float get_hvac_odu_exv_super_heat() { return this->hvac_odu_exv_super_heat; }
+	float get_hvac_odu_suction_line_temp() { return this->hvac_odu_suction_line_temp; }
+	float get_hvac_odu_pressure_suction() { return this->hvac_odu_pressure_suction; }
 
 	void register_listener(uint8_t datapoint_id, const std::function<void(float)> &func);
 	

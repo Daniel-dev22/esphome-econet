@@ -204,7 +204,7 @@ void Econet::handle_float(uint32_t src_adr, std::string obj_string, float value)
 		}
 		else if(obj_string == "TEMP_EVP")
 		{
-			hvac_odu_temp_evaporator_temp = value;
+			hvac_odu_evaporator_temp = value;
 		}
 		else if(obj_string == "ISCSPEED")
 		{
