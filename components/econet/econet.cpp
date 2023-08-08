@@ -196,6 +196,41 @@ void Econet::handle_float(uint32_t src_adr, std::string obj_string, float value)
 			cc_dhumsetp = value;
 		}
 	}
+	else if(src_adr == OUTDOOR_UNIT)
+	{
+		if(obj_string == "TEMP_OAT")
+		{
+			hvac_odu_outside_air_temp = value;
+		}
+		else if(obj_string == "TEMP_EVP")
+		{
+			hvac_odu_temp_evaporator_temp = value;
+		}
+		else if(obj_string == "ISCSPEED")
+		{
+			hvac_odu_inverter_crank_speed = value;
+		}
+		else if(obj_string == "TEMP_CPT")
+		{
+			hvac_odu_crankcase_heater_temp = value;
+		}
+		else if(obj_string == "EXACTUAL")
+		{
+			hvac_odu_exv_current_position = value;
+		}
+		else if(obj_string == "EXVSUPER")
+		{
+			hvac_odu_exv_super_heat = value
+		}
+		else if(obj_string == "TEMP_OST")
+		{
+			hvac_odu_suction_line_temp = value;
+		}
+		else if(obj_string == "PRES_SUC")
+		{
+			hvac_odu_pressure_suction = value;
+		}
+	}
 }
 
 void Econet::handle_enumerated_text(uint32_t src_adr, std::string obj_string, uint8_t value, std::string text)
