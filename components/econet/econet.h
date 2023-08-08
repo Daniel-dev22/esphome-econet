@@ -190,14 +190,14 @@ class Econet : public Component {
 	std::string cc_hvacmode_text = "unknown";
 	std::string cc_automode_text = "unknown";
 	
-	float hvac_odu_outside_air_temp_sensor = 0;
-	float hvac_odu_temp_evaporator_temp_sensor = 0;
-	float hvac_odu_inverter_crank_speed_sensor = 0;
-	float hvac_odu_crankcase_heater_temp_sensor = 0;
-	float hvac_odu_exv_current_position_sensor = 0;
-	float hvac_odu_exv_super_heat_sensor = 0;
-	float hvac_odu_suction_line_temp_sensor = 0;
-	float hvac_odu_pressure_suction_sensor = 0;
+	float hvac_odu_outside_air_temp = 0;
+	float hvac_odu_temp_evaporator_temp = 0;
+	float hvac_odu_inverter_crank_speed = 0;
+	float hvac_odu_crankcase_heater_temp = 0;
+	float hvac_odu_exv_current_position = 0;
+	float hvac_odu_exv_super_heat = 0;
+	float hvac_odu_suction_line_temp = 0;
+	float hvac_odu_pressure_suction = 0;
 	
 	uint8_t req_id = 0;
 	uint32_t last_request_{0};
