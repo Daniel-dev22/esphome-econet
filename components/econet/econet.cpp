@@ -220,7 +220,7 @@ void Econet::handle_float(uint32_t src_adr, std::string obj_string, float value)
 		}
 		else if(obj_string == "EXVSUPER")
 		{
-			hvac_odu_exv_super_heat = value
+			hvac_odu_exv_super_heat = value;
 		}
 		else if(obj_string == "TEMP_OST")
 		{
