@@ -96,7 +96,7 @@ class EconetSensor : public PollingComponent, public EconetClient {
 		this->hvac_odu_exv_current_position_sensor_ = sensor;
 	}
 	void set_hvac_odu_exv_super_heat_sensor(sensor::Sensor *sensor) {
-		this->hvac_odu_exv_super_heat_sensor = sensor;
+		this->hvac_odu_exv_super_heat_sensor_ = sensor;
 	}
 	void set_hvac_odu_suction_line_temp_sensor(sensor::Sensor *sensor) {
 		this->hvac_odu_suction_line_temp_sensor_ = sensor;
