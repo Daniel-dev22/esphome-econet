@@ -14,6 +14,7 @@ from esphome.const import (
     DEVICE_CLASS_HUMIDITY,
     STATE_CLASS_MEASUREMENT,
     ENTITY_CATEGORY_DIAGNOSTIC,
+)
 
 from .. import (
     econet_ns,
