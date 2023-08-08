@@ -93,7 +93,7 @@ void EconetSensor::update() {
 	if (this->hvac_odu_crankcase_heater_temp_sensor_ != nullptr) {
 		this->hvac_odu_crankcase_heater_temp_sensor_->publish_state(this->econet->get_hvac_odu_crankcase_heater_temp());
 	}
-	if (this->hvac_odu_exv_current_position_sensor_- != nullptr) {
+	if (this->hvac_odu_exv_current_position_sensor_ != nullptr) {
 		this->hvac_odu_exv_current_position_sensor_->publish_state(this->econet->get_hvac_odu_exv_current_position());
 	}
 	if (this->hvac_odu_exv_super_heat_sensor_ != nullptr) {
