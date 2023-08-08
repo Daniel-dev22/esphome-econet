@@ -454,4 +454,4 @@ async def to_code(config):
         if key in config:
             conf = config[key]
             sens = await sensor.new_sensor(conf)
-            cg.add(var."set_"+ str(key) + "_sensor"(sens))
+            cg.add(var,"set_"+ str(conf) + "_sensor"(sens))
