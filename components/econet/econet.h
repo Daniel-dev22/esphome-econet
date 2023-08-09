@@ -191,7 +191,7 @@ class Econet : public Component {
 	std::string cc_automode_text = "unknown";
 	
 	float hvac_odu_outside_air_temp = 0;
-	float hvac_odu_temp_evaporator_temp = 0;
+	float hvac_odu_evaporator_temp = 0;
 	float hvac_odu_inverter_crank_speed = 0;
 	float hvac_odu_crankcase_heater_temp = 0;
 	float hvac_odu_exv_current_position = 0;
