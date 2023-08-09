@@ -72,7 +72,14 @@ SENSORS = [
     CONF_HVAC_ODU_EXV_CURRENT_POSITION,
     CONF_HVAC_ODU_EXV_SUPER_HEAT,
     CONF_HVAC_ODU_SUCTION_LINE_TEMP,
-    CONF_HVAC_ODU_PRESSURE_SUCTION
+    CONF_HVAC_ODU_PRESSURE_SUCTION,
+    CONF_CC_HVACMODE,
+    CONF_CC_SPT_STAT,
+    CONF_CC_COOLSETP,
+    CONF_CC_AUTOMODE,
+    CONF_CC_REL_HUM,
+    CONF_CC_BLOWER_CFM,
+    CONF_CC_BLOWER_RPM
 ]
 
 
@@ -97,6 +104,7 @@ CONFIG_SCHEMA = (
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
 		{
@@ -115,6 +123,7 @@ CONFIG_SCHEMA = (
                 unit_of_measurement="gpm",
                 accuracy_decimals=1,
                 state_class=STATE_CLASS_MEASUREMENT,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
 		{
@@ -123,6 +132,7 @@ CONFIG_SCHEMA = (
                 unit_of_measurement="gal",
                 accuracy_decimals=1,
                 state_class=STATE_CLASS_MEASUREMENT,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
 		{
@@ -130,6 +140,7 @@ CONFIG_SCHEMA = (
             cv.Optional(CONF_BTUS_USED): sensor.sensor_schema(
                 unit_of_measurement="kbtu",
                 accuracy_decimals=3,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
 		{
@@ -137,6 +148,7 @@ CONFIG_SCHEMA = (
             cv.Optional(CONF_IGNITION_CYCLES): sensor.sensor_schema(
                 unit_of_measurement="",
                 accuracy_decimals=0,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
 		{
@@ -144,6 +156,7 @@ CONFIG_SCHEMA = (
             cv.Optional(CONF_INSTANT_BTUS): sensor.sensor_schema(
                 unit_of_measurement="kbtu/hr",
                 accuracy_decimals=3,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
 		{
@@ -151,6 +164,7 @@ CONFIG_SCHEMA = (
             cv.Optional(CONF_HOT_WATER): sensor.sensor_schema(
                 unit_of_measurement="%",
                 accuracy_decimals=0,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
 		{
@@ -161,6 +175,7 @@ CONFIG_SCHEMA = (
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
 		{
@@ -171,6 +186,7 @@ CONFIG_SCHEMA = (
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
         {
@@ -181,6 +197,7 @@ CONFIG_SCHEMA = (
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
         {
@@ -189,6 +206,7 @@ CONFIG_SCHEMA = (
                 unit_of_measurement="W",
                 accuracy_decimals=3,
                 state_class=STATE_CLASS_MEASUREMENT,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
         {
@@ -199,6 +217,7 @@ CONFIG_SCHEMA = (
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
         {
@@ -209,6 +228,7 @@ CONFIG_SCHEMA = (
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
         {
@@ -270,6 +290,7 @@ CONFIG_SCHEMA = (
             cv.Optional(CONF_CC_BLOWER_CFM): sensor.sensor_schema(
                 unit_of_measurement="",
                 accuracy_decimals=0,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
 		{
@@ -277,6 +298,7 @@ CONFIG_SCHEMA = (
             cv.Optional(CONF_CC_BLOWER_RPM): sensor.sensor_schema(
                 unit_of_measurement="",
                 accuracy_decimals=0,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
         {
@@ -428,27 +450,6 @@ async def to_code(config):
     if CONF_DISCTEMP in config:
         sens = await sensor.new_sensor(config[CONF_DISCTEMP])
         cg.add(var.set_discharge_temp_sensor(sens))
-    if CONF_CC_HVACMODE in config:
-        sens = await sensor.new_sensor(config[CONF_CC_HVACMODE])
-        cg.add(var.set_cc_hvacmode_sensor(sens))
-    if CONF_CC_SPT_STAT in config:
-        sens = await sensor.new_sensor(config[CONF_CC_SPT_STAT])
-        cg.add(var.set_cc_spt_stat_sensor(sens))
-    if CONF_CC_COOLSETP in config:
-        sens = await sensor.new_sensor(config[CONF_CC_COOLSETP])
-        cg.add(var.set_cc_coolsetp_sensor(sens))
-    if CONF_CC_AUTOMODE in config:
-        sens = await sensor.new_sensor(config[CONF_CC_AUTOMODE])
-        cg.add(var.set_cc_automode_sensor(sens))
-    if CONF_CC_REL_HUM in config:
-        sens = await sensor.new_sensor(config[CONF_CC_REL_HUM])
-        cg.add(var.set_cc_rel_hum_sensor(sens))
-    if CONF_CC_BLOWER_CFM in config:
-        sens = await sensor.new_sensor(config[CONF_CC_BLOWER_CFM])
-        cg.add(var.set_cc_blower_cfm_sensor(sens))
-    if CONF_CC_BLOWER_RPM in config:
-        sens = await sensor.new_sensor(config[CONF_CC_BLOWER_RPM])
-        cg.add(var.set_cc_blower_rpm_sensor(sens))
 
     for key in SENSORS:
         if key in config:
