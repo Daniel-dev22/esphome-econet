@@ -234,7 +234,7 @@ void EconetClimate::control(const climate::ClimateCall &call) {
 		else
 		{
 			climate_mode = call.get_mode().value();
-			uint8_t new_mode = false;
+			bool new_mode = false;
 			
 			switch (climate_mode) {
 				case climate::CLIMATE_MODE_AUTO:
