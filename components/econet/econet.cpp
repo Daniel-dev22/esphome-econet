@@ -196,29 +196,43 @@ void Econet::handle_float(uint32_t src_adr, std::string obj_string, float value)
 			cc_dhumsetp = value;
 		}
 	}
+	else if(src_adr == OUTDOOR_UNIT)
+	{
+		if(obj_string == "TEMP_OAT")
+		{
+			hvac_odu_outside_air_temp = value;
+		}
+		else if(obj_string == "TEMP_EVP")
+		{
+			hvac_odu_evaporator_temp = value;
+		}
+		else if(obj_string == "ISCSPEED")
+		{
+			hvac_odu_inverter_crank_speed = value;
+		}
+		else if(obj_string == "TEMP_CPT")
+		{
+			hvac_odu_crankcase_heater_temp = value;
+		}
+		else if(obj_string == "EXACTUAL")
+		{
+			hvac_odu_exv_current_position = value;
+		}
+		else if(obj_string == "EXVSUPER")
+		{
+			hvac_odu_exv_super_heat = value;
+		}
+		else if(obj_string == "TEMP_OST")
+		{
+			hvac_odu_suction_line_temp = value;
+		}
+		else if(obj_string == "PRES_SUC")
+		{
+			hvac_odu_pressure_suction = value;
+		}
+	}
 }
-	/*
-	
-							if(item_num == 4)
-						{
-							if(item_value == 0)
-							{
-								enable_state = false;
-								// send_datapoint(0,0);
-							}
-							else if(item_value == 1)
-							{
-								enable_state = true;
-								// send_datapoint(0,1);
-							}
-						}
-						else if(item_num == 5)
-						{
-							ESP_LOGD("econet", "WHTRMODE (val): %d", item_value);
-							ESP_LOGD("econet", "WHTRMODE (str): %s", s.c_str());
-						}
-						
-	*/
+
 void Econet::handle_enumerated_text(uint32_t src_adr, std::string obj_string, uint8_t value, std::string text)
 {
 	if(src_adr == SMARTEC_TRANSLATOR)
@@ -489,6 +503,11 @@ void Econet::make_request()
 				str_ids.push_back("EVAPTEMP");
 				str_ids.push_back("SUCTIONT");
 				str_ids.push_back("DISCTEMP");
+				//str_ids.push_back("ALRMALRT");
+				//str_ids.push_back("ALARM_01");
+				//str_ids.push_back("ALARM_02");
+				//str_ids.push_back("ALARM_03");
+				//str_ids.push_back("ALARM_04");
 			}
 			else if(type_id_ == 2 && hvac_wifi_module_connected_ == false)
 			{
@@ -506,10 +525,10 @@ void Econet::make_request()
 				str_ids.push_back("SPT_STAT");
 				request_strings(dst_adr, src_adr, str_ids);
 				/*
-				str_ids.push_back("AAUX1CFM");
-				str_ids.push_back("AAUX2CFM");
-				str_ids.push_back("AAUX3CFM");
-				str_ids.push_back("AAUX4CFM");
+				str_ids.push_back("ALARM_0");
+				str_ids.push_back("ALARM_01");
+				str_ids.push_back("ALARM_02");
+				str_ids.push_back("ALARM_03");
 				*/
 			}
 			if(type_id_ != 2)

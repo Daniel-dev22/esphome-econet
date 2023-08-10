@@ -110,6 +110,15 @@ class Econet : public Component {
 	std::string get_cc_hvacmode_text() { return this->cc_hvacmode_text; }
 	std::string get_cc_automode_text() { return this->cc_automode_text; }
 
+	float get_hvac_odu_outside_air_temp() { return this->hvac_odu_outside_air_temp; }
+	float get_hvac_odu_evaporator_temp() { return this->hvac_odu_evaporator_temp; }
+	float get_hvac_odu_inverter_crank_speed() { return this->hvac_odu_inverter_crank_speed; }
+	float get_hvac_odu_crankcase_heater_temp() { return this->hvac_odu_crankcase_heater_temp; }
+	float get_hvac_odu_exv_current_position() { return this->hvac_odu_exv_current_position; }
+	float get_hvac_odu_exv_super_heat() { return this->hvac_odu_exv_super_heat; }
+	float get_hvac_odu_suction_line_temp() { return this->hvac_odu_suction_line_temp; }
+	float get_hvac_odu_pressure_suction() { return this->hvac_odu_pressure_suction; }
+
 	void register_listener(uint8_t datapoint_id, const std::function<void(float)> &func);
 	
  protected:
@@ -181,6 +190,15 @@ class Econet : public Component {
 	std::string cc_hvacmode_text = "unknown";
 	std::string cc_automode_text = "unknown";
 	
+	float hvac_odu_outside_air_temp = 0;
+	float hvac_odu_evaporator_temp = 0;
+	float hvac_odu_inverter_crank_speed = 0;
+	float hvac_odu_crankcase_heater_temp = 0;
+	float hvac_odu_exv_current_position = 0;
+	float hvac_odu_exv_super_heat = 0;
+	float hvac_odu_suction_line_temp = 0;
+	float hvac_odu_pressure_suction = 0;
+	
 	uint8_t req_id = 0;
 	uint32_t last_request_{0};
 	uint32_t last_read_{0};
@@ -229,6 +247,7 @@ class Econet : public Component {
 	uint32_t HEAT_PUMP_WATER_HEATER =       0x1280; // 80 00 12 80
 	uint32_t AIR_HANDLER = 					0x3c0;	// 80 00 03 C0
 	uint32_t CONTROL_CENTER = 				0x380;	// 80 00 03 80
+	uint32_t OUTDOOR_UNIT = 				0x400;
 
 	uint8_t DST_ADR_POS = 0;
 	uint8_t SRC_ADR_POS = 5;

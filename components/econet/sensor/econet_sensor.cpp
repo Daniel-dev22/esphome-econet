@@ -38,7 +38,6 @@ void EconetSensor::update() {
 	if (this->hot_water_sensor_ != nullptr) {
 		this->hot_water_sensor_->publish_state(this->econet->get_hot_water());
 	}
-	
 	if (this->ambient_temp_sensor_ != nullptr) {
 		this->ambient_temp_sensor_->publish_state(this->econet->get_ambient_temp());
 	}
@@ -81,6 +80,30 @@ void EconetSensor::update() {
 	}
 	if (this->cc_blower_rpm_sensor_ != nullptr) {
 		this->cc_blower_rpm_sensor_->publish_state(this->econet->get_cc_blower_rpm());
+	}
+	if (this->hvac_odu_outside_air_temp_sensor_ != nullptr) {
+		this->hvac_odu_outside_air_temp_sensor_->publish_state(this->econet->get_hvac_odu_outside_air_temp());
+	}
+	if (this->hvac_odu_evaporator_temp_sensor_ != nullptr) {
+		this->hvac_odu_evaporator_temp_sensor_->publish_state(this->econet->get_hvac_odu_evaporator_temp());
+	}
+	if (this->hvac_odu_inverter_crank_speed_sensor_ != nullptr) {
+		this->hvac_odu_inverter_crank_speed_sensor_->publish_state(this->econet->get_hvac_odu_inverter_crank_speed());
+	}
+	if (this->hvac_odu_crankcase_heater_temp_sensor_ != nullptr) {
+		this->hvac_odu_crankcase_heater_temp_sensor_->publish_state(this->econet->get_hvac_odu_crankcase_heater_temp());
+	}
+	if (this->hvac_odu_exv_current_position_sensor_ != nullptr) {
+		this->hvac_odu_exv_current_position_sensor_->publish_state(this->econet->get_hvac_odu_exv_current_position());
+	}
+	if (this->hvac_odu_exv_super_heat_sensor_ != nullptr) {
+		this->hvac_odu_exv_super_heat_sensor_->publish_state(this->econet->get_hvac_odu_exv_super_heat());
+	}
+	if (this->hvac_odu_suction_line_temp_sensor_ != nullptr) {
+		this->hvac_odu_suction_line_temp_sensor_->publish_state(this->econet->get_hvac_odu_suction_line_temp());
+	}
+	if (this->hvac_odu_pressure_suction_sensor_ != nullptr) {
+		this->hvac_odu_pressure_suction_sensor_->publish_state(this->econet->get_hvac_odu_pressure_suction());
 	}
 }
 

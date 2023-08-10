@@ -38,7 +38,7 @@ ECONET_NUMBER_SCHEMA = number.number_schema(EconetNumber).extend(
         cv.Required(CONF_MIN_VALUE): cv.float_, 
         cv.Required(CONF_STEP): cv.positive_float,
     }
-)
+).extend(cv.polling_component_schema("5s"))
 
 CONFIG_SCHEMA = ( 
     ECONET_CLIENT_SCHEMA.extend(
@@ -47,7 +47,6 @@ CONFIG_SCHEMA = (
             #cv.Optional(CONF_CC_SOMETHING): ECONET_NUMBER_SCHEMA,
         }
     )
-        .extend(cv.COMPONENT_SCHEMA).extend(cv.polling_component_schema("5s"))
 )
 
 
