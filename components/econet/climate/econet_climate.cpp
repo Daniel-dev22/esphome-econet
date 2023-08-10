@@ -202,7 +202,7 @@ void EconetClimate::control(const climate::ClimateCall &call) {
 	
 	if (call.get_mode().has_value())
 	{
-		if (this->econet->get_type_id() == 2) {
+		if (this->econet->get_type_id() == 2)
 		{
 			climate_mode = call.get_mode().value();
 			uint8_t new_mode = 0;
@@ -254,7 +254,6 @@ void EconetClimate::control(const climate::ClimateCall &call) {
 			this->econet->set_enable_state(new_mode);
 		}
 	}
-}
 	
 	if (call.get_custom_fan_mode().has_value()) {
 		fan_mode = call.get_custom_fan_mode().value();
