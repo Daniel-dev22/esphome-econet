@@ -200,35 +200,62 @@ void EconetClimate::control(const climate::ClimateCall &call) {
 		// ESP_LOGD("econet", "Lets change the temp to %f", setpoint);
 	}
 	
+			if(this->econet->get_type_id() == 1)
+		{
+			switch((int)this->econet->get_mode())
+			{
 	if(call.get_mode().has_value())
-	{
-		climate_mode = call.get_mode().value();
-		uint8_t new_mode = 0;
-		
-		switch (climate_mode) {
-			case climate::CLIMATE_MODE_HEAT_COOL:
-				new_mode = 2;
-				break;
-			case climate::CLIMATE_MODE_HEAT:
-			  	new_mode = 0;
-				break;
-			case climate::CLIMATE_MODE_COOL:
-			  	new_mode = 1;
-				break;
-			case climate::CLIMATE_MODE_FAN_ONLY:
-			  	new_mode = 3;
-				break;
-			case climate::CLIMATE_MODE_OFF:
-			  	new_mode = 4;
-				break;
-			default:
-			  new_mode = 4;
+		if(this->econet->get_type_id() == 2) {
+		{
+			climate_mode = call.get_mode().value();
+			uint8_t new_mode = 0;
+			
+			switch (climate_mode) {
+				case climate::CLIMATE_MODE_HEAT_COOL:
+					new_mode = 2;
+					break;
+				case climate::CLIMATE_MODE_HEAT:
+				  	new_mode = 0;
+					break;
+				case climate::CLIMATE_MODE_COOL:
+				  	new_mode = 1;
+					break;
+				case climate::CLIMATE_MODE_FAN_ONLY:
+				  	new_mode = 3;
+					break;
+				case climate::CLIMATE_MODE_OFF:
+				  	new_mode = 4;
+					break;
+				default:
+				  new_mode = 4;
+			}
+			ESP_LOGI("econet", "Raw Mode is %d", climate_mode);
+			ESP_LOGI("econet", "Lets change the mode to %d", new_mode);
+			// call.get_preset().value()
+			// Call to this->econet->setMode
+			this->econet->set_new_mode(new_mode);
 		}
-		ESP_LOGI("econet", "Raw Mode is %d", climate_mode);
-		ESP_LOGI("econet", "Lets change the mode to %d", new_mode);
-		// call.get_preset().value()
-		// Call to this->econet->setMode
-		this->econet->set_new_mode(new_mode);
+		else
+		{
+			climate_mode = call.get_mode().value();
+			uint8_t new_mode = false;
+			
+			switch (climate_mode) {
+				case climate::CLIMATE_MODE_AUTO:
+					new_mode = true;
+					break;
+				case climate::CLIMATE_MODE_OFF:
+				  	new_mode = false;
+					break;
+				default:
+				  new_mode = true;
+			}
+			ESP_LOGI("econet", "Raw Mode is %d", climate_mode);
+			ESP_LOGI("econet", "Lets change the mode to %d", new_mode);
+			// call.get_preset().value()
+			// Call to this->econet->setMode
+			this->econet->set_enable_state(new_mode);
+		}
 	}
 	
 	if (call.get_custom_fan_mode().has_value()) {
