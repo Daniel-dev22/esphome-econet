@@ -200,9 +200,9 @@ void EconetClimate::control(const climate::ClimateCall &call) {
 		// ESP_LOGD("econet", "Lets change the temp to %f", setpoint);
 	}
 	
-	if(call.get_mode().has_value())
+	if (call.get_mode().has_value())
 	{
-		if(this->econet->get_type_id() == 2) {
+		if (this->econet->get_type_id() == 2) {
 		{
 			climate_mode = call.get_mode().value();
 			uint8_t new_mode = 0;
