@@ -9,7 +9,7 @@ esphome:
   comment: ${device_description}
   project:
     name: "daniel-dev22.econet"
-    version: 0.1.0
+    version: 0.1.5
 
 preferences:
   flash_write_interval: "24h"
