@@ -29,7 +29,9 @@ The  M5Stack ATOM RS485 K045 Kit includes two components, the RS485 interface, a
 ### Hardware Installation ###
 
 Cut the connector off one one end of the RJ11/12 cable, then strip and connect the Red, Green, and Yellow cable wires to the RS485 device's screw terminals, Red to B, Green to A, and Yellow to G.  A and B are for data communication, and G is ground. 12V is left empty.
- 
+
+*NOTE: Wire colors can vary from cable to cable. Ensure you are matching the pins as shown in the diagram below regardless of cable color, i.e. Pin 3 to B, Pin 4 to A, Pin 5 to G.*
+
 ```
     6P4C RJ11/RJ12 male connector end view   
     
@@ -46,9 +48,9 @@ Yellow  GND 5  ---       +--+
 
 ### Software Installation ###
 
-Installation of esphome-econet requires having first installed ESPHome. See Getting Started at https://esphome.io/index.html for ESPHome installation instructions. 
+See Getting Started at https://esphome.io/index.html for ESPHome usage and installation instructions. Once flashed with econet-esphome, the device will directly communicate with Home Assistant via API.
 
-Three econet based water heater types are supported.  Each has its own `yaml` configuration file in this repo that defines the applicable Home Assistant Sensors and Controls.  These are:
+The below econet based water heater types are supported.  Each has its own `yaml` configuration file in this repo that defines the applicable Home Assistant Sensors and Controls.  These are:
 
 **Tankless Water Heater**
 
@@ -58,11 +60,13 @@ Three econet based water heater types are supported.  Each has its own `yaml` co
 
 - [econet_heatpump_water_heater.yaml](econet_heatpump_water_heater.yaml)
 
-**Electric Water Heater**
-- Not Currently Supported
-
 **HVAC**
+
 - [econet_hvac.yaml](econet_hvac.yaml)
+
+**Electric Water Heater**
+
+- Not Currently Supported
 
 ### Compiling and Uploading esphome-econet ###
 
@@ -74,23 +78,32 @@ Run `ls /dev/ttyUSB*` again and note the new port shown, perhaps /dev/ttyUSB2 (t
 Extract the contents of the water heater's configuration file from the repo to a new file in the Home Assistant /config directory.
 
 Edit the configuration file:
-- Insert the local network's wifi credentials or `secret` references in place of the sample entries.
-- Make sure `external_components` is set to:
+
+* Insert the local network's wifi credentials or `secret` references in place of the sample entries.
+
+```yaml
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
 ```
+
+- Make sure `external_components` is set to:
+
+```yaml
 external_components:
-  - source: github://stockmopar/esphome-econet
+  - source: github://Daniel-dev22/esphome-econet
 ```
 - Save and exit the file
 
 Run the following command to compile and upload esphome-econet to the ATOM.  This assumes the docker container is named `esphome` and that the ATOM is found on `/dev/ttyUSB2`. Change as necessary.
-```
-sudo docker run --rm -v "${PWD}":/config --device=/dev/ttyUSB2 -it esphome/esphome run econet_heatpump.yaml
+```bash
+docker run --rm -v "${PWD}":/config --device=/dev/ttyUSB2 -it esphome/esphome run econet_heatpump_water_heater.yaml
 ```
 The program should compile and ask whether to install OTA or via USB. Choose USB.  It should then upload.  
 
 Once uploaded, unplug the USB cable from the computer and move the device to the water heater.  Connect the RJ11/12 cable to the port on the display panel and provide power from a wall wart to the USB cable that is plugged into the ATOM.
 
-Open Home Assistant and Add a New ESPHome Integration choosing esphome-econet.  However, the device may be discovered automatically, in which case just accept the new device and wait a few moments.  A number of sensors will soon appear in `Developer Tools > States`. These will reflect the name of your water heater that you may have configured in the Rheem econet app on a mobile device.  This package though is strictly local and does not require a cloud account or its credentials.
+Open Home Assistant and Add a New ESPHome Integration choosing esphome.  The device may be discovered automatically, in which case just accept the new device and wait a few moments.  A number of sensors will soon appear in `Developer Tools > States`. These will reflect the name of your water heater that you may have configured in the Rheem econet app on a mobile device.  This package though is strictly local and does not require a cloud account or its credentials.
 
 ## Protocol Documentation ##
 
