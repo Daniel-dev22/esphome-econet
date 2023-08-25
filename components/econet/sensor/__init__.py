@@ -7,14 +7,16 @@ import esphome.config_validation as cv
 from esphome.components import sensor
 from esphome.const import (
     CONF_ID,
-    UNIT_CELSIUS,
-    ICON_THERMOMETER,
-    DEVICE_CLASS_SPEED,
-    DEVICE_CLASS_TEMPERATURE,
     DEVICE_CLASS_HUMIDITY,
+    DEVICE_CLASS_MOISTURE,
+    DEVICE_CLASS_POWER,
     DEVICE_CLASS_PRESSURE,
-    STATE_CLASS_MEASUREMENT,
+    DEVICE_CLASS_TEMPERATURE,
+    DEVICE_CLASS_WATER,
     ENTITY_CATEGORY_DIAGNOSTIC,
+    ICON_WATER,
+    STATE_CLASS_MEASUREMENT,
+
 )
 
 from .. import (
@@ -89,7 +91,6 @@ CONFIG_SCHEMA = (
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_TEMP_IN): sensor.sensor_schema(
                 unit_of_measurement="°F",
-                icon=ICON_THERMOMETER,
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
@@ -100,7 +101,6 @@ CONFIG_SCHEMA = (
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_TEMP_OUT): sensor.sensor_schema(
                 unit_of_measurement="°F",
-                icon=ICON_THERMOMETER,
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
@@ -111,7 +111,6 @@ CONFIG_SCHEMA = (
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_SETPOINT): sensor.sensor_schema(
                 unit_of_measurement="°F",
-                icon=ICON_THERMOMETER,
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
@@ -124,6 +123,7 @@ CONFIG_SCHEMA = (
                 accuracy_decimals=1,
                 state_class=STATE_CLASS_MEASUREMENT,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+                icon=ICON_WATER,
             )
         },
 		{
@@ -131,6 +131,7 @@ CONFIG_SCHEMA = (
             cv.Optional(CONF_WATER_USED): sensor.sensor_schema(
                 unit_of_measurement="gal",
                 accuracy_decimals=1,
+                device_class=DEVICE_CLASS_WATER,
                 state_class=STATE_CLASS_MEASUREMENT,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
@@ -164,6 +165,7 @@ CONFIG_SCHEMA = (
             cv.Optional(CONF_HOT_WATER): sensor.sensor_schema(
                 unit_of_measurement="%",
                 accuracy_decimals=0,
+                device_class=DEVICE_CLASS_MOISTURE,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
@@ -171,7 +173,6 @@ CONFIG_SCHEMA = (
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_AMBIENTT): sensor.sensor_schema(
                 unit_of_measurement="°F",
-                icon=ICON_THERMOMETER,
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
@@ -182,7 +183,6 @@ CONFIG_SCHEMA = (
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_LOHTRTMP): sensor.sensor_schema(
                 unit_of_measurement="°F",
-                icon=ICON_THERMOMETER,
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
@@ -193,7 +193,6 @@ CONFIG_SCHEMA = (
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_UPHTRTMP): sensor.sensor_schema(
                 unit_of_measurement="°F",
-                icon=ICON_THERMOMETER,
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
@@ -205,6 +204,7 @@ CONFIG_SCHEMA = (
             cv.Optional(CONF_POWRWATT): sensor.sensor_schema(
                 unit_of_measurement="W",
                 accuracy_decimals=3,
+                device_class=DEVICE_CLASS_POWER,
                 state_class=STATE_CLASS_MEASUREMENT,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
@@ -213,7 +213,6 @@ CONFIG_SCHEMA = (
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_EVAPTEMP): sensor.sensor_schema(
                 unit_of_measurement="°F",
-                icon=ICON_THERMOMETER,
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
@@ -224,7 +223,6 @@ CONFIG_SCHEMA = (
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_SUCTIONT): sensor.sensor_schema(
                 unit_of_measurement="°F",
-                icon=ICON_THERMOMETER,
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
@@ -235,17 +233,16 @@ CONFIG_SCHEMA = (
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_DISCTEMP): sensor.sensor_schema(
                 unit_of_measurement="°F",
-                icon=ICON_THERMOMETER,
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             )
         },
         {
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_CC_SPT_STAT): sensor.sensor_schema(
                 unit_of_measurement="°F",
-                icon=ICON_THERMOMETER,
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
@@ -255,7 +252,6 @@ CONFIG_SCHEMA = (
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_CC_COOLSETP): sensor.sensor_schema(
                 unit_of_measurement="°F",
-                icon=ICON_THERMOMETER,
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
@@ -279,7 +275,6 @@ CONFIG_SCHEMA = (
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_CC_REL_HUM): sensor.sensor_schema(
                 unit_of_measurement="%",
-                icon=ICON_THERMOMETER,
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_HUMIDITY,
                 state_class=STATE_CLASS_MEASUREMENT,
@@ -305,7 +300,6 @@ CONFIG_SCHEMA = (
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_HVAC_ODU_OUTSIDE_AIR_TEMP): sensor.sensor_schema(
                 unit_of_measurement="F",
-                icon=ICON_THERMOMETER,
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
