@@ -7,6 +7,7 @@ import esphome.config_validation as cv
 from esphome.components import binary_sensor
 from esphome.const import (
     CONF_ID,
+    DEVICE_CLASS_RUNNING,
 )
 
 from .. import (
@@ -29,19 +30,27 @@ CONFIG_SCHEMA = (
     cv.COMPONENT_SCHEMA.extend(
         {
             cv.GenerateID(): cv.declare_id(EconetBinarySensor),
-            cv.Optional(CONF_ENABLE_STATE): binary_sensor.binary_sensor_schema()
+            cv.Optional(CONF_ENABLE_STATE): binary_sensor.binary_sensor_schema(
+                device_class=DEVICE_CLASS_RUNNING,
+            )
         },
 		{
             cv.GenerateID(): cv.declare_id(EconetBinarySensor),
-            cv.Optional(CONF_HEATCTRL): binary_sensor.binary_sensor_schema()
+            cv.Optional(CONF_HEATCTRL): binary_sensor.binary_sensor_schema(
+                device_class=DEVICE_CLASS_RUNNING,
+            )
         },
 		{
             cv.GenerateID(): cv.declare_id(EconetBinarySensor),
-            cv.Optional(CONF_FAN_CTRL): binary_sensor.binary_sensor_schema()
+            cv.Optional(CONF_FAN_CTRL): binary_sensor.binary_sensor_schema(
+                device_class=DEVICE_CLASS_RUNNING,
+            )
         },
 		{
             cv.GenerateID(): cv.declare_id(EconetBinarySensor),
-            cv.Optional(CONF_COMP_RLY): binary_sensor.binary_sensor_schema()
+            cv.Optional(CONF_COMP_RLY): binary_sensor.binary_sensor_schema(
+                device_class=DEVICE_CLASS_RUNNING,
+            )
         }
     )
     .extend(ECONET_CLIENT_SCHEMA)
