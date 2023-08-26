@@ -54,8 +54,8 @@ CONFIG_SCHEMA = (
 
 async def to_code(config): 
 
-    await cg.register_component(var, config)
     econet_var = await cg.get_variable(config[CONF_ECONET_ID])
+    await cg.register_component(econet_var, config)
     cg.add(var.set_econet(econet_var))
 
 
@@ -63,4 +63,4 @@ async def to_code(config):
         if key in config:
             conf = config[key]
             sens = await sensor.new_switch(conf)
-            cg.add(getattr(var,f"set_{key}_switch")(sens))
+            cg.add(getattr(econet_var,f"set_{key}_switch")(sens))
