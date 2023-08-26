@@ -64,4 +64,4 @@ async def to_code(config):
         if key in config:
             conf = config[key]
             sens = await switch.new_switch(conf)
-            cg.add(getattr(var,f"set_{key}")(sens))
+            #cg.add(getattr(var,f"set_{key}")(sens))
