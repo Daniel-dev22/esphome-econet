@@ -67,6 +67,22 @@ CONF_HVAC_ODU_SUCTION_LINE_TEMP = "hvac_odu_suction_line_temp"
 CONF_HVAC_ODU_PRESSURE_SUCTION = "hvac_odu_pressure_suction"
 
 SENSORS = [
+    CONF_TEMP_IN,
+    CONF_TEMP_OUT,
+    CONF_SETPOINT,
+    CONF_FLOW_RATE,
+    CONF_WATER_USED,
+    CONF_BTUS_USED,
+    CONF_IGNITION_CYCLES,
+    CONF_INSTANT_BTUS,
+    CONF_HOT_WATER,
+    CONF_AMBIENTT,
+    CONF_LOHTRTMP,
+    CONF_UPHTRTMP,
+    CONF_POWRWATT,
+    CONF_EVAPTEMP,
+    CONF_SUCTIONT,
+    CONF_DISCTEMP,
     CONF_HVAC_ODU_OUTSIDE_AIR_TEMP,
     CONF_HVAC_ODU_EVAPORATOR_TEMP,
     CONF_HVAC_ODU_INVERTER_CRANK_SPEED,
@@ -396,54 +412,8 @@ async def to_code(config):
     econet_var = await cg.get_variable(config[CONF_ECONET_ID])
     cg.add(var.set_econet(econet_var))
 
-    if CONF_TEMP_IN in config:
-        sens = await sensor.new_sensor(config[CONF_TEMP_IN])
-        cg.add(var.set_temp_in_sensor(sens))
-    if CONF_TEMP_OUT in config:
-        sens = await sensor.new_sensor(config[CONF_TEMP_OUT])
-        cg.add(var.set_temp_out_sensor(sens))
-    if CONF_SETPOINT in config:
-        sens = await sensor.new_sensor(config[CONF_SETPOINT])
-        cg.add(var.set_setpoint_sensor(sens))
-    if CONF_FLOW_RATE in config:
-        sens = await sensor.new_sensor(config[CONF_FLOW_RATE])
-        cg.add(var.set_flow_rate_sensor(sens))
-    if CONF_WATER_USED in config:
-        sens = await sensor.new_sensor(config[CONF_WATER_USED])
-        cg.add(var.set_water_used_sensor(sens))
-    if CONF_BTUS_USED in config:
-        sens = await sensor.new_sensor(config[CONF_BTUS_USED])
-        cg.add(var.set_btus_used_sensor(sens))
-    if CONF_IGNITION_CYCLES in config:
-        sens = await sensor.new_sensor(config[CONF_IGNITION_CYCLES])
-        cg.add(var.set_ignition_cycles_sensor(sens))
-    if CONF_INSTANT_BTUS in config:
-        sens = await sensor.new_sensor(config[CONF_INSTANT_BTUS])
-        cg.add(var.set_instant_btus_sensor(sens))
-    if CONF_HOT_WATER in config:
-        sens = await sensor.new_sensor(config[CONF_HOT_WATER])
-        cg.add(var.set_hot_water_sensor(sens))
-    if CONF_AMBIENTT in config:
-        sens = await sensor.new_sensor(config[CONF_AMBIENTT])
-        cg.add(var.set_ambient_temp_sensor(sens))
-    if CONF_LOHTRTMP in config:
-        sens = await sensor.new_sensor(config[CONF_LOHTRTMP])
-        cg.add(var.set_lower_water_heater_temp_sensor(sens))
-    if CONF_UPHTRTMP in config:
-        sens = await sensor.new_sensor(config[CONF_UPHTRTMP])
-        cg.add(var.set_upper_water_heater_temp_sensor(sens))
-    if CONF_POWRWATT in config:
-        sens = await sensor.new_sensor(config[CONF_POWRWATT])
-        cg.add(var.set_power_watt_sensor(sens))
-    if CONF_EVAPTEMP in config:
-        sens = await sensor.new_sensor(config[CONF_EVAPTEMP])
-        cg.add(var.set_evap_temp_sensor(sens))
-    if CONF_SUCTIONT in config:
-        sens = await sensor.new_sensor(config[CONF_SUCTIONT])
-        cg.add(var.set_suction_temp_sensor(sens))
-    if CONF_DISCTEMP in config:
-        sens = await sensor.new_sensor(config[CONF_DISCTEMP])
-        cg.add(var.set_discharge_temp_sensor(sens))
+
+
 
     for key in SENSORS:
         if key in config:
