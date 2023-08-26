@@ -54,7 +54,7 @@ CONFIG_SCHEMA = (
 
 async def to_code(config): 
 
-    var = cg.new_Pvariable(config[CONF_ID])
+    var = await cg.get_variable(config[CONF_ECONET_ID])
     await cg.register_component(var, config)
     econet_var = await cg.get_variable(config[CONF_ECONET_ID])
     cg.add(var.set_econet(econet_var))
