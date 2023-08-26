@@ -44,6 +44,7 @@ ECONET_SWITCH_SCHEMA = switch.switch_schema(EconetSwitch).extend(
 CONFIG_SCHEMA = (
     ECONET_CLIENT_SCHEMA.extend(
         {
+            cv.GenerateID(): cv.declare_id(EconetSwitch),
             cv.Optional(CONF_ENABLE_SWITCH): ECONET_SWITCH_SCHEMA,
             cv.Optional(CONF_CC_DHUM_ENABLE_STATE): ECONET_SWITCH_SCHEMA,
         }
@@ -51,11 +52,11 @@ CONFIG_SCHEMA = (
     .extend(cv.COMPONENT_SCHEMA).extend(cv.polling_component_schema("5s"))
 )
 
-
 async def to_code(config): 
 
+    var = cg.new_Pvariable(config[CONF_ID])
+    await cg.register_component(var, config)
     econet_var = await cg.get_variable(config[CONF_ECONET_ID])
-    await cg.register_component(econet_var, config)
     cg.add(var.set_econet(econet_var))
 
 
@@ -63,4 +64,4 @@ async def to_code(config):
         if key in config:
             conf = config[key]
             sens = await sensor.new_switch(conf)
-            cg.add(getattr(econet_var,f"set_{key}_switch")(sens))
+            cg.add(getattr(var,f"set_{key}_switch")(sens))
