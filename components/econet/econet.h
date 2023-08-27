@@ -87,6 +87,7 @@ class Econet : public Component {
 	float get_evap_temp() { return this->evap_temp; }
 	float get_suction_temp() { return this->suction_temp; }
 	float get_discharge_temp() { return this->discharge_temp; }
+	std::string get_watee_heater_fan_speed() { return this->water_heater_fan_speed; }
 	
 	float get_current_temp() {
 		if(this->type_id_ == 0) return this->temp_out;
@@ -169,6 +170,7 @@ class Econet : public Component {
 	float evap_temp = 0;
 	float suction_temp = 0;
 	float discharge_temp = 0;
+	std::string water_heater_fan_speed = "unknown";
 	
 	float current_temp = 0;
 	

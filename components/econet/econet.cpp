@@ -259,6 +259,7 @@ void Econet::handle_enumerated_text(uint32_t src_adr, std::string obj_string, ui
 		else if(obj_string == "FAN_CTRL")
 		{
 			fan_ctrl = value == 1;
+			water_heater_fan_speed = text.c_str();
 		}
 		else if(obj_string == "COMP_RLY")
 		{
