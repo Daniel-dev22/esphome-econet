@@ -11,7 +11,9 @@ class EconetTextSensor : public PollingComponent, public EconetClient {
 	void update() override;
 	void dump_config() override;
 
-
+	void set_water_heater_fan_speed_text_sensor(text_sensor::TextSensor *text_sensor) {
+		this->water_heater_fan_speed_text_sensor_ = text_sensor;
+	}
 	void set_cc_hvacmode_text_text_sensor(text_sensor::TextSensor *text_sensor) {
 		this->cc_hvacmode_text_text_sensor_ = text_sensor;
 	}
@@ -23,6 +25,8 @@ class EconetTextSensor : public PollingComponent, public EconetClient {
  protected:
 	text_sensor::TextSensor *cc_hvacmode_text_text_sensor_{nullptr};
 	text_sensor::TextSensor *cc_automode_text_text_sensor_{nullptr};
+	text_sensor::TextSensor *water_heater_fan_speed_text_sensor_{nullptr};
+	
 };
 }  // namespace econet
 }  // namespace esphome
