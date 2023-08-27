@@ -30,9 +30,22 @@ CONF_ECONET_ID = "econet"
 
 CONF_CC_HVACMODE_TEXT = "cc_hvacmode_text"
 CONF_CC_AUTOMODE_TEXT = "cc_automode_text"
+CONF_WATER_HEATER_FAN_SPEED = "water_heater_fan_speed"
+
+TEXT_SENSORS = [
+    WATER_HEATER_FAN_SPEED
+    CONF_CC_HVACMODE_TEXT,
+    CONF_CC_AUTOMODE_TEXT
+]
 
 CONFIG_SCHEMA = (
     cv.COMPONENT_SCHEMA.extend(
+        {
+            cv.GenerateID(): cv.declare_id(EconetTextSensor),
+            cv.Optional(CONF_WATER_HEATER_FAN_SPEED): text_sensor.text_sensor_schema(
+
+            )
+        },
         {
             cv.GenerateID(): cv.declare_id(EconetTextSensor),
             cv.Optional(CONF_CC_HVACMODE_TEXT): text_sensor.text_sensor_schema(
@@ -52,7 +65,6 @@ CONFIG_SCHEMA = (
 
 
 
-
 async def to_code(config):
     """Generate main.cpp code"""
 
@@ -61,9 +73,9 @@ async def to_code(config):
     econet_var = await cg.get_variable(config[CONF_ECONET_ID])
     cg.add(var.set_econet(econet_var))
 
-    if CONF_CC_HVACMODE_TEXT in config:
-        sens = await text_sensor.new_text_sensor(config[CONF_CC_HVACMODE_TEXT])
-        cg.add(var.set_cc_hvacmode_text_text_sensor(sens))
-    if CONF_CC_AUTOMODE_TEXT in config:
-        sens = await text_sensor.new_text_sensor(config[CONF_CC_AUTOMODE_TEXT])
-        cg.add(var.set_cc_automode_text_text_sensor(sens))
+
+    for key in TEXT_SENSORS:
+        if key in config:
+            conf = config[key]
+            sens = await sensor.new_text_sensor(conf)
+            cg.add(getattr(var,f"set_{key}_text_sensor")(sens))
