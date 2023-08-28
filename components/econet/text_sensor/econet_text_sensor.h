@@ -8,21 +8,14 @@ namespace econet {
 
 class EconetTextSensor : public PollingComponent, public EconetClient {
  public:
-	void update() override;
-	void dump_config() override;
+  void update() override;
+  void dump_config() override;
 
+  void set_text_sensor(std::string key, text_sensor::TextSensor *sensor) { text_sensors_[key] = sensor; }
 
-	void set_cc_hvacmode_text_text_sensor(text_sensor::TextSensor *text_sensor) {
-		this->cc_hvacmode_text_text_sensor_ = text_sensor;
-	}
-	void set_cc_automode_text_text_sensor(text_sensor::TextSensor *text_sensor) {
-		this->cc_automode_text_text_sensor_ = text_sensor;
-	}
-
-	
  protected:
-	text_sensor::TextSensor *cc_hvacmode_text_text_sensor_{nullptr};
-	text_sensor::TextSensor *cc_automode_text_text_sensor_{nullptr};
+  std::map<std::string, text_sensor::TextSensor *> text_sensors_;
 };
+
 }  // namespace econet
 }  // namespace esphome

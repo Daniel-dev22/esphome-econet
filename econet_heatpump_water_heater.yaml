@@ -1,6 +1,6 @@
 substitutions:
   name: econet
-  device_description: "Rheem Heat Pump Hot Water Heater"
+  device_description: "Rheem Heat Pump Water Heater"
   tx_pin: GPIO19
   rx_pin: GPIO22
 
@@ -37,6 +37,7 @@ logger:
 
 external_components:
   - source: github://Daniel-dev22/esphome-econet
+  # - source: components
 
 uart:
   id: uart_0
@@ -89,8 +90,3 @@ binary_sensor:
       name: "Fan Control"
     comp_rly:
       name: "Compressor Relay"
-
-# switch:
-#   - platform: econet
-#     enable_switch:
-#       name: "Water Heater Enabled"

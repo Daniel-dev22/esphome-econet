@@ -16,22 +16,13 @@ from esphome.const import (
     ENTITY_CATEGORY_DIAGNOSTIC,
     ICON_WATER,
     STATE_CLASS_MEASUREMENT,
-
 )
 
-from .. import (
-    econet_ns,
-    CONF_ECONET_ID,
-    ECONET_CLIENT_SCHEMA,
-    EconetClient,
-)
+from .. import CONF_ECONET_ID, ECONET_CLIENT_SCHEMA, EconetClient, econet_ns
 
-EconetSensor = econet_ns.class_(
-    "EconetSensor", cg.PollingComponent, EconetClient
-)
+EconetSensor = econet_ns.class_("EconetSensor", cg.PollingComponent, EconetClient)
 
 
-CONF_ECONET_ID = "econet"
 CONF_TEMP_IN = "temp_in"
 CONF_TEMP_OUT = "temp_out"
 CONF_SETPOINT = "setpoint"
@@ -39,7 +30,6 @@ CONF_FLOW_RATE = "flow_rate"
 CONF_WATER_USED = "water_used"
 CONF_BTUS_USED = "btus_used"
 CONF_IGNITION_CYCLES = "ignition_cycles"
-CONF_INSTANT_BTUS = "instant_btus"
 CONF_HOT_WATER = "hot_water"
 CONF_AMBIENTT = "ambient_temp"
 CONF_LOHTRTMP = "lower_water_heater_temp"
@@ -54,8 +44,6 @@ CONF_CC_SPT_STAT = "cc_spt_stat"
 CONF_CC_COOLSETP = "cc_coolsetp"
 CONF_CC_AUTOMODE = "cc_automode"
 CONF_CC_REL_HUM = "cc_rel_hum"
-CONF_CC_BLOWER_CFM = "cc_blower_cfm"
-CONF_CC_BLOWER_RPM = "cc_blower_rpm"
 
 CONF_HVAC_ODU_OUTSIDE_AIR_TEMP = "hvac_odu_outside_air_temp"
 CONF_HVAC_ODU_EVAPORATOR_TEMP = "hvac_odu_evaporator_temp"
@@ -66,24 +54,39 @@ CONF_HVAC_ODU_EXV_SUPER_HEAT = "hvac_odu_exv_super_heat"
 CONF_HVAC_ODU_SUCTION_LINE_TEMP = "hvac_odu_suction_line_temp"
 CONF_HVAC_ODU_PRESSURE_SUCTION = "hvac_odu_pressure_suction"
 
-SENSORS = [
-    CONF_HVAC_ODU_OUTSIDE_AIR_TEMP,
-    CONF_HVAC_ODU_EVAPORATOR_TEMP,
-    CONF_HVAC_ODU_INVERTER_CRANK_SPEED,
-    CONF_HVAC_ODU_CRANKCASE_HEATER_TEMP,
-    CONF_HVAC_ODU_EXV_CURRENT_POSITION,
-    CONF_HVAC_ODU_EXV_SUPER_HEAT,
-    CONF_HVAC_ODU_SUCTION_LINE_TEMP,
-    CONF_HVAC_ODU_PRESSURE_SUCTION,
-    CONF_CC_HVACMODE,
-    CONF_CC_SPT_STAT,
-    CONF_CC_COOLSETP,
-    CONF_CC_AUTOMODE,
-    CONF_CC_REL_HUM,
-    CONF_CC_BLOWER_CFM,
-    CONF_CC_BLOWER_RPM
-]
+FLOAT_SENSORS = {
+    CONF_TEMP_IN: "TEMP__IN",
+    CONF_TEMP_OUT: "TEMP_OUT",
+    CONF_SETPOINT: "WHTRSETP",
+    CONF_FLOW_RATE: "FLOWRATE",
+    CONF_WATER_USED: "WTR_USED",
+    CONF_BTUS_USED: "WTR_BTUS",
+    CONF_IGNITION_CYCLES: "IGNCYCLS",
+    CONF_HOT_WATER: "HOTWATER",
+    CONF_AMBIENTT: "AMBIENTT",
+    CONF_LOHTRTMP: "LOHTRTMP",
+    CONF_UPHTRTMP: "UPHTRTMP",
+    CONF_POWRWATT: "POWRWATT",
+    CONF_EVAPTEMP: "EVAPTEMP",
+    CONF_SUCTIONT: "SUCTIONT",
+    CONF_DISCTEMP: "DISCTEMP",
+    CONF_HVAC_ODU_OUTSIDE_AIR_TEMP: "TEMP_OAT",
+    CONF_HVAC_ODU_EVAPORATOR_TEMP: "TEMP_EVP",
+    CONF_HVAC_ODU_INVERTER_CRANK_SPEED: "ISCSPEED",
+    CONF_HVAC_ODU_CRANKCASE_HEATER_TEMP: "TEMP_CPT",
+    CONF_HVAC_ODU_EXV_CURRENT_POSITION: "EXACTUAL",
+    CONF_HVAC_ODU_EXV_SUPER_HEAT: "EXVSUPER",
+    CONF_HVAC_ODU_SUCTION_LINE_TEMP: "TEMP_OST",
+    CONF_HVAC_ODU_PRESSURE_SUCTION: "PRES_SUC",
+    CONF_CC_SPT_STAT: "SPT_STAT",
+    CONF_CC_COOLSETP: "COOLSETP",
+    CONF_CC_REL_HUM: "RELH7005",
+}
 
+ENUM_SENSORS = {
+    CONF_CC_HVACMODE: "HVACMODE",
+    CONF_CC_AUTOMODE: "AUTOMODE",
+}
 
 CONFIG_SCHEMA = (
     cv.COMPONENT_SCHEMA.extend(
@@ -95,7 +98,7 @@ CONFIG_SCHEMA = (
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            )
+            ),
         },
         {
             cv.GenerateID(): cv.declare_id(EconetSensor),
@@ -105,18 +108,18 @@ CONFIG_SCHEMA = (
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            )
+            ),
         },
-		{
+        {
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_SETPOINT): sensor.sensor_schema(
                 unit_of_measurement="°F",
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
-            )
+            ),
         },
-		{
+        {
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_FLOW_RATE): sensor.sensor_schema(
                 unit_of_measurement="gpm",
@@ -124,9 +127,9 @@ CONFIG_SCHEMA = (
                 state_class=STATE_CLASS_MEASUREMENT,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
                 icon=ICON_WATER,
-            )
+            ),
         },
-		{
+        {
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_WATER_USED): sensor.sensor_schema(
                 unit_of_measurement="gal",
@@ -134,42 +137,34 @@ CONFIG_SCHEMA = (
                 device_class=DEVICE_CLASS_WATER,
                 state_class=STATE_CLASS_MEASUREMENT,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            )
+            ),
         },
-		{
+        {
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_BTUS_USED): sensor.sensor_schema(
                 unit_of_measurement="kbtu",
                 accuracy_decimals=3,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            )
+            ),
         },
-		{
+        {
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_IGNITION_CYCLES): sensor.sensor_schema(
                 unit_of_measurement="",
                 accuracy_decimals=0,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            )
+            ),
         },
-		{
-            cv.GenerateID(): cv.declare_id(EconetSensor),
-            cv.Optional(CONF_INSTANT_BTUS): sensor.sensor_schema(
-                unit_of_measurement="kbtu/hr",
-                accuracy_decimals=3,
-                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            )
-        },
-		{
+        {
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_HOT_WATER): sensor.sensor_schema(
                 unit_of_measurement="%",
                 accuracy_decimals=0,
                 device_class=DEVICE_CLASS_MOISTURE,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            )
+            ),
         },
-		{
+        {
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_AMBIENTT): sensor.sensor_schema(
                 unit_of_measurement="°F",
@@ -177,9 +172,9 @@ CONFIG_SCHEMA = (
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            )
+            ),
         },
-		{
+        {
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_LOHTRTMP): sensor.sensor_schema(
                 unit_of_measurement="°F",
@@ -187,7 +182,7 @@ CONFIG_SCHEMA = (
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            )
+            ),
         },
         {
             cv.GenerateID(): cv.declare_id(EconetSensor),
@@ -197,7 +192,7 @@ CONFIG_SCHEMA = (
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            )
+            ),
         },
         {
             cv.GenerateID(): cv.declare_id(EconetSensor),
@@ -207,7 +202,7 @@ CONFIG_SCHEMA = (
                 device_class=DEVICE_CLASS_POWER,
                 state_class=STATE_CLASS_MEASUREMENT,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            )
+            ),
         },
         {
             cv.GenerateID(): cv.declare_id(EconetSensor),
@@ -217,7 +212,7 @@ CONFIG_SCHEMA = (
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            )
+            ),
         },
         {
             cv.GenerateID(): cv.declare_id(EconetSensor),
@@ -227,7 +222,7 @@ CONFIG_SCHEMA = (
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            )
+            ),
         },
         {
             cv.GenerateID(): cv.declare_id(EconetSensor),
@@ -237,7 +232,7 @@ CONFIG_SCHEMA = (
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            )
+            ),
         },
         {
             cv.GenerateID(): cv.declare_id(EconetSensor),
@@ -246,7 +241,7 @@ CONFIG_SCHEMA = (
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
-            )
+            ),
         },
         {
             cv.GenerateID(): cv.declare_id(EconetSensor),
@@ -255,46 +250,30 @@ CONFIG_SCHEMA = (
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
-            )
+            ),
         },
-		{
+        {
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_CC_HVACMODE): sensor.sensor_schema(
                 unit_of_measurement="",
                 accuracy_decimals=0,
-            )
+            ),
         },
-		{
+        {
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_CC_AUTOMODE): sensor.sensor_schema(
                 unit_of_measurement="",
                 accuracy_decimals=0,
-            )
+            ),
         },
-		{
+        {
             cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_CC_REL_HUM): sensor.sensor_schema(
                 unit_of_measurement="%",
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_HUMIDITY,
                 state_class=STATE_CLASS_MEASUREMENT,
-            )
-        },
-		{
-            cv.GenerateID(): cv.declare_id(EconetSensor),
-            cv.Optional(CONF_CC_BLOWER_CFM): sensor.sensor_schema(
-                unit_of_measurement="",
-                accuracy_decimals=0,
-                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            )
-        },
-		{
-            cv.GenerateID(): cv.declare_id(EconetSensor),
-            cv.Optional(CONF_CC_BLOWER_RPM): sensor.sensor_schema(
-                unit_of_measurement="",
-                accuracy_decimals=0,
-                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            )
+            ),
         },
         {
             cv.GenerateID(): cv.declare_id(EconetSensor),
@@ -304,7 +283,7 @@ CONFIG_SCHEMA = (
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            )
+            ),
         },
         {
             cv.GenerateID(): cv.declare_id(EconetSensor),
@@ -314,7 +293,7 @@ CONFIG_SCHEMA = (
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            )
+            ),
         },
         {
             cv.GenerateID(): cv.declare_id(EconetSensor),
@@ -322,7 +301,7 @@ CONFIG_SCHEMA = (
                 unit_of_measurement="",
                 accuracy_decimals=1,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            )
+            ),
         },
         {
             cv.GenerateID(): cv.declare_id(EconetSensor),
@@ -332,7 +311,7 @@ CONFIG_SCHEMA = (
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            )
+            ),
         },
         {
             cv.GenerateID(): cv.declare_id(EconetSensor),
@@ -340,7 +319,7 @@ CONFIG_SCHEMA = (
                 unit_of_measurement="",
                 accuracy_decimals=1,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            )
+            ),
         },
         {
             cv.GenerateID(): cv.declare_id(EconetSensor),
@@ -348,7 +327,7 @@ CONFIG_SCHEMA = (
                 unit_of_measurement="",
                 accuracy_decimals=1,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            )
+            ),
         },
         {
             cv.GenerateID(): cv.declare_id(EconetSensor),
@@ -358,7 +337,7 @@ CONFIG_SCHEMA = (
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            )
+            ),
         },
         {
             cv.GenerateID(): cv.declare_id(EconetSensor),
@@ -368,7 +347,7 @@ CONFIG_SCHEMA = (
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            )
+            ),
         },
         {
             cv.GenerateID(): cv.declare_id(EconetSensor),
@@ -378,14 +357,12 @@ CONFIG_SCHEMA = (
                 device_class=DEVICE_CLASS_PRESSURE,
                 state_class=STATE_CLASS_MEASUREMENT,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            )
-        }
+            ),
+        },
     )
     .extend(ECONET_CLIENT_SCHEMA)
     .extend(cv.polling_component_schema("5s"))
 )
-
-
 
 
 async def to_code(config):
@@ -396,57 +373,12 @@ async def to_code(config):
     econet_var = await cg.get_variable(config[CONF_ECONET_ID])
     cg.add(var.set_econet(econet_var))
 
-    if CONF_TEMP_IN in config:
-        sens = await sensor.new_sensor(config[CONF_TEMP_IN])
-        cg.add(var.set_temp_in_sensor(sens))
-    if CONF_TEMP_OUT in config:
-        sens = await sensor.new_sensor(config[CONF_TEMP_OUT])
-        cg.add(var.set_temp_out_sensor(sens))
-    if CONF_SETPOINT in config:
-        sens = await sensor.new_sensor(config[CONF_SETPOINT])
-        cg.add(var.set_setpoint_sensor(sens))
-    if CONF_FLOW_RATE in config:
-        sens = await sensor.new_sensor(config[CONF_FLOW_RATE])
-        cg.add(var.set_flow_rate_sensor(sens))
-    if CONF_WATER_USED in config:
-        sens = await sensor.new_sensor(config[CONF_WATER_USED])
-        cg.add(var.set_water_used_sensor(sens))
-    if CONF_BTUS_USED in config:
-        sens = await sensor.new_sensor(config[CONF_BTUS_USED])
-        cg.add(var.set_btus_used_sensor(sens))
-    if CONF_IGNITION_CYCLES in config:
-        sens = await sensor.new_sensor(config[CONF_IGNITION_CYCLES])
-        cg.add(var.set_ignition_cycles_sensor(sens))
-    if CONF_INSTANT_BTUS in config:
-        sens = await sensor.new_sensor(config[CONF_INSTANT_BTUS])
-        cg.add(var.set_instant_btus_sensor(sens))
-    if CONF_HOT_WATER in config:
-        sens = await sensor.new_sensor(config[CONF_HOT_WATER])
-        cg.add(var.set_hot_water_sensor(sens))
-    if CONF_AMBIENTT in config:
-        sens = await sensor.new_sensor(config[CONF_AMBIENTT])
-        cg.add(var.set_ambient_temp_sensor(sens))
-    if CONF_LOHTRTMP in config:
-        sens = await sensor.new_sensor(config[CONF_LOHTRTMP])
-        cg.add(var.set_lower_water_heater_temp_sensor(sens))
-    if CONF_UPHTRTMP in config:
-        sens = await sensor.new_sensor(config[CONF_UPHTRTMP])
-        cg.add(var.set_upper_water_heater_temp_sensor(sens))
-    if CONF_POWRWATT in config:
-        sens = await sensor.new_sensor(config[CONF_POWRWATT])
-        cg.add(var.set_power_watt_sensor(sens))
-    if CONF_EVAPTEMP in config:
-        sens = await sensor.new_sensor(config[CONF_EVAPTEMP])
-        cg.add(var.set_evap_temp_sensor(sens))
-    if CONF_SUCTIONT in config:
-        sens = await sensor.new_sensor(config[CONF_SUCTIONT])
-        cg.add(var.set_suction_temp_sensor(sens))
-    if CONF_DISCTEMP in config:
-        sens = await sensor.new_sensor(config[CONF_DISCTEMP])
-        cg.add(var.set_discharge_temp_sensor(sens))
+    for config_key, obg_key in FLOAT_SENSORS.items():
+        if config_key in config:
+            sens = await sensor.new_sensor(config[config_key])
+            cg.add(var.set_float_sensor(obg_key, sens))
 
-    for key in SENSORS:
-        if key in config:
-            conf = config[key]
-            sens = await sensor.new_sensor(conf)
-            cg.add(getattr(var,f"set_{key}_sensor")(sens))
+    for config_key, obg_key in ENUM_SENSORS.items():
+        if config_key in config:
+            sens = await sensor.new_sensor(config[config_key])
+            cg.add(var.set_enum_sensor(obg_key, sens))

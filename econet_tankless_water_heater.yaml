@@ -30,8 +30,8 @@ logger:
   tx_buffer_size: 2000
 
 external_components:
-  - source: github://stockmopar/esphome-econet
-#  - source: components
+  - source: github://Daniel-dev22/esphome-econet
+  # - source: components
 
 uart:
   id: uart_0
@@ -68,16 +68,8 @@ sensor:
       name: "Flow Rate"
     ignition_cycles:
       name: "Ignition Cycles"
-    instant_btus:
-      name: "Instant BTUs"
 
 binary_sensor:
   - platform: econet
     enable_state:
       name: "Water Heater Enabled (Sensor)"
-
-switch:
-  - platform: econet
-    name: "Water Heater Enabled"
-    switch_datapoint: 0
-    id: wh_enabled_switch
