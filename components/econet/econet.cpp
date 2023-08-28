@@ -89,19 +89,19 @@ void Econet::dump_config() { this->check_uart_settings(); }
 void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector<uint8_t> data) {
   if (src_adr == FURNACE) {
     if (obj_string == "HWSTATUS") {
-			uint8_t heatcmd = data[11]; // 0 to 100 [0, 70, 100]
-			uint8_t coolcmd = data[12]; // [0, 2] Maybe 1 for 1st Stage?
-			uint16_t fan_cfm = (((uint16_t)data[13]) * 256) + data[14];
-			ESP_LOGI("econet", "  HeatCmd : %d %", heatcmd);
-			ESP_LOGI("econet", "  CoolCmd : %d %", coolcmd);			
-			ESP_LOGI("econet", "  FanCFM? : %d cfm", fan_cfm);
+      uint8_t heatcmd = data[11];  // 0 to 100 [0, 70, 100]
+      uint8_t coolcmd = data[12];  // [0, 2] Maybe 1 for 1st Stage?
+      uint16_t fan_cfm = (((uint16_t) data[13]) * 256) + data[14];
+      ESP_LOGI("econet", "  HeatCmd : %d %", heatcmd);
+      ESP_LOGI("econet", "  CoolCmd : %d %", coolcmd);
+      ESP_LOGI("econet", "  FanCFM? : %d cfm", fan_cfm);
     }
   } else if (src_adr == 0x3c0) {
     if (obj_string == "AIRHSTAT") {
       float cc_blower_cfm = (data[16] << 8) + data[17];
       float cc_blower_rpm = (data[20] << 8) + data[21];
-			ESP_LOGI("econet", "  cc_blower_cfm : %f", cc_blower_cfm);
-			ESP_LOGI("econet", "  cc_blower_rpm : %f", cc_blower_rpm);
+      ESP_LOGI("econet", "  cc_blower_cfm : %f", cc_blower_cfm);
+      ESP_LOGI("econet", "  cc_blower_rpm : %f", cc_blower_rpm);
     }
   }
 }
