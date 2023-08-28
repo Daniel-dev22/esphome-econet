@@ -47,5 +47,5 @@ async def to_code(config):
 
     for config_key, obg_key in TEXT_SENSORS.items():
         if config_key in config:
-            sens = await text_sensor.new_sensor(config[config_key])
+            sens = await text_sensor.new_text_sensor(config[config_key])
             cg.add(var.set_text_sensor(obg_key, sens))
