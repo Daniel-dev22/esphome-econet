@@ -5,17 +5,9 @@ Binary Sensor component for Econet
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import binary_sensor
-from esphome.const import (
-    CONF_ID,
-    DEVICE_CLASS_RUNNING,
-)
+from esphome.const import CONF_ID, DEVICE_CLASS_RUNNING
 
-from .. import (
-    econet_ns,
-    CONF_ECONET_ID,
-    ECONET_CLIENT_SCHEMA,
-    EconetClient,
-)
+from .. import CONF_ECONET_ID, ECONET_CLIENT_SCHEMA, EconetClient, econet_ns
 
 EconetBinarySensor = econet_ns.class_(
     "EconetBinarySensor", cg.PollingComponent, EconetClient
@@ -32,30 +24,31 @@ CONFIG_SCHEMA = (
             cv.GenerateID(): cv.declare_id(EconetBinarySensor),
             cv.Optional(CONF_ENABLE_STATE): binary_sensor.binary_sensor_schema(
                 device_class=DEVICE_CLASS_RUNNING,
-            )
+            ),
         },
-		{
+        {
             cv.GenerateID(): cv.declare_id(EconetBinarySensor),
             cv.Optional(CONF_HEATCTRL): binary_sensor.binary_sensor_schema(
                 device_class=DEVICE_CLASS_RUNNING,
-            )
+            ),
         },
-		{
+        {
             cv.GenerateID(): cv.declare_id(EconetBinarySensor),
             cv.Optional(CONF_FAN_CTRL): binary_sensor.binary_sensor_schema(
                 device_class=DEVICE_CLASS_RUNNING,
-            )
+            ),
         },
-		{
+        {
             cv.GenerateID(): cv.declare_id(EconetBinarySensor),
             cv.Optional(CONF_COMP_RLY): binary_sensor.binary_sensor_schema(
                 device_class=DEVICE_CLASS_RUNNING,
-            )
-        }
+            ),
+        },
     )
     .extend(ECONET_CLIENT_SCHEMA)
     .extend(cv.polling_component_schema("1s"))
 )
+
 
 async def to_code(config):
     """Generate main.cpp code"""
