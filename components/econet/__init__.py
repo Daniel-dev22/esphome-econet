@@ -29,7 +29,7 @@ CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(): cv.declare_id(Econet),
         cv.Required(CONF_UART): cv.use_id(UARTComponent),
-        cv.Required(CONF_MODEL): cv.enum(MODEL_TYPES, upper=True, space="_"),
+        cv.Required(CONF_MODEL): cv.enum(MODEL_TYPES),
         cv.Optional(CONF_HVAC_WIFI_MODULE_CONNECTED, default=True): cv.boolean,
     }
 )
