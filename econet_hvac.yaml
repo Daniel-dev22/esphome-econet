@@ -1,5 +1,5 @@
 substitutions:
-  name: econet
+  name: "econet-hvac"
   device_description: "Communicate with Econet Netork"
   tx_pin: GPIO19
   rx_pin: GPIO22
@@ -7,9 +7,9 @@ substitutions:
 esphome:
   name: ${name}
   comment: ${device_description}
-  project:
-    name: "daniel-dev22.econet"
-    version: 0.1.0
+
+preferences:
+  flash_write_interval: "24h"
 
 esp32:
   board: esp32dev
@@ -42,20 +42,19 @@ uart:
   rx_pin:
     number: ${rx_pin}
 
-# The base UART communication hub.
 econet:
   uart: uart_0
   model: "HVAC"
+  hvac_wifi_module_connected: false
 
 climate:
   - platform: econet
     name: "HVAC"
 
-# Optional additional sensors.
 sensor:
   - platform: econet
     cc_hvacmode:
-      name: "HVAC Mode"
+      name: "HVAC Operating Mode"
     cc_spt_stat:
       name: "HVAC Thermostat Temperature"
     cc_coolsetp:
@@ -64,3 +63,44 @@ sensor:
       name: "HVAC Auto Mode"
     cc_rel_hum:
       name: "Thermostat Current Humidity"
+    # cc_blower_cfm:
+    #   name: "HVAC Air Handler CFM"
+    # cc_blower_rpm:
+    #   name: "HVAC Air Handler RPM"
+    hvac_odu_outside_air_temp:
+      name: "HVAC ODU Outside Air Temperature "
+    hvac_odu_evaporator_temp:
+      name: "HVAC ODU Evaporator Temperature "
+    hvac_odu_inverter_crank_speed:
+      name: "HVAC ODU Inverter Crank Speed"
+    hvac_odu_crankcase_heater_temp:
+      name: "HVAC ODU Crankcase Heater Temperature"
+    hvac_odu_exv_current_position:
+      name: "HVAC ODU Expansion Valve Current Position"
+    hvac_odu_exv_super_heat:
+      name: "HVAC ODU Expansion Valve Super Heat"
+    hvac_odu_suction_line_temp:
+      name: "HVAC ODU Suction Line Temp"
+    hvac_odu_pressure_suction:
+      name: "HVAC ODU Pressure Suction"
+
+text_sensor:
+  - platform: econet
+    cc_hvacmode_text:
+      name: "HVAC Operating Mode Text"
+    cc_automode_text:
+      name: "HVAC Auto Mode Text"
+
+number:
+  - platform: econet
+    cc_dhumsetp:
+      name: "HVAC Dehumidification Setting Control"
+      min_value: 10
+      max_value: 80
+      step: 1
+      mode: 'slider'
+
+switch:
+  - platform: econet
+    cc_dhum_enable_state:
+      name: "HVAC Dehumidification Enable State"

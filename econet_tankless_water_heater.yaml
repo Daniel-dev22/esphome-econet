@@ -1,15 +1,15 @@
 substitutions:
-  name: econet
-  device_description: "Communicate with Econet Netork"
+  name: "econet-twh"
+  device_description: "Rheem Tankless Water Heater"
   tx_pin: GPIO19
   rx_pin: GPIO22
 
 esphome:
   name: ${name}
   comment: ${device_description}
-  project:
-    name: "daniel-dev22.econet"
-    version: 0.1.0
+
+preferences:
+  flash_write_interval: "24h"
 
 esp32:
   board: esp32dev
@@ -42,7 +42,6 @@ uart:
   rx_pin:
     number: ${rx_pin}
 
-# The base UART communication hub.
 econet:
   uart: uart_0
   model: "Tankless"
@@ -51,7 +50,6 @@ climate:
   - platform: econet
     name: "Water Heater"
 
-# Optional additional sensors.
 sensor:
   - platform: econet
     temp_in:
