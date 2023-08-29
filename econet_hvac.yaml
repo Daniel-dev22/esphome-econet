@@ -63,10 +63,10 @@ sensor:
       name: "HVAC Auto Mode"
     cc_rel_hum:
       name: "Thermostat Current Humidity"
-    # cc_blower_cfm:
-    #   name: "HVAC Air Handler CFM"
-    # cc_blower_rpm:
-    #   name: "HVAC Air Handler RPM"
+    cc_blower_cfm:
+      name: "HVAC Air Handler CFM"
+    cc_blower_rpm:
+      name: "HVAC Air Handler RPM"
     hvac_odu_outside_air_temp:
       name: "HVAC ODU Outside Air Temperature "
     hvac_odu_evaporator_temp:

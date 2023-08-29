@@ -96,12 +96,10 @@ void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector
       ESP_LOGI("econet", "  CoolCmd : %d %", coolcmd);
       ESP_LOGI("econet", "  FanCFM? : %d cfm", fan_cfm);
     }
-  } else if (src_adr == 0x3c0) {
+  } else if (src_adr == AIR_HANDLER) {
     if (obj_string == "AIRHSTAT") {
-      float cc_blower_cfm = (data[16] << 8) + data[17];
-      float cc_blower_rpm = (data[20] << 8) + data[21];
-      ESP_LOGI("econet", "  cc_blower_cfm : %f", cc_blower_cfm);
-      ESP_LOGI("econet", "  cc_blower_rpm : %f", cc_blower_rpm);
+      cc_blower_cfm = (data[16] << 8) + data[17];
+      cc_blower_rpm = (data[20] << 8) + data[21];
     }
   }
 }

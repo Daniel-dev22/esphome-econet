@@ -52,6 +52,9 @@ class Econet : public Component {
   void write_float_value(std::string key, float value) { pending_float_writes_[key] = value; }
   void write_int_value(std::string key, uint8_t value) { pending_int_writes_[key] = value; }
 
+  float get_cc_blower_cfm() { return this->cc_blower_cfm; }
+  float get_cc_blower_rpm() { return this->cc_blower_rpm; }
+
   void register_listener(uint8_t datapoint_id, const std::function<void(float)> &func);
 
  protected:
@@ -83,6 +86,8 @@ class Econet : public Component {
   std::map<std::string, float> pending_float_writes_{};
   std::map<std::string, uint8_t> pending_int_writes_{};
 
+  float cc_blower_cfm = 0;
+  float cc_blower_rpm = 0;
   bool hvac_wifi_module_connected_ = true;
 
   uint8_t req_id = 0;

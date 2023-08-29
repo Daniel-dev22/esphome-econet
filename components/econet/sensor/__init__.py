@@ -44,6 +44,8 @@ CONF_CC_SPT_STAT = "cc_spt_stat"
 CONF_CC_COOLSETP = "cc_coolsetp"
 CONF_CC_AUTOMODE = "cc_automode"
 CONF_CC_REL_HUM = "cc_rel_hum"
+CONF_CC_BLOWER_CFM = "cc_blower_cfm"
+CONF_CC_BLOWER_RPM = "cc_blower_rpm"
 
 CONF_HVAC_ODU_OUTSIDE_AIR_TEMP = "hvac_odu_outside_air_temp"
 CONF_HVAC_ODU_EVAPORATOR_TEMP = "hvac_odu_evaporator_temp"
@@ -87,6 +89,12 @@ ENUM_SENSORS = {
     CONF_CC_HVACMODE: "HVACMODE",
     CONF_CC_AUTOMODE: "AUTOMODE",
 }
+
+# TODO: Make these work as easy as the float and enum sensors
+SENSORS = [
+    CONF_CC_BLOWER_CFM,
+    CONF_CC_BLOWER_RPM,
+]
 
 CONFIG_SCHEMA = (
     cv.COMPONENT_SCHEMA.extend(
@@ -277,6 +285,22 @@ CONFIG_SCHEMA = (
         },
         {
             cv.GenerateID(): cv.declare_id(EconetSensor),
+            cv.Optional(CONF_CC_BLOWER_CFM): sensor.sensor_schema(
+                unit_of_measurement="",
+                accuracy_decimals=0,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+            ),
+        },
+        {
+            cv.GenerateID(): cv.declare_id(EconetSensor),
+            cv.Optional(CONF_CC_BLOWER_RPM): sensor.sensor_schema(
+                unit_of_measurement="",
+                accuracy_decimals=0,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+            ),
+        },
+        {
+            cv.GenerateID(): cv.declare_id(EconetSensor),
             cv.Optional(CONF_HVAC_ODU_OUTSIDE_AIR_TEMP): sensor.sensor_schema(
                 unit_of_measurement="F",
                 accuracy_decimals=1,
@@ -382,3 +406,8 @@ async def to_code(config):
         if config_key in config:
             sens = await sensor.new_sensor(config[config_key])
             cg.add(var.set_enum_sensor(obg_key, sens))
+
+    for config_key in SENSORS:
+        if config_key in config:
+            sens = await sensor.new_sensor(config[config_key])
+            cg.add(getattr(var, f"set_{config_key}_sensor")(sens))
