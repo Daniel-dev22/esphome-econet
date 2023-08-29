@@ -71,8 +71,6 @@ uint32_t floatToUint32(float f) {
   return fbits;
 }
 
-void Econet::set_uart(uart::UARTComponent *econet_uart) { this->econet_uart = econet_uart; }
-
 #define ECONET_BAUD_RATE 38400
 
 void Econet::check_uart_settings() {
@@ -87,191 +85,32 @@ void Econet::check_uart_settings() {
 }
 
 void Econet::dump_config() { this->check_uart_settings(); }
-void Econet::handle_float(uint32_t src_adr, std::string obj_string, float value) {
-  if (src_adr == SMARTEC_TRANSLATOR) {
-    if (obj_string == "FLOWRATE") {
-      flow_rate = value / 3.785;
-    } else if (obj_string == "TEMP_OUT") {
-      temp_out = value;
-    } else if (obj_string == "TEMP__IN") {
-      temp_in = value;
-    } else if (obj_string == "WHTRSETP") {
-      setpoint = value;
-    } else if (obj_string == "WTR_USED") {
-      water_used = value;
-    } else if (obj_string == "WTR_BTUS") {
-      btus_used = value;
-    } else if (obj_string == "IGNCYCLS") {
-      ignition_cycles = value;
-    } else if (obj_string == "BURNTIME") {
-      // Not Supported Yet
-    }
-  } else if (src_adr == HEAT_PUMP_WATER_HEATER) {
-    if (obj_string == "WHTRSETP") {
-      setpoint = value;
-    } else if (obj_string == "HOTWATER") {
-      hot_water = value;
-    } else if (obj_string == "AMBIENTT") {
-      ambient_temp = value;
-    } else if (obj_string == "LOHTRTMP") {
-      lower_water_heater_temp = value;
-    } else if (obj_string == "UPHTRTMP") {
-      upper_water_heater_temp = value;
-    } else if (obj_string == "POWRWATT") {
-      power_watt = value;
-    } else if (obj_string == "EVAPTEMP") {
-      evap_temp = value;
-    } else if (obj_string == "SUCTIONT") {
-      suction_temp = value;
-    } else if (obj_string == "DISCTEMP") {
-      discharge_temp = value;
-    }
-  } else if (src_adr == CONTROL_CENTER) {
-    if (obj_string == "SPT_STAT") {
-      cc_spt_stat = value;
-    } else if (obj_string == "COOLSETP") {
-      cc_cool_setpoint = value;
-      // setpoint
-    } else if (obj_string == "HEATSETP") {
-      cc_heat_setpoint = value;
-    } else if (obj_string == "RELH7005") {
-      cc_rel_hum = value;
-    } else if (obj_string == "DHUMSETP") {
-      cc_dhumsetp = value;
-    }
-  } else if (src_adr == OUTDOOR_UNIT) {
-    if (obj_string == "TEMP_OAT") {
-      hvac_odu_outside_air_temp = value;
-    } else if (obj_string == "TEMP_EVP") {
-      hvac_odu_evaporator_temp = value;
-    } else if (obj_string == "ISCSPEED") {
-      hvac_odu_inverter_crank_speed = value;
-    } else if (obj_string == "TEMP_CPT") {
-      hvac_odu_crankcase_heater_temp = value;
-    } else if (obj_string == "EXACTUAL") {
-      hvac_odu_exv_current_position = value;
-    } else if (obj_string == "EXVSUPER") {
-      hvac_odu_exv_super_heat = value;
-    } else if (obj_string == "TEMP_OST") {
-      hvac_odu_suction_line_temp = value;
-    } else if (obj_string == "PRES_SUC") {
-      hvac_odu_pressure_suction = value;
-    }
-  }
-}
-
-void Econet::handle_enumerated_text(uint32_t src_adr, std::string obj_string, uint8_t value, std::string text) {
-  if (src_adr == SMARTEC_TRANSLATOR) {
-    if (obj_string == "WHTRENAB") {
-      enable_state = value == 1;
-    }
-  } else if (src_adr == HEAT_PUMP_WATER_HEATER) {
-    if (obj_string == "WHTRENAB") {
-      enable_state = value == 1;
-    } else if (obj_string == "WHTRCNFG") {
-      mode = value;
-    } else if (obj_string == "HEATCTRL") {
-      heatctrl = value == 1;
-    } else if (obj_string == "FAN_CTRL") {
-      fan_ctrl = value == 1;
-    } else if (obj_string == "COMP_RLY") {
-      comp_rly = value == 1;
-    }
-  } else if (src_adr == CONTROL_CENTER) {
-    if (obj_string == "HVACMODE") {
-      cc_hvacmode = value;
-      cc_hvacmode_text = text.c_str();
-      //	ESP_LOGI("econet", "  TextHVACMode : %s ", text.c_str());
-    } else if (obj_string == "AUTOMODE") {
-      cc_automode = value;
-      cc_automode_text = text.c_str();
-    } else if (obj_string == "STATMODE") {
-      cc_statmode = value;
-    } else if (obj_string == "STATNFAN") {
-      cc_fan_mode = value;
-    } else if (obj_string == "DHUMENAB") {
-      cc_dhum_enable_state = value == 1;
-    }
-  }
-}
-
-void Econet::handle_text(uint32_t src_adr, std::string obj_string, std::string text) {
-  if (src_adr == 0x1040) {
-  } else if (src_adr == CONTROL_CENTER) {
-  }
-}
 
 void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector<uint8_t> data) {
-  if (src_adr == 0x1c0) {
+  if (src_adr == FURNACE) {
     if (obj_string == "HWSTATUS") {
-      // data[0] = 4
-      // data[1 - 10] = 0
       uint8_t heatcmd = data[11];  // 0 to 100 [0, 70, 100]
       uint8_t coolcmd = data[12];  // [0, 2] Maybe 1 for 1st Stage?
       uint16_t fan_cfm = (((uint16_t) data[13]) * 256) + data[14];
-
       ESP_LOGI("econet", "  HeatCmd : %d %", heatcmd);
       ESP_LOGI("econet", "  CoolCmd : %d %", coolcmd);
-
       ESP_LOGI("econet", "  FanCFM? : %d cfm", fan_cfm);
     }
-  } else if (src_adr == 0x3c0) {
+  } else if (src_adr == AIR_HANDLER) {
     if (obj_string == "AIRHSTAT") {
-      // data[0] = 4
-      // data[1 - 10] = 0
       cc_blower_cfm = (data[16] << 8) + data[17];
       cc_blower_rpm = (data[20] << 8) + data[21];
-      //	uint16_t testone = (data[22] << 8) + data[23];
-      //	uint16_t testtwo = (data[36] << 8) + data[37];
-      //	uint16_t testthree = (data[57] << 8) + data[58];
-      //	uint16_t testfour = (data[73] << 8) + data[74];
-      //	uint16_t testfive = (data[95] << 8) + data[96];
-      //	uint16_t testsix = (data[20] << 8) + data[21];
-      //	uint16_t testseven = (data[22] << 8) + data[22];
-      //	uint16_t testeight = (data[35] << 8) + data[36];
-      //	uint16_t testnine = (data[56] << 8) + data[57];
-      //	uint16_t testten = (data[72] << 8) + data[73];
-      //	uint16_t testeleven = (data[94] << 8) + data[95];
-      //	uint16_t testtwelve = (data[26] << 8) + data[27];
-      //	uint16_t testthirteen = (data[102] << 8) + data[103];
-      //	uint16_t testfourteen = (data[106] << 8) + data[107];
-      //	uint16_t testfifteen = (data[140] << 8) + data[141];
-      //	uint16_t testsixteen = (data[150] << 8) + data[151];
-      uint16_t testseventeen = ((data[104] << 8) + data[105]) / 10;
-      uint16_t testeighteen = ((data[108] << 8) + data[109]) / 10;
-      uint16_t testnineteen = ((data[117] << 8) + data[118]) / 10;
-      // testtwo has something to do with the unit running when its off its 0
-
-      //	ESP_LOGI("econet", "  TestOne : %d ", testone);
-      //	ESP_LOGI("econet", "  TestTwo : %d ", testtwo);
-      //	ESP_LOGI("econet", "  TestThree : %d ", testthree);
-      //	ESP_LOGI("econet", "  TestFour : %d ", testfour);
-      //	ESP_LOGI("econet", "  TestFive : %d ", testfive);
-      //	ESP_LOGI("econet", "  TestSix : %d ", testsix);
-      //	ESP_LOGI("econet", "  TestSeven : %d ", testseven);
-      //	ESP_LOGI("econet", "  TestEight : %d ", testeight);
-      //	ESP_LOGI("econet", "  TestNine : %d ", testnine);
-      //	ESP_LOGI("econet", "  TestTen : %d ", testten);
-      //	ESP_LOGI("econet", "  TestEleven : %d ", testeleven);
-      //	ESP_LOGI("econet", "  TestTwelve : %d ", testtwelve);
-      //	ESP_LOGI("econet", "  TestThirteen : %d ", testthirteen);
-      //	ESP_LOGI("econet", "  TestFourteen : %d ", testfourteen);
-      //	ESP_LOGI("econet", "  TestFifteen : %d ", testfifteen);
-      ESP_LOGI("econet", "  TestSeventeen : %d ", testseventeen);
-      ESP_LOGI("econet", "  TestEighteen : %d ", testeighteen);
-      ESP_LOGI("econet", "  TestNineteen : %d ", testnineteen);
-
-      //	ESP_LOGI("econet", "  FanRPM? : %d rpm", cc_blower_rpm);
     }
   }
 }
 
 void Econet::make_request() {
   uint32_t dst_adr = SMARTEC_TRANSLATOR;
-  if (type_id_ == 1)
+  if (model_type_ == MODEL_TYPE_HEATPUMP) {
     dst_adr = HEAT_PUMP_WATER_HEATER;
-  else if (type_id_ == 2)
+  } else if (model_type_ == MODEL_TYPE_HVAC) {
     dst_adr = CONTROL_CENTER;
+  }
 
   uint8_t dst_bus = 0x00;
 
@@ -281,125 +120,75 @@ void Econet::make_request() {
 
   std::vector<uint8_t> data;
 
-  if (send_enable_disable == true) {
-    this->write_value(dst_adr, src_adr, "WHTRENAB", ENUM_TEXT, static_cast<float>(enable_disable_cmd));
+  if (!this->pending_float_writes_.empty()) {
+    const auto &kv = this->pending_float_writes_.begin();
+    this->write_value(dst_adr, src_adr, kv->first, FLOAT, kv->second);
+    this->pending_float_writes_.erase(kv->first);
+    return;
+  }
+  if (!this->pending_int_writes_.empty()) {
+    const auto &kv = this->pending_int_writes_.begin();
+    this->write_value(dst_adr, src_adr, kv->first, ENUM_TEXT, kv->second);
+    this->pending_int_writes_.erase(kv->first);
+    return;
+  }
 
-    send_enable_disable = false;
-  } else if (send_new_mode == true) {
-    // Modes
-    // 0 - Off
-    // 1 - Energy Saver
-    // 2 - Heat Pump
-    // 3 - High Demand
-    // 4 - Electric / Gas
-    if (this->type_id_ == 2) {
-      this->write_value(dst_adr, src_adr, "STATMODE", ENUM_TEXT, new_mode);
-    } else {
-      this->write_value(dst_adr, src_adr, "WHTRCNFG", ENUM_TEXT, new_mode);
+  std::vector<std::string> str_ids{};
+
+  // TODO: Only request ones needed for climate and enabled sensors
+  if (req_id == 0) {
+    if (model_type_ == MODEL_TYPE_TANKLESS) {
+      str_ids.push_back("FLOWRATE");
+      str_ids.push_back("TEMP_OUT");
+      str_ids.push_back("TEMP__IN");
+      str_ids.push_back("WHTRENAB");
+      str_ids.push_back("WHTRMODE");
+      str_ids.push_back("WHTRSETP");
+      str_ids.push_back("WTR_USED");
+      str_ids.push_back("WTR_BTUS");
+      str_ids.push_back("IGNCYCLS");
+      str_ids.push_back("BURNTIME");
+    } else if (model_type_ == MODEL_TYPE_HEATPUMP) {
+      str_ids.push_back("WHTRENAB");
+      str_ids.push_back("WHTRCNFG");
+      str_ids.push_back("WHTRSETP");
+      str_ids.push_back("HOTWATER");
+      str_ids.push_back("HEATCTRL");
+      str_ids.push_back("FAN_CTRL");
+      str_ids.push_back("COMP_RLY");
+      str_ids.push_back("AMBIENTT");
+      str_ids.push_back("LOHTRTMP");
+      str_ids.push_back("UPHTRTMP");
+      str_ids.push_back("POWRWATT");
+      str_ids.push_back("EVAPTEMP");
+      str_ids.push_back("SUCTIONT");
+      str_ids.push_back("DISCTEMP");
+    } else if (model_type_ == MODEL_TYPE_HVAC && hvac_wifi_module_connected_ == false) {
+      str_ids.push_back("DHUMSETP");
+      str_ids.push_back("DHUMENAB");
+      str_ids.push_back("DH_DRAIN");
+      str_ids.push_back("OAT_TEMP");
+      str_ids.push_back("COOLSETP");
+      str_ids.push_back("HEATSETP");
+      str_ids.push_back("STATNFAN");
+      str_ids.push_back("STATMODE");
+      str_ids.push_back("AUTOMODE");
+      str_ids.push_back("HVACMODE");
+      str_ids.push_back("RELH7005");
+      str_ids.push_back("SPT_STAT");
     }
-    send_new_mode = false;
-  } else if (send_new_setpoint_high == true) {
-    if (this->type_id_ == 2) {
-      this->write_value(dst_adr, src_adr, "COOLSETP", FLOAT, new_setpoint_high);
+    if (model_type_ != MODEL_TYPE_HVAC || !hvac_wifi_module_connected_) {
+      request_strings(dst_adr, src_adr, str_ids);
     }
+    return;
+  }
 
-    send_new_setpoint_high = false;
-  } else if (send_new_setpoint_low == true) {
-    if (this->type_id_ == 2) {
-      this->write_value(dst_adr, src_adr, "HEATSETP", FLOAT, new_setpoint_low);
+  if (req_id == 1) {
+    if (model_type_ == MODEL_TYPE_TANKLESS) {
+      str_ids.push_back("HWSTATUS");
+      request_strings(FURNACE, CONTROL_CENTER, str_ids);
     }
-
-    send_new_setpoint_low = false;
-  } else if (send_new_setpoint == true) {
-    if (this->type_id_ == 2) {
-      this->write_value(dst_adr, src_adr, "COOLSETP", FLOAT, new_setpoint);
-    } else {
-      this->write_value(dst_adr, src_adr, "WHTRSETP", FLOAT, new_setpoint);
-    }
-
-    send_new_setpoint = false;
-  } else if (send_new_fan_mode == true) {
-    if (this->type_id_ == 2) {
-      this->write_value(dst_adr, src_adr, "STATNFAN", ENUM_TEXT, new_fan_mode);
-      cc_fan_mode = new_fan_mode;
-    }
-
-    send_new_fan_mode = false;
-  } else if (send_new_dhumsetp == true) {
-    if (this->type_id_ == 2) {
-      this->write_value(dst_adr, src_adr, "DHUMSETP", FLOAT, new_dhumsetp);
-    }
-
-    send_new_dhumsetp = false;
-  } else if (send_dhum_enable_disable == true) {
-    this->write_value(dst_adr, src_adr, "DHUMENAB", ENUM_TEXT, static_cast<float>(dhum_enable_disable_cmd));
-
-    send_dhum_enable_disable = false;
-  } else {
-    std::vector<std::string> str_ids{};
-
-    if (req_id == 0) {
-      if (type_id_ == 0) {
-        str_ids.push_back("FLOWRATE");
-        str_ids.push_back("TEMP_OUT");
-        str_ids.push_back("TEMP__IN");
-        str_ids.push_back("WHTRENAB");
-        str_ids.push_back("WHTRMODE");
-        str_ids.push_back("WHTRSETP");
-        str_ids.push_back("WTR_USED");
-        str_ids.push_back("WTR_BTUS");
-        str_ids.push_back("IGNCYCLS");
-        str_ids.push_back("BURNTIME");
-      } else if (type_id_ == 1) {
-        str_ids.push_back("WHTRENAB");
-        str_ids.push_back("WHTRCNFG");
-        str_ids.push_back("WHTRSETP");
-        str_ids.push_back("HOTWATER");
-        str_ids.push_back("HEATCTRL");
-        str_ids.push_back("FAN_CTRL");
-        str_ids.push_back("COMP_RLY");
-        str_ids.push_back("AMBIENTT");
-        str_ids.push_back("LOHTRTMP");
-        str_ids.push_back("UPHTRTMP");
-        str_ids.push_back("POWRWATT");
-        str_ids.push_back("EVAPTEMP");
-        str_ids.push_back("SUCTIONT");
-        str_ids.push_back("DISCTEMP");
-        // str_ids.push_back("ALRMALRT");
-        // str_ids.push_back("ALARM_01");
-        // str_ids.push_back("ALARM_02");
-        // str_ids.push_back("ALARM_03");
-        // str_ids.push_back("ALARM_04");
-      } else if (type_id_ == 2 && hvac_wifi_module_connected_ == false) {
-        str_ids.push_back("DHUMSETP");
-        str_ids.push_back("DHUMENAB");
-        str_ids.push_back("DH_DRAIN");
-        str_ids.push_back("OAT_TEMP");
-        str_ids.push_back("COOLSETP");
-        str_ids.push_back("HEATSETP");
-        str_ids.push_back("STATNFAN");
-        str_ids.push_back("STATMODE");
-        str_ids.push_back("AUTOMODE");
-        str_ids.push_back("HVACMODE");
-        str_ids.push_back("RELH7005");
-        str_ids.push_back("SPT_STAT");
-        request_strings(dst_adr, src_adr, str_ids);
-        /*
-        str_ids.push_back("ALARM_0");
-        str_ids.push_back("ALARM_01");
-        str_ids.push_back("ALARM_02");
-        str_ids.push_back("ALARM_03");
-        */
-      }
-      if (type_id_ != 2) {
-        request_strings(dst_adr, src_adr, str_ids);
-      }
-    } else if (req_id == 1) {
-      if (type_id_ == 0) {
-        str_ids.push_back("HWSTATUS");
-        request_strings(0x1c0, 0x380, str_ids);
-      }
-    }
+    return;
   }
 }
 
@@ -424,56 +213,28 @@ void Econet::parse_message(bool is_tx) {
 
   uint16_t pmsg_len = 0;
 
-  if (is_tx == false) {
-    dst_adr = ((buffer[0] & 0x7f) << 24) + (buffer[1] << 16) + (buffer[2] << 8) + buffer[3];
-    dst_bus = buffer[4];
+  const uint8_t *b = is_tx ? wbuffer : buffer;
+  dst_adr = ((b[0] & 0x7f) << 24) + (b[1] << 16) + (b[2] << 8) + b[3];
+  dst_bus = b[4];
 
-    src_adr = ((buffer[5] & 0x7f) << 24) + (buffer[6] << 16) + (buffer[7] << 8) + buffer[8];
-    src_bus = buffer[9];
+  src_adr = ((b[5] & 0x7f) << 24) + (b[6] << 16) + (b[7] << 8) + b[8];
+  src_bus = b[9];
 
-    data_len = buffer[10];
+  data_len = b[10];
 
-    pmsg_len = data_len + MSG_HEADER_SIZE + MSG_CRC_SIZE;
+  pmsg_len = data_len + MSG_HEADER_SIZE + MSG_CRC_SIZE;
 
-    command = buffer[13];
+  command = b[13];
 
-    crc = (buffer[data_len + MSG_HEADER_SIZE]) + (buffer[data_len + MSG_HEADER_SIZE + 1] << 8);
+  crc = (b[data_len + MSG_HEADER_SIZE]) + (b[data_len + MSG_HEADER_SIZE + 1] << 8);
 
-    crc_check = gen_crc16(buffer, data_len + 14);
+  crc_check = gen_crc16(b, data_len + 14);
 
-    for (int i = 0; i < data_len; i++) {
-      pdata[i] = buffer[MSG_HEADER_SIZE + i];
-    }
-
-    // data_len + MSG_HEADER_SIZE + MSG_CRC_SIZE
-
-  } else {
-    dst_adr = ((wbuffer[0] & 0x7f) << 24) + (wbuffer[1] << 16) + (wbuffer[2] << 8) + wbuffer[3];
-    dst_bus = wbuffer[4];
-
-    src_adr = ((wbuffer[5] & 0x7f) << 24) + (wbuffer[6] << 16) + (wbuffer[7] << 8) + wbuffer[8];
-    src_bus = wbuffer[9];
-
-    data_len = wbuffer[10];
-
-    pmsg_len = data_len + MSG_HEADER_SIZE + MSG_CRC_SIZE;
-
-    command = wbuffer[13];
-
-    crc = (wbuffer[data_len + MSG_HEADER_SIZE]) + (wbuffer[data_len + MSG_HEADER_SIZE + 1] << 8);
-
-    crc_check = gen_crc16(wbuffer, data_len + 14);
-
-    for (int i = 0; i < data_len; i++) {
-      pdata[i] = wbuffer[MSG_HEADER_SIZE + i];
-    }
+  for (int i = 0; i < data_len; i++) {
+    pdata[i] = b[MSG_HEADER_SIZE + i];
   }
 
-  if (is_tx == false) {
-    ESP_LOGI("econet", "<<< %s", format_hex_pretty((const uint8_t *) buffer, pmsg_len).c_str());
-  } else {
-    ESP_LOGI("econet", ">>> %s", format_hex_pretty((const uint8_t *) wbuffer, pmsg_len).c_str());
-  }
+  ESP_LOGI("econet", "%s %s", is_tx ? ">>>" : "<<<", format_hex_pretty(b, pmsg_len).c_str());
 
   ESP_LOGI("econet", "  Dst Adr : 0x%x", dst_adr);
   ESP_LOGI("econet", "  Src Adr : 0x%x", src_adr);
@@ -560,12 +321,7 @@ void Econet::parse_message(bool is_tx) {
     } else {
       ESP_LOGI("econet", "  Don't Currently Support This Class Type", type);
     }
-    // tuple<uint32_t, uint32_t> req_tup(dst_adr,src_adr);
 
-    // read_reqs
-    // This is a read request so let's track it so that when an ACK/response comes to this we know what data it is!
-    // for(
-    // read_reqs_
   } else if (command == ACK) {
     if (read_req.dst_adr == src_adr && read_req.src_adr == dst_adr && read_req.awaiting_res == true) {
       if (read_req.obj_names.size() == 1) {
@@ -590,7 +346,8 @@ void Econet::parse_message(bool is_tx) {
             float item_value = bytesToFloat(pdata[tpos + 4], pdata[tpos + 5], pdata[tpos + 6], pdata[tpos + 7]);
 
             if (item_num < read_req.obj_names.size()) {
-              handle_float(src_adr, read_req.obj_names[item_num], item_value);
+              // TODO: detect change and push update
+              this->values_float_[read_req.obj_names[item_num]] = item_value;
               ESP_LOGI("econet", "  %s : %f", read_req.obj_names[item_num].c_str(), item_value);
             }
           } else if (item_type == 1) {
@@ -609,7 +366,7 @@ void Econet::parse_message(bool is_tx) {
               std::string s(char_arr, sizeof(char_arr));
 
               if (item_num < read_req.obj_names.size()) {
-                handle_text(src_adr, read_req.obj_names[item_num], s);
+                // handle_text(src_adr, read_req.obj_names[item_num], s);
                 ESP_LOGI("econet", "  %s : (%s)", read_req.obj_names[item_num].c_str(), s.c_str());
               }
             }
@@ -631,7 +388,9 @@ void Econet::parse_message(bool is_tx) {
 
               std::string s(char_arr, sizeof(char_arr));
               if (item_num < read_req.obj_names.size()) {
-                handle_enumerated_text(src_adr, read_req.obj_names[item_num], item_value, s);
+                // TODO: detect change and push update
+                this->values_int_[read_req.obj_names[item_num]] = item_value;
+                this->values_string_[read_req.obj_names[item_num]] = s;
                 ESP_LOGI("econet", "  %s : %d (%s)", read_req.obj_names[item_num].c_str(), item_value, s.c_str());
               }
             }
@@ -716,157 +475,6 @@ void Econet::parse_message(bool is_tx) {
     } else {
     }
   }
-
-  /*
-
-  uint32_t UNKNOWN_HANDLER =  			241	;	// 80 00 00 F1
-  uint32_t WIFI_MODULE =    				832	;	// 80 00 03 40
-  uint32_t SMARTEC_TRANSLATOR = 			4160;	// 80 00 10 40
-  uint32_t INTERNAL = 					4736; 	// 80 00 10 40
-  uint32_t HEAT_PUMP_WATER_HEATER =       0x1280;
-  uint32_t AIR_HANDLER = 					0x3c0;
-  uint32_t CONTROL_CENTER = 				0x380;
-
-  */
-
-  bool recognized = false;
-
-  uint32_t exp_dst_adr = WIFI_MODULE;
-  uint32_t exp_src_adr = SMARTEC_TRANSLATOR;
-  int exp_msg_len = 115;
-
-  if (type_id_ == 1) {
-    exp_dst_adr = WIFI_MODULE;
-    exp_src_adr = HEAT_PUMP_WATER_HEATER;
-    exp_msg_len = 166;
-    // Original was 66
-    // New is 110
-    // New new is 150 + 14 + 2 = 166
-  } else if (dst_adr == UNKNOWN_HANDLER) {
-    // Filter these for now
-    recognized = false;
-  } else if (src_adr == UNKNOWN_HANDLER) {
-    // Filter these for now
-    recognized = false;
-  } else if (dst_adr == SMARTEC_TRANSLATOR && src_adr == WIFI_MODULE) {
-    // Filter these for now
-  }
-
-  if (recognized == false) {
-    if (false) {
-      if (command == 30) {
-        // READ
-        uint8_t type = pdata[0];
-        ESP_LOGI("econet", "  Type    : %d", type);
-
-        if (type == 1) {
-          char char_arr[data_len - 6];
-
-          for (int a = 0; a < data_len - 6; a++) {
-            char_arr[a] = pdata[a + 4];
-          }
-
-          std::string s(char_arr, sizeof(char_arr));
-
-          ESP_LOGD("econet", "  ValName : %s", s.c_str());
-        } else if (type == 2) {
-          int tpos = 0;
-          uint8_t item_num = 1;
-
-          while (tpos < data_len) {
-            ESP_LOGD("econet", "  Item[%d] ", item_num);
-
-            uint8_t item_len = pdata[tpos];
-            uint8_t item_type = pdata[tpos + 1] & 0x7F;
-
-            ESP_LOGD("econet", "  ItemLen : %d", item_len);
-            ESP_LOGD("econet", "  ItemType: %d", item_type);
-
-            if (item_type == 0) {
-              float item_value = bytesToFloat(pdata[tpos + 4], pdata[tpos + 5], pdata[tpos + 6], pdata[tpos + 7]);
-              ESP_LOGD("econet", "  ItemVal : %f", item_value);
-            } else if (item_type == 2) {
-              // Enumerated Text
-
-              uint8_t item_value = pdata[tpos + 4];
-
-              ESP_LOGD("econet", "  ItemVal : %d", item_value);
-
-              uint8_t item_text_len = pdata[tpos + 5];
-
-              // uint8_t str_arr[item_text_len];
-              char char_arr[item_text_len];
-
-              for (int a = 0; a < item_text_len; a++) {
-                // str_arr[a] = pdata[tpos+a+6];
-                char_arr[a] = pdata[tpos + a + 6];
-              }
-
-              std::string s(char_arr, sizeof(char_arr));
-
-              ESP_LOGD("econet", "  ItemStr : %s", s.c_str());
-            }
-            tpos += item_len + 1;
-            item_num++;
-          }
-        }
-      } else if (command == 6) {
-        // ACK
-
-        uint8_t type = pdata[0] & 0x7F;
-
-        //
-        if (type == 0) {
-          float item_value = bytesToFloat(pdata[11], pdata[12], pdata[13], pdata[14]);
-          ESP_LOGD("econet", "  ItemVal : %f", item_value);
-        } else if (type == 2) {
-          int tpos = 0;
-          uint8_t item_num = 1;
-
-          while (tpos < data_len) {
-            ESP_LOGD("econet", "  Item[%d] ", item_num);
-
-            uint8_t item_len = pdata[tpos];
-            uint8_t item_type = pdata[tpos + 1] & 0x7F;
-
-            ESP_LOGD("econet", "  ItemLen : %d", item_len);
-            ESP_LOGD("econet", "  ItemType: %d", item_type);
-
-            if (item_type == 0) {
-              float item_value = bytesToFloat(pdata[tpos + 4], pdata[tpos + 5], pdata[tpos + 6], pdata[tpos + 7]);
-              ESP_LOGD("econet", "  ItemVal : %f", item_value);
-            } else if (item_type == 2) {
-              // Enumerated Text
-
-              uint8_t item_value = pdata[tpos + 4];
-
-              ESP_LOGD("econet", "  ItemVal : %d", item_value);
-
-              uint8_t item_text_len = pdata[tpos + 5];
-
-              // uint8_t str_arr[item_text_len];
-              char char_arr[item_text_len];
-
-              for (int a = 0; a < item_text_len; a++) {
-                // str_arr[a] = pdata[tpos+a+6];
-                char_arr[a] = pdata[tpos + a + 6];
-              }
-
-              // std::string item_string = reinterpret_cast<char *>(str_arr);
-              std::string s(char_arr, sizeof(char_arr));
-
-              ESP_LOGD("econet", "  ItemStr : %s", s.c_str());
-            }
-            tpos += item_len + 1;
-            item_num++;
-          }
-        }
-      }
-    }
-  } else {
-    // ESP_LOGD("econet", "<<< %s", format_hex_pretty((const uint8_t *) buffer, msg_len).c_str());
-  }
-  // return true;
 }
 
 void Econet::read_buffer(int bytes_available) {
@@ -879,211 +487,77 @@ void Econet::read_buffer(int bytes_available) {
 
   uint8_t bytes[bytes_to_read];
 
-  // Read multiple bytes at the same time
-  if (econet_uart->read_array(bytes, bytes_to_read) == false) {
+  if (!econet_uart->read_array(bytes, bytes_to_read)) {
     return;
   }
 
   for (int i = 0; i < bytes_to_read; i++) {
     uint8_t byte = bytes[i];
-    if (pos == DST_ADR_POS) {
-      if (byte == 0x80) {
-        buffer[pos] = byte;
-        pos++;
-      } else {
-        buffer[pos] = byte;
-        pos++;
-        // Not the byte we are looking for
-        // ESP_LOGI("econet", "<<< %s", format_hex_pretty((const uint8_t *) buffer, pos).c_str());
-        pos = 0;
-      }
-    } else if (pos == SRC_ADR_POS) {
-      if (byte == 0x80) {
-        buffer[pos] = byte;
-        pos++;
-      } else {
-        buffer[pos] = byte;
-        pos++;
-        // Not the byte we are looking for
-        // ESP_LOGI("econet", "<<< %s", format_hex_pretty((const uint8_t *) buffer, pos).c_str());
-        // Not the byte we are looking for
-        // TODO
-        // Loop through and check if we were off by a couple bytes
-        pos = 0;
-      }
-    } else if (pos == LEN_POS) {
+    buffer[pos] = byte;
+    if ((pos == DST_ADR_POS || pos == SRC_ADR_POS) && byte != 0x80) {
+      pos = 0;
+      continue;
+    }
+    if (pos == LEN_POS) {
       data_len = byte;
       msg_len = data_len + MSG_HEADER_SIZE + MSG_CRC_SIZE;
-      buffer[pos] = byte;
-      pos++;
-    } else {
-      buffer[pos] = byte;
-      pos++;
     }
+    pos++;
 
-    if (pos == msg_len && msg_len != 0 && pos != 0) {
+    if (pos == msg_len && msg_len != 0) {
       // We have a full message
       this->parse_rx_message();
       pos = 0;
       msg_len = 0;
       data_len = 0;
-    } else if (pos == msg_len && msg_len != 0) {
-      ESP_LOGD("econet", "This would have cuased problems");
     }
   }
 }
 
 void Econet::loop() {
   const uint32_t now = millis();
-  bool flag = false;
 
-  // Read Every 50ms After 10s afer boot
-  if (now - this->last_read_ > 10) {
-    this->act_loop_time_ = now - this->last_read_;
-    this->last_read_ = now;
-    // Read Everything that is in the buffer
-    int bytes_available = econet_uart->available();
+  // Wait at least 10ms since last attempt to read
+  if (now - this->last_read_ <= 10) {
+    return;
+  }
 
-    if (bytes_available > 0) {
-      this->last_read_data_ = now;
-      ESP_LOGI("econet", "Read %d. ms=%d, lt=%d", bytes_available, now, act_loop_time_);
-      flag = true;
-      this->read_buffer(bytes_available);
-    } else {
-      // ESP_LOGI("econet", "--- millis()=%d", now);
-    }
-    if (now - this->last_read_data_ > 100) {
-      // ESP_LOGI("econet", "request ms=%d", now);
+  this->act_loop_time_ = now - this->last_read_;
+  this->last_read_ = now;
 
-      // Bus is Assumbed Available For Sending
-      // This currently attempts a request every 1000ms
-      if (now - this->last_request_ > 500) {
-        ESP_LOGI("econet", "request ms=%d", now);
-        this->last_request_ = now;
-        this->make_request();
-        req_id++;
-        if (req_id > 1) {
-          ESP_LOGI("econet", "request ms=%d", now);
-          this->last_request_ = now;
-          this->make_request();
-          req_id++;
-          if (req_id > 0) {
-            req_id = 0;
-          }
-        }
-      }
-      if (now - this->last_request_ > 10000 && type_id_ == 2) {
-        if (false) {
-          std::vector<uint8_t> data;
+  // Read Everything that is in the buffer
+  int bytes_available = econet_uart->available();
+  if (bytes_available > 0) {
+    this->last_read_data_ = now;
+    ESP_LOGI("econet", "Read %d. ms=%d, lt=%d", bytes_available, now, act_loop_time_);
+    this->read_buffer(bytes_available);
+    return;
+  }
 
-          // std::vector<uint8_t> req1 =
-          // {0x80,0x00,0x03,0x80,0x00,0x80,0x00,0x03,0x40,0x00,0x98,0x00,0x00,0x1E,0x02,0x01,0x00,0x00,0x41,0x55,0x54,0x4F,0x4D,0x4F,0x44,0x45,0x00,0x00,0x41,0x57,0x41,0x59,0x4D,0x4F,0x44,0x45,0x00,0x00,0x43,0x4F,0x4F,0x4C,0x53,0x45,0x54,0x50,0x00,0x00,0x44,0x45,0x41,0x44,0x42,0x41,0x4E,0x44,0x00,0x00,0x46,0x55,0x52,0x4E,0x47,0x46,0x41,0x4E,0x00,0x00,0x48,0x45,0x41,0x54,0x53,0x45,0x54,0x50,0x00,0x00,0x48,0x56,0x41,0x43,0x4D,0x4F,0x44,0x45,0x00,0x00,0x48,0x57,0x5F,0x47,0x5F,0x46,0x41,0x4E,0x00,0x00,0x52,0x45,0x4C,0x48,0x37,0x30,0x30,0x35,0x00,0x00,0x53,0x50,0x54,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x53,0x50,0x54,0x5F,0x53,0x54,0x41,0x54,0x00,0x00,0x53,0x54,0x41,0x54,0x4D,0x4F,0x44,0x45,0x00,0x00,0x53,0x54,0x41,0x54,0x4E,0x46,0x41,0x4E,0x00,0x00,0x53,0x54,0x41,0x54,0x5F,0x46,0x41,0x4E,0x00,0x00,0x56,0x41,0x43,0x53,0x54,0x41,0x54,0x45,0x54,0x06};
+  // Wait at least 100ms since last time we read data
+  if (now - this->last_read_data_ <= 100) {
+    return;
+  }
 
-          // data = announce1;
-          /*
-          for(int i=0; i < data.size(); i++)
-          {
-            wbuffer[i] = data[i];
-          }
+  // Wait at least 500ms since last request
+  if (now - this->last_request_ <= 500) {
+    return;
+  }
 
-          parse_tx_message();
-          */
-        }
-        if (false) {
-          this->last_request_ = now;
+  // If there are any needed write requests they will be made every 500ms.
+  // Read requests are made every 1s unless there are pending write requests in
+  // which case they will be at the next available 500ms slot.
 
-          ESP_LOGI("econet", "request ms=%d", now);
-
-          // do_once = true;
-          // wbuffer
-
-          std::vector<uint8_t> announce1 = {0x80, 0x00, 0x00, 0xF1, 0x00, 0x80, 0x00, 0x03, 0x80,
-                                            0x00, 0x0A, 0x00, 0x00, 0x1F, 0x08, 0x06, 0x0A, 0x19,
-                                            0x10, 0x17, 0x29, 0x29, 0x77, 0xA9, 0xAF, 0xED};
-          std::vector<uint8_t> announce2 = {0x80, 0x00, 0x03, 0x80, 0x00, 0x80, 0x00, 0x00, 0xF1,
-                                            0x00, 0x01, 0x00, 0x00, 0x06, 0x00, 0x5E, 0x9A};
-          std::vector<uint8_t> announce3 = {0x80, 0x00, 0x00, 0xF1, 0x00, 0x80, 0x00, 0x03, 0x80, 0x00, 0x06,
-                                            0x00, 0x01, 0x1F, 0x09, 0x01, 0x00, 0x00, 0x03, 0x80, 0x7E, 0xBB};
-
-          std::vector<uint8_t> airhstat_req = {0x80, 0x00, 0x03, 0xC0, 0x00, 0x80, 0x00, 0x03, 0x80, 0x00,
-                                               0x0C, 0x00, 0x00, 0x1E, 0x01, 0x01, 0x00, 0x00, 0x41, 0x49,
-                                               0x52, 0x48, 0x53, 0x54, 0x41, 0x54, 0xA5, 0x29};
-
-          std::vector<uint8_t> prodmodn = {0x80, 0x00, 0x03, 0xC0, 0x00, 0x80, 0x00, 0x03, 0x80, 0x00,
-                                           0x0C, 0x00, 0x00, 0x1E, 0x01, 0x00, 0x00, 0x00, 0x50, 0x52,
-                                           0x4F, 0x44, 0x4D, 0x4F, 0x44, 0x4E, 0x2D, 0x2C};
-
-          std::vector<uint8_t> prodmodn_data = {0x01, 0x00, 0x00, 0x00, 0x50, 0x52, 0x4F, 0x44, 0x4D, 0x4F, 0x44, 0x4E};
-
-          std::vector<uint8_t> hwell_id = {0x80, 0x00, 0x01, 0xC0, 0x00, 0x80, 0x00, 0x03, 0x80, 0x00,
-                                           0x0C, 0x00, 0x00, 0x1E, 0x01, 0x01, 0x00, 0x00, 0x48, 0x57,
-                                           0x45, 0x4C, 0x4C, 0x5F, 0x49, 0x44, 0xA0, 0xD5};
-
-          //
-          /*
-          transmit_message(announce1);
-          transmit_sync();
-
-          delay(40);
-
-          transmit_message(announce2);
-          transmit_sync();
-
-          delay(250);
-
-          transmit_message(announce3);
-          transmit_sync();
-
-          delay(44);
-
-          transmit_message(announce3);
-          transmit_sync();
-
-          delay(10);
-          */
-
-          // std::vector<std::string> str_ids{};
-
-          /*
-          str_ids.push_back("AAUX1CFM");
-          str_ids.push_back("AAUX2CFM");
-          str_ids.push_back("AAUX3CFM");
-          str_ids.push_back("AAUX4CFM");
-          */
-
-          // str_ids.push_back("HWELL_ID");
-          // str_ids.push_back("HWELMODL");
-          // str_ids.push_back("HWCONFIG");
-          // str_ids.push_back("HWSTATUS");
-          // HWSTATUS
-          // request_strings(0x1c0, 0x380, str_ids);
-
-          // transmit_message(hwell_id);
-          /*
-          if(do_once == false && false)
-          {
-
-            do_once = true;
-
-            transmit_message(hwell_id);
-
-            transmit_sync();
-
-            transmit_message(hwell_id);
-
-            transmit_sync();
-
-            transmit_message(hwell_id);
-
-            transmit_sync();
-
-          }
-
-          econet_uart->flush();
-          */
-        }
-      }
-    }
+  // Bus is assumed Available For Sending
+  ESP_LOGI("econet", "request ms=%d", now);
+  this->last_request_ = now;
+  this->make_request();
+  req_id++;
+  if (req_id > 1) {
+    ESP_LOGI("econet", "request ms=%d", now);
+    this->last_request_ = now;
+    this->make_request();
+    req_id = 0;
   }
 }
 
@@ -1192,73 +666,10 @@ void Econet::transmit_message(uint32_t dst_adr, uint32_t src_adr, uint8_t comman
   parse_tx_message();
 }
 
-void Econet::transmit_message(std::vector<uint8_t> data) {
-  for (int i = 0; i < data.size(); i++) {
-    wbuffer[i] = data[i];
-  }
-
-  econet_uart->write_array(wbuffer, data.size());
-  // econet_uart->flush();
-
-  parse_tx_message();
-}
-
-void Econet::transmit_sync() { econet_uart->flush(); }
-
 void Econet::send_datapoint(uint8_t datapoint_id, float value) {
   for (auto &listener : this->listeners_) {
     if (listener.datapoint_id == datapoint_id)
       listener.on_datapoint(value);
-  }
-}
-
-void Econet::set_enable_state(bool state) {
-  if (state) {
-    this->send_enable_disable = true;
-    this->enable_disable_cmd = true;
-  } else {
-    this->send_enable_disable = true;
-    this->enable_disable_cmd = false;
-  }
-}
-
-void Econet::set_new_setpoint(float setpoint) {
-  send_new_setpoint = true;
-  new_setpoint = setpoint;
-}
-
-void Econet::set_new_setpoint_low(float setpoint) {
-  send_new_setpoint_low = true;
-  new_setpoint_low = setpoint;
-}
-
-void Econet::set_new_setpoint_high(float setpoint) {
-  send_new_setpoint_high = true;
-  new_setpoint_high = setpoint;
-}
-
-void Econet::set_new_mode(float mode) {
-  send_new_mode = true;
-  new_mode = mode;
-}
-
-void Econet::set_new_fan_mode(float fan_mode) {
-  send_new_fan_mode = true;
-  new_fan_mode = fan_mode;
-}
-
-void Econet::set_new_dhumsetp(float setpoint) {
-  send_new_dhumsetp = true;
-  new_dhumsetp = setpoint;
-}
-
-void Econet::set_dhum_enable_state(bool state) {
-  if (state) {
-    this->send_dhum_enable_disable = true;
-    this->dhum_enable_disable_cmd = true;
-  } else {
-    this->send_dhum_enable_disable = true;
-    this->dhum_enable_disable_cmd = false;
   }
 }
 

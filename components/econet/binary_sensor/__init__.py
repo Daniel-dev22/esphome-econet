@@ -18,6 +18,13 @@ CONF_HEATCTRL = "heatctrl"
 CONF_FAN_CTRL = "fan_ctrl"
 CONF_COMP_RLY = "comp_rly"
 
+BINARY_SENSORS = {
+    CONF_ENABLE_STATE: "WHTRENAB",
+    CONF_HEATCTRL: "HEATCTRL",
+    CONF_FAN_CTRL: "FAN_CTRL",
+    CONF_COMP_RLY: "COMP_RLY",
+}
+
 CONFIG_SCHEMA = (
     cv.COMPONENT_SCHEMA.extend(
         {
@@ -57,15 +64,7 @@ async def to_code(config):
     econet_var = await cg.get_variable(config[CONF_ECONET_ID])
     cg.add(var.set_econet(econet_var))
 
-    if CONF_ENABLE_STATE in config:
-        sens = await binary_sensor.new_binary_sensor(config[CONF_ENABLE_STATE])
-        cg.add(var.set_enable_state_sensor(sens))
-    if CONF_HEATCTRL in config:
-        sens = await binary_sensor.new_binary_sensor(config[CONF_HEATCTRL])
-        cg.add(var.set_heatctrl_sensor(sens))
-    if CONF_FAN_CTRL in config:
-        sens = await binary_sensor.new_binary_sensor(config[CONF_FAN_CTRL])
-        cg.add(var.set_fan_ctrl_sensor(sens))
-    if CONF_COMP_RLY in config:
-        sens = await binary_sensor.new_binary_sensor(config[CONF_COMP_RLY])
-        cg.add(var.set_comp_rly_sensor(sens))
+    for config_key, obg_key in BINARY_SENSORS.items():
+        if config_key in config:
+            sens = await binary_sensor.new_binary_sensor(config[config_key])
+            cg.add(var.set_binary_sensor(obg_key, sens))

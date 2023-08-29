@@ -1,15 +1,12 @@
 substitutions:
-  name: econet
-  device_description: "Rheem Heat Pump Hot Water Heater"
+  name: "econet-hpwh"
+  device_description: "Rheem Heat Pump Water Heater"
   tx_pin: GPIO19
   rx_pin: GPIO22
 
 esphome:
   name: ${name}
   comment: ${device_description}
-  project:
-    name: "daniel-dev22.econet"
-    version: 0.1.5
 
 preferences:
   flash_write_interval: "24h"
@@ -27,9 +24,6 @@ api:
 
 ota:
 
-# web_server:
-#   port: 80
-
 logger:
   baud_rate: 0  # Disable UART logger if using UART0 (pins 1,3)
   level: INFO
@@ -37,6 +31,7 @@ logger:
 
 external_components:
   - source: github://Daniel-dev22/esphome-econet
+  # - source: components
 
 uart:
   id: uart_0
@@ -47,7 +42,6 @@ uart:
   rx_pin:
     number: ${rx_pin}
 
-# The base UART communication hub.
 econet:
   uart: uart_0
   model: "Heatpump"
@@ -56,7 +50,6 @@ climate:
   - platform: econet
     name: "Water Heater"
 
-# Optional additional sensors.
 sensor:
   - platform: econet
     hot_water:
@@ -89,8 +82,3 @@ binary_sensor:
       name: "Fan Control"
     comp_rly:
       name: "Compressor Relay"
-
-# switch:
-#   - platform: econet
-#     enable_switch:
-#       name: "Water Heater Enabled"

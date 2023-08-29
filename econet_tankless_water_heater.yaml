@@ -1,15 +1,15 @@
 substitutions:
-  name: econet
-  device_description: "Communicate with Econet Netork"
+  name: "econet-twh"
+  device_description: "Rheem Tankless Water Heater"
   tx_pin: GPIO19
   rx_pin: GPIO22
 
 esphome:
   name: ${name}
   comment: ${device_description}
-  project:
-    name: "daniel-dev22.econet"
-    version: 0.1.0
+
+preferences:
+  flash_write_interval: "24h"
 
 esp32:
   board: esp32dev
@@ -30,8 +30,8 @@ logger:
   tx_buffer_size: 2000
 
 external_components:
-  - source: github://stockmopar/esphome-econet
-#  - source: components
+  - source: github://Daniel-dev22/esphome-econet
+  # - source: components
 
 uart:
   id: uart_0
@@ -42,7 +42,6 @@ uart:
   rx_pin:
     number: ${rx_pin}
 
-# The base UART communication hub.
 econet:
   uart: uart_0
   model: "Tankless"
@@ -51,7 +50,6 @@ climate:
   - platform: econet
     name: "Water Heater"
 
-# Optional additional sensors.
 sensor:
   - platform: econet
     temp_in:
@@ -68,16 +66,8 @@ sensor:
       name: "Flow Rate"
     ignition_cycles:
       name: "Ignition Cycles"
-    instant_btus:
-      name: "Instant BTUs"
 
 binary_sensor:
   - platform: econet
     enable_state:
       name: "Water Heater Enabled (Sensor)"
-
-switch:
-  - platform: econet
-    name: "Water Heater Enabled"
-    switch_datapoint: 0
-    id: wh_enabled_switch

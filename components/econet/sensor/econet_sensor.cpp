@@ -6,112 +6,28 @@ namespace econet {
 static const char *const TAG = "econet.sensor";
 
 void EconetSensor::update() {
-  if (!this->econet->is_ready())
-    return;
-
-  // ESP_LOGD("econet", "econet->get_type_id() = %d", this->econet->get_type_id());
-
-  if (this->temp_in_sensor_ != nullptr) {
-    this->temp_in_sensor_->publish_state(this->econet->get_temp_in());
-  }
-  if (this->temp_out_sensor_ != nullptr) {
-    this->temp_out_sensor_->publish_state(this->econet->get_temp_out());
-  }
-  if (this->flow_rate_sensor_ != nullptr) {
-    this->flow_rate_sensor_->publish_state(this->econet->get_flow_rate());
-  }
-  if (this->setpoint_sensor_ != nullptr) {
-    this->setpoint_sensor_->publish_state(this->econet->get_setpoint());
-  }
-  if (this->water_used_sensor_ != nullptr) {
-    this->water_used_sensor_->publish_state(this->econet->get_water_used());
-  }
-  if (this->btus_used_sensor_ != nullptr) {
-    this->btus_used_sensor_->publish_state(this->econet->get_btus_used());
-  }
-  if (this->ignition_cycles_sensor_ != nullptr) {
-    this->ignition_cycles_sensor_->publish_state(this->econet->get_ignition_cycles());
-  }
-  if (this->instant_btus_sensor_ != nullptr) {
-    this->instant_btus_sensor_->publish_state(this->econet->get_instant_btus());
-  }
-  if (this->hot_water_sensor_ != nullptr) {
-    this->hot_water_sensor_->publish_state(this->econet->get_hot_water());
-  }
-  if (this->ambient_temp_sensor_ != nullptr) {
-    this->ambient_temp_sensor_->publish_state(this->econet->get_ambient_temp());
-  }
-  if (this->lower_water_heater_temp_sensor_ != nullptr) {
-    this->lower_water_heater_temp_sensor_->publish_state(this->econet->get_lower_water_heater_temp());
-  }
-  if (this->upper_water_heater_temp_sensor_ != nullptr) {
-    this->upper_water_heater_temp_sensor_->publish_state(this->econet->get_upper_water_heater_temp());
-  }
-  if (this->power_watt_sensor_ != nullptr) {
-    this->power_watt_sensor_->publish_state(this->econet->get_power_watt());
-  }
-  if (this->evap_temp_sensor_ != nullptr) {
-    this->evap_temp_sensor_->publish_state(this->econet->get_evap_temp());
-  }
-  if (this->suction_temp_sensor_ != nullptr) {
-    this->suction_temp_sensor_->publish_state(this->econet->get_suction_temp());
-  }
-  if (this->discharge_temp_sensor_ != nullptr) {
-    this->discharge_temp_sensor_->publish_state(this->econet->get_discharge_temp());
+  for (const auto &kv : this->float_sensors_) {
+    float value = this->econet->get_float_value(kv.first);
+    if (kv.first == "FLOWRATE") {
+      // Convert liters per minute to gpm
+      value /= 3.785;
+    }
+    kv.second->publish_state(value);
   }
 
-  if (this->cc_hvacmode_sensor_ != nullptr) {
-    this->cc_hvacmode_sensor_->publish_state(this->econet->get_cc_hvacmode());
+  for (const auto &kv : this->enum_sensors_) {
+    kv.second->publish_state(this->econet->get_int_value(kv.first));
   }
-  if (this->cc_spt_stat_sensor_ != nullptr) {
-    this->cc_spt_stat_sensor_->publish_state(this->econet->get_cc_spt_stat());
-  }
-  if (this->cc_coolsetp_sensor_ != nullptr) {
-    this->cc_coolsetp_sensor_->publish_state(this->econet->get_cc_cool_setpoint());
-  }
-  if (this->cc_automode_sensor_ != nullptr) {
-    this->cc_automode_sensor_->publish_state(this->econet->get_cc_automode());
-  }
-  if (this->cc_rel_hum_sensor_ != nullptr) {
-    this->cc_rel_hum_sensor_->publish_state(this->econet->get_cc_rel_hum());
-  }
+
   if (this->cc_blower_cfm_sensor_ != nullptr) {
     this->cc_blower_cfm_sensor_->publish_state(this->econet->get_cc_blower_cfm());
   }
   if (this->cc_blower_rpm_sensor_ != nullptr) {
     this->cc_blower_rpm_sensor_->publish_state(this->econet->get_cc_blower_rpm());
   }
-  if (this->hvac_odu_outside_air_temp_sensor_ != nullptr) {
-    this->hvac_odu_outside_air_temp_sensor_->publish_state(this->econet->get_hvac_odu_outside_air_temp());
-  }
-  if (this->hvac_odu_evaporator_temp_sensor_ != nullptr) {
-    this->hvac_odu_evaporator_temp_sensor_->publish_state(this->econet->get_hvac_odu_evaporator_temp());
-  }
-  if (this->hvac_odu_inverter_crank_speed_sensor_ != nullptr) {
-    this->hvac_odu_inverter_crank_speed_sensor_->publish_state(this->econet->get_hvac_odu_inverter_crank_speed());
-  }
-  if (this->hvac_odu_crankcase_heater_temp_sensor_ != nullptr) {
-    this->hvac_odu_crankcase_heater_temp_sensor_->publish_state(this->econet->get_hvac_odu_crankcase_heater_temp());
-  }
-  if (this->hvac_odu_exv_current_position_sensor_ != nullptr) {
-    this->hvac_odu_exv_current_position_sensor_->publish_state(this->econet->get_hvac_odu_exv_current_position());
-  }
-  if (this->hvac_odu_exv_super_heat_sensor_ != nullptr) {
-    this->hvac_odu_exv_super_heat_sensor_->publish_state(this->econet->get_hvac_odu_exv_super_heat());
-  }
-  if (this->hvac_odu_suction_line_temp_sensor_ != nullptr) {
-    this->hvac_odu_suction_line_temp_sensor_->publish_state(this->econet->get_hvac_odu_suction_line_temp());
-  }
-  if (this->hvac_odu_pressure_suction_sensor_ != nullptr) {
-    this->hvac_odu_pressure_suction_sensor_->publish_state(this->econet->get_hvac_odu_pressure_suction());
-  }
 }
 
-void EconetSensor::dump_config() {
-  ESP_LOGCONFIG(TAG, "Econet Sensors:");
-  // LOG_SENSOR("  ", "temp_in", this->temp_in_sensor_);
-  // LOG_SENSOR("  ", "temp_out", this->temp_out_sensor_);
-}
+void EconetSensor::dump_config() { ESP_LOGCONFIG(TAG, "Econet Sensors:"); }
 
 }  // namespace econet
 }  // namespace esphome
