@@ -18,13 +18,19 @@ Econet = econet_ns.class_("Econet", cg.Component)
 EconetClient = econet_ns.class_("EconetClient")
 uart_ns = cg.esphome_ns.namespace("uart")
 UARTComponent = uart_ns.class_("UARTComponent")
+ModelType = econet_ns.enum("ModelType")
+MODEL_TYPES = {
+    "Tankless": ModelType.MODEL_TYPE_TANKLESS,
+    "Heatpump": ModelType.MODEL_TYPE_HEATPUMP,
+    "HVAC": ModelType.MODEL_TYPE_HVAC,
+}
 
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(): cv.declare_id(Econet),
         cv.Required(CONF_UART): cv.use_id(UARTComponent),
-        cv.Required(CONF_MODEL): cv.string,
-        cv.Optional(CONF_HVAC_WIFI_MODULE_CONNECTED): cv.boolean,
+        cv.Required(CONF_MODEL): cv.enum(MODEL_TYPES),
+        cv.Optional(CONF_HVAC_WIFI_MODULE_CONNECTED, default=True): cv.boolean,
     }
 )
 
@@ -41,13 +47,5 @@ async def to_code(config):
     await cg.register_component(var, config)
     uart = await cg.get_variable(config[CONF_UART])
     cg.add(var.set_uart(uart))
-    if config[CONF_MODEL] == "Tankless":
-        cg.add(var.set_type_id(0))
-    if config[CONF_MODEL] == "Heatpump":
-        cg.add(var.set_type_id(1))
-    if config[CONF_MODEL] == "HVAC":
-        cg.add(var.set_type_id(2))
-    if CONF_HVAC_WIFI_MODULE_CONNECTED in config:
-        cg.add(
-            var.set_hvac_wifi_module_connected(config[CONF_HVAC_WIFI_MODULE_CONNECTED])
-        )
+    cg.add(var.set_model_type(config[CONF_MODEL]))
+    cg.add(var.set_hvac_wifi_module_connected(config[CONF_HVAC_WIFI_MODULE_CONNECTED]))

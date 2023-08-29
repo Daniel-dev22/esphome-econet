@@ -15,11 +15,6 @@ class EconetClimate : public climate::Climate, public PollingComponent, public E
   void dump_config() override;
   void control(const climate::ClimateCall &call) override;
 
-  climate::ClimateAction econet_climate_action();
-
-  climate::ClimateMode econet_climate_mode(EconetClimateMode mode);
-  EconetClimateMode econet_climate_mode(climate::ClimateMode mode);
-
  protected:
   climate::ClimateTraits traits() override;
 };

@@ -30,7 +30,6 @@ CONF_FLOW_RATE = "flow_rate"
 CONF_WATER_USED = "water_used"
 CONF_BTUS_USED = "btus_used"
 CONF_IGNITION_CYCLES = "ignition_cycles"
-CONF_INSTANT_BTUS = "instant_btus"
 CONF_HOT_WATER = "hot_water"
 CONF_AMBIENTT = "ambient_temp"
 CONF_LOHTRTMP = "lower_water_heater_temp"
@@ -57,24 +56,45 @@ CONF_HVAC_ODU_EXV_SUPER_HEAT = "hvac_odu_exv_super_heat"
 CONF_HVAC_ODU_SUCTION_LINE_TEMP = "hvac_odu_suction_line_temp"
 CONF_HVAC_ODU_PRESSURE_SUCTION = "hvac_odu_pressure_suction"
 
+FLOAT_SENSORS = {
+    CONF_TEMP_IN: "TEMP__IN",
+    CONF_TEMP_OUT: "TEMP_OUT",
+    CONF_SETPOINT: "WHTRSETP",
+    CONF_FLOW_RATE: "FLOWRATE",
+    CONF_WATER_USED: "WTR_USED",
+    CONF_BTUS_USED: "WTR_BTUS",
+    CONF_IGNITION_CYCLES: "IGNCYCLS",
+    CONF_HOT_WATER: "HOTWATER",
+    CONF_AMBIENTT: "AMBIENTT",
+    CONF_LOHTRTMP: "LOHTRTMP",
+    CONF_UPHTRTMP: "UPHTRTMP",
+    CONF_POWRWATT: "POWRWATT",
+    CONF_EVAPTEMP: "EVAPTEMP",
+    CONF_SUCTIONT: "SUCTIONT",
+    CONF_DISCTEMP: "DISCTEMP",
+    CONF_HVAC_ODU_OUTSIDE_AIR_TEMP: "TEMP_OAT",
+    CONF_HVAC_ODU_EVAPORATOR_TEMP: "TEMP_EVP",
+    CONF_HVAC_ODU_INVERTER_CRANK_SPEED: "ISCSPEED",
+    CONF_HVAC_ODU_CRANKCASE_HEATER_TEMP: "TEMP_CPT",
+    CONF_HVAC_ODU_EXV_CURRENT_POSITION: "EXACTUAL",
+    CONF_HVAC_ODU_EXV_SUPER_HEAT: "EXVSUPER",
+    CONF_HVAC_ODU_SUCTION_LINE_TEMP: "TEMP_OST",
+    CONF_HVAC_ODU_PRESSURE_SUCTION: "PRES_SUC",
+    CONF_CC_SPT_STAT: "SPT_STAT",
+    CONF_CC_COOLSETP: "COOLSETP",
+    CONF_CC_REL_HUM: "RELH7005",
+}
+
+ENUM_SENSORS = {
+    CONF_CC_HVACMODE: "HVACMODE",
+    CONF_CC_AUTOMODE: "AUTOMODE",
+}
+
+# TODO: Make these work as easy as the float and enum sensors
 SENSORS = [
-    CONF_HVAC_ODU_OUTSIDE_AIR_TEMP,
-    CONF_HVAC_ODU_EVAPORATOR_TEMP,
-    CONF_HVAC_ODU_INVERTER_CRANK_SPEED,
-    CONF_HVAC_ODU_CRANKCASE_HEATER_TEMP,
-    CONF_HVAC_ODU_EXV_CURRENT_POSITION,
-    CONF_HVAC_ODU_EXV_SUPER_HEAT,
-    CONF_HVAC_ODU_SUCTION_LINE_TEMP,
-    CONF_HVAC_ODU_PRESSURE_SUCTION,
-    CONF_CC_HVACMODE,
-    CONF_CC_SPT_STAT,
-    CONF_CC_COOLSETP,
-    CONF_CC_AUTOMODE,
-    CONF_CC_REL_HUM,
     CONF_CC_BLOWER_CFM,
     CONF_CC_BLOWER_RPM,
 ]
-
 
 CONFIG_SCHEMA = (
     cv.COMPONENT_SCHEMA.extend(
@@ -140,14 +160,6 @@ CONFIG_SCHEMA = (
             cv.Optional(CONF_IGNITION_CYCLES): sensor.sensor_schema(
                 unit_of_measurement="",
                 accuracy_decimals=0,
-                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            ),
-        },
-        {
-            cv.GenerateID(): cv.declare_id(EconetSensor),
-            cv.Optional(CONF_INSTANT_BTUS): sensor.sensor_schema(
-                unit_of_measurement="kbtu/hr",
-                accuracy_decimals=3,
                 entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             ),
         },
@@ -385,57 +397,17 @@ async def to_code(config):
     econet_var = await cg.get_variable(config[CONF_ECONET_ID])
     cg.add(var.set_econet(econet_var))
 
-    if CONF_TEMP_IN in config:
-        sens = await sensor.new_sensor(config[CONF_TEMP_IN])
-        cg.add(var.set_temp_in_sensor(sens))
-    if CONF_TEMP_OUT in config:
-        sens = await sensor.new_sensor(config[CONF_TEMP_OUT])
-        cg.add(var.set_temp_out_sensor(sens))
-    if CONF_SETPOINT in config:
-        sens = await sensor.new_sensor(config[CONF_SETPOINT])
-        cg.add(var.set_setpoint_sensor(sens))
-    if CONF_FLOW_RATE in config:
-        sens = await sensor.new_sensor(config[CONF_FLOW_RATE])
-        cg.add(var.set_flow_rate_sensor(sens))
-    if CONF_WATER_USED in config:
-        sens = await sensor.new_sensor(config[CONF_WATER_USED])
-        cg.add(var.set_water_used_sensor(sens))
-    if CONF_BTUS_USED in config:
-        sens = await sensor.new_sensor(config[CONF_BTUS_USED])
-        cg.add(var.set_btus_used_sensor(sens))
-    if CONF_IGNITION_CYCLES in config:
-        sens = await sensor.new_sensor(config[CONF_IGNITION_CYCLES])
-        cg.add(var.set_ignition_cycles_sensor(sens))
-    if CONF_INSTANT_BTUS in config:
-        sens = await sensor.new_sensor(config[CONF_INSTANT_BTUS])
-        cg.add(var.set_instant_btus_sensor(sens))
-    if CONF_HOT_WATER in config:
-        sens = await sensor.new_sensor(config[CONF_HOT_WATER])
-        cg.add(var.set_hot_water_sensor(sens))
-    if CONF_AMBIENTT in config:
-        sens = await sensor.new_sensor(config[CONF_AMBIENTT])
-        cg.add(var.set_ambient_temp_sensor(sens))
-    if CONF_LOHTRTMP in config:
-        sens = await sensor.new_sensor(config[CONF_LOHTRTMP])
-        cg.add(var.set_lower_water_heater_temp_sensor(sens))
-    if CONF_UPHTRTMP in config:
-        sens = await sensor.new_sensor(config[CONF_UPHTRTMP])
-        cg.add(var.set_upper_water_heater_temp_sensor(sens))
-    if CONF_POWRWATT in config:
-        sens = await sensor.new_sensor(config[CONF_POWRWATT])
-        cg.add(var.set_power_watt_sensor(sens))
-    if CONF_EVAPTEMP in config:
-        sens = await sensor.new_sensor(config[CONF_EVAPTEMP])
-        cg.add(var.set_evap_temp_sensor(sens))
-    if CONF_SUCTIONT in config:
-        sens = await sensor.new_sensor(config[CONF_SUCTIONT])
-        cg.add(var.set_suction_temp_sensor(sens))
-    if CONF_DISCTEMP in config:
-        sens = await sensor.new_sensor(config[CONF_DISCTEMP])
-        cg.add(var.set_discharge_temp_sensor(sens))
+    for config_key, obg_key in FLOAT_SENSORS.items():
+        if config_key in config:
+            sens = await sensor.new_sensor(config[config_key])
+            cg.add(var.set_float_sensor(obg_key, sens))
 
-    for key in SENSORS:
-        if key in config:
-            conf = config[key]
-            sens = await sensor.new_sensor(conf)
-            cg.add(getattr(var, f"set_{key}_sensor")(sens))
+    for config_key, obg_key in ENUM_SENSORS.items():
+        if config_key in config:
+            sens = await sensor.new_sensor(config[config_key])
+            cg.add(var.set_enum_sensor(obg_key, sens))
+
+    for config_key in SENSORS:
+        if config_key in config:
+            sens = await sensor.new_sensor(config[config_key])
+            cg.add(getattr(var, f"set_{config_key}_sensor")(sens))
