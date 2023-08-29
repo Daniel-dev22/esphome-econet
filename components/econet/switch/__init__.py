@@ -36,6 +36,7 @@ CONFIG_SCHEMA = (
     .extend(cv.polling_component_schema("5s"))
 )
 
+
 async def to_code(config):
     var = await cg.get_variable(config[CONF_ECONET_ID])
 
