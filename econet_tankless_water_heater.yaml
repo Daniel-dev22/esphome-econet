@@ -71,3 +71,10 @@ binary_sensor:
   - platform: econet
     enable_state:
       name: "Water Heater Enabled (Sensor)"
+
+text_sensor:
+  - platform: econet
+    water_heater_fan_speed:
+      name: "Water Heater Fan Speed"
+    water_heater_heating_element_state:
+      name: "Water Heater Heating Element State"

@@ -15,10 +15,14 @@ EconetTextSensor = econet_ns.class_(
 
 CONF_CC_HVACMODE_TEXT = "cc_hvacmode_text"
 CONF_CC_AUTOMODE_TEXT = "cc_automode_text"
+CONF_WATER_HEATER_FAN_SPEED = "water_heater_fan_speed"
+CONF_WATER_HEATER_HEATING_ELEMENT_STATE = "water_heater_heating_element_state"
 
 TEXT_SENSORS = {
     CONF_CC_HVACMODE_TEXT: "HVACMODE",
     CONF_CC_AUTOMODE_TEXT: "AUTOMODE",
+    CONF_WATER_HEATER_FAN_SPEED: "FAN_CTRL",
+    CONF_WATER_HEATER_HEATING_ELEMENT_STATE: "HEATCTRL",
 }
 
 CONFIG_SCHEMA = (
@@ -30,6 +34,14 @@ CONFIG_SCHEMA = (
         {
             cv.GenerateID(): cv.declare_id(EconetTextSensor),
             cv.Optional(CONF_CC_AUTOMODE_TEXT): text_sensor.text_sensor_schema(),
+        },
+        {
+            cv.GenerateID(): cv.declare_id(EconetTextSensor),
+            cv.Optional(CONF_WATER_HEATER_FAN_SPEED): text_sensor.text_sensor_schema(),
+        },
+        {
+            cv.GenerateID(): cv.declare_id(EconetTextSensor),
+            cv.Optional(CONF_WATER_HEATER_HEATING_ELEMENT_STATE): text_sensor.text_sensor_schema(),
         },
     )
     .extend(ECONET_CLIENT_SCHEMA)
