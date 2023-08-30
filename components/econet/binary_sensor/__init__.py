@@ -14,14 +14,10 @@ EconetBinarySensor = econet_ns.class_(
 )
 
 CONF_ENABLE_STATE = "enable_state"
-CONF_HEATCTRL = "heatctrl"
-CONF_FAN_CTRL = "fan_ctrl"
 CONF_COMP_RLY = "comp_rly"
 
 BINARY_SENSORS = {
     CONF_ENABLE_STATE: "WHTRENAB",
-    CONF_HEATCTRL: "HEATCTRL",
-    CONF_FAN_CTRL: "FAN_CTRL",
     CONF_COMP_RLY: "COMP_RLY",
 }
 
@@ -30,18 +26,6 @@ CONFIG_SCHEMA = (
         {
             cv.GenerateID(): cv.declare_id(EconetBinarySensor),
             cv.Optional(CONF_ENABLE_STATE): binary_sensor.binary_sensor_schema(
-                device_class=DEVICE_CLASS_RUNNING,
-            ),
-        },
-        {
-            cv.GenerateID(): cv.declare_id(EconetBinarySensor),
-            cv.Optional(CONF_HEATCTRL): binary_sensor.binary_sensor_schema(
-                device_class=DEVICE_CLASS_RUNNING,
-            ),
-        },
-        {
-            cv.GenerateID(): cv.declare_id(EconetBinarySensor),
-            cv.Optional(CONF_FAN_CTRL): binary_sensor.binary_sensor_schema(
                 device_class=DEVICE_CLASS_RUNNING,
             ),
         },
