@@ -76,8 +76,6 @@ binary_sensor:
   - platform: econet
     enable_state:
       name: "Water Heater Enabled (Sensor)"
-    heatctrl:
-      name: "Heater Control"
     comp_rly:
       name: "Compressor Relay"
 
