@@ -78,8 +78,6 @@ binary_sensor:
       name: "Water Heater Enabled (Sensor)"
     heatctrl:
       name: "Heater Control"
-    fan_ctrl:
-      name: "Fan Control"
     comp_rly:
       name: "Compressor Relay"
 
