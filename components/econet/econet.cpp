@@ -135,7 +135,6 @@ void Econet::make_request() {
 
   std::vector<std::string> str_ids{};
 
-  // TODO: Only request ones needed for climate and enabled sensors
   if (req_id == 0) {
     if (model_type_ == MODEL_TYPE_TANKLESS) {
       str_ids.push_back("FLOWRATE");
@@ -163,6 +162,9 @@ void Econet::make_request() {
       str_ids.push_back("EVAPTEMP");
       str_ids.push_back("SUCTIONT");
       str_ids.push_back("DISCTEMP");
+      str_ids.push_back("ALRMALRT");
+      //str_ids.push_back("SUCTIONT");
+      //str_ids.push_back("DISCTEMP");
     } else if (model_type_ == MODEL_TYPE_HVAC && hvac_wifi_module_connected_ == false) {
       str_ids.push_back("DHUMSETP");
       str_ids.push_back("DHUMENAB");
