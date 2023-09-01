@@ -169,7 +169,6 @@ CONFIG_SCHEMA = (
                 unit_of_measurement="%",
                 accuracy_decimals=0,
                 device_class=DEVICE_CLASS_MOISTURE,
-                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             ),
         },
         {
