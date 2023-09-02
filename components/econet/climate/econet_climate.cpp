@@ -40,23 +40,23 @@ climate::ClimateTraits EconetClimate::traits() {
   traits.set_supports_current_temperature(true);
   traits.set_visual_temperature_step(SETPOINT_STEP);
 
-  // Set Supported Climate Modes
-  if (this->econet->get_model_type() == MODEL_TYPE_HVAC) {
+  // Conifugre Climate Traits for the Different Device Types (MODEL_TYPE_TANKLESS, MODEL_TYPE_HEATPUMP, MODEL_TYPE_HVAC)
+  if (this->econet->get_model_type() == MODEL_TYPE_HVAC) { // HVAC Systems
     traits.set_supported_modes({climate::CLIMATE_MODE_OFF, climate::CLIMATE_MODE_COOL, climate::CLIMATE_MODE_HEAT,
                                 climate::CLIMATE_MODE_HEAT_COOL, climate::CLIMATE_MODE_FAN_ONLY});
-    traits.set_supported_custom_fan_modes({"Automatic", "Speed 1 (Low)", "Speed 2 (Medium Low)", "Speed 3 (Medium)",
-                                           "Speed 4 (Medium High)", "Speed 5 (High)"});
     traits.set_supports_two_point_target_temperature(true);
     traits.set_visual_min_temperature(HVAC_SETPOINT_MIN);
     traits.set_visual_max_temperature(HVAC_SETPOINT_MAX);
-  } else {
+    traits.set_supported_custom_fan_modes({"Automatic", "Speed 1 (Low)", "Speed 2 (Medium Low)", "Speed 3 (Medium)",
+                                           "Speed 4 (Medium High)", "Speed 5 (High)"});
+  } else { // Hot Water Heaters
     traits.set_supported_modes({climate::CLIMATE_MODE_OFF, climate::CLIMATE_MODE_AUTO});
     traits.set_supports_two_point_target_temperature(false);
     traits.set_visual_min_temperature(WATER_HEATER_SETPOINT_MIN);
     traits.set_visual_max_temperature(WATER_HEATER_SETPOINT_MAX);
   }
 
-  // Set Custom Presets for Heat Pumps
+  // Set Custom Presets Specific to Hybrid Heat Pumps
   if (this->econet->get_model_type() == MODEL_TYPE_HEATPUMP) {
     traits.set_supported_custom_presets({"Off", "Eco Mode", "Heat Pump", "High Demand", "Electric", "Vacation"});
   }
