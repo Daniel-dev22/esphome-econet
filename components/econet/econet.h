@@ -58,7 +58,7 @@ inline bool operator==(const EconetDatapoint &lhs, const EconetDatapoint &rhs) {
 }
 
 struct EconetDatapointListener {
-  std::string datapoint_id;
+  const std::string &datapoint_id;
   std::function<void(EconetDatapoint)> on_datapoint;
 };
 
@@ -74,17 +74,17 @@ class Econet : public Component, public uart::UARTDevice {
     hvac_wifi_module_connected_ = hvac_wifi_module_connected;
   }
 
-  void set_float_datapoint_value(std::string datapoint_id, float value);
-  void set_enum_datapoint_value(std::string datapoint_id, uint8_t value);
+  void set_float_datapoint_value(const std::string &datapoint_id, float value);
+  void set_enum_datapoint_value(const std::string &datapoint_id, uint8_t value);
 
-  void register_listener(std::string datapoint_id, const std::function<void(EconetDatapoint)> &func);
+  void register_listener(const std::string &datapoint_id, const std::function<void(EconetDatapoint)> &func);
 
  protected:
   ModelType model_type_;
   std::vector<EconetDatapointListener> listeners_;
   ReadRequest read_req;
-  void set_datapoint_(std::string datapoint_id, EconetDatapoint new_datapoint);
-  void send_datapoint_(std::string datapoint_id, EconetDatapoint value);
+  void set_datapoint_(const std::string &datapoint_id, EconetDatapoint new_datapoint);
+  void send_datapoint_(const std::string &datapoint_id, EconetDatapoint value);
 
   void make_request();
   void read_buffer(int bytes_available);
@@ -94,7 +94,8 @@ class Econet : public Component, public uart::UARTDevice {
 
   void transmit_message(uint32_t dst_adr, uint32_t src_adr, uint8_t command, std::vector<uint8_t> data);
   void request_strings(uint32_t dst_adr, uint32_t src_adr, std::vector<std::string> objects);
-  void write_value(uint32_t dst_adr, uint32_t src_adr, std::string object, EconetDatapointType type, float value);
+  void write_value(uint32_t dst_adr, uint32_t src_adr, const std::string &object, EconetDatapointType type,
+                   float value);
 
   std::map<std::string, EconetDatapoint> datapoints_{};
 
@@ -137,9 +138,9 @@ class Econet : public Component, public uart::UARTDevice {
   uint8_t BYTES_BETWEEN_ADRS = 5;
   uint8_t MSG_CRC_SIZE = 2;
 
-  uint8_t ACK = 6;
-  uint8_t READ_COMMAND = 30;
-  uint8_t WRITE_COMMAND = 31;
+  uint8_t ACK = 0x06;
+  uint8_t READ_COMMAND = 0x1E;   // 30
+  uint8_t WRITE_COMMAND = 0x1F;  // 31
 };
 
 class EconetClient {

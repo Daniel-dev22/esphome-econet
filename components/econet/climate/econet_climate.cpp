@@ -223,7 +223,7 @@ void EconetClimate::control(const climate::ClimateCall &call) {
   }
 
   if (call.get_custom_fan_mode().has_value()) {
-    std::string fan_mode = call.get_custom_fan_mode().value();
+    const std::string &fan_mode = call.get_custom_fan_mode().value();
     int new_fan_mode = 0;
     if (fan_mode == "Automatic") {
       new_fan_mode = 0;
@@ -242,7 +242,7 @@ void EconetClimate::control(const climate::ClimateCall &call) {
   }
 
   if (call.get_custom_preset().has_value()) {
-    std::string preset = call.get_custom_preset().value();
+    const std::string &preset = call.get_custom_preset().value();
 
     ESP_LOGI("econet", "Set custom preset: %s", preset);
 

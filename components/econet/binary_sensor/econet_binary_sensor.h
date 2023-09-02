@@ -11,7 +11,7 @@ class EconetBinarySensor : public binary_sensor::BinarySensor, public Component,
  public:
   void setup() override;
   void dump_config() override;
-  void set_sensor_id(std::string sensor_id) { this->sensor_id_ = sensor_id; }
+  void set_sensor_id(const std::string &sensor_id) { this->sensor_id_ = sensor_id; }
 
  protected:
   std::string sensor_id_{""};

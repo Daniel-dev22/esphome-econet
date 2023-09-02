@@ -7,10 +7,8 @@ static const char *const TAG = "econet.automation";
 namespace esphome {
 namespace econet {
 
-EconetRawDatapointUpdateTrigger::EconetRawDatapointUpdateTrigger(Econet *parent, std::string sensor_id) {
-  parent->register_listener(sensor_id, [this](const EconetDatapoint &dp) {
-    this->trigger(dp.value_raw);
-  });
+EconetRawDatapointUpdateTrigger::EconetRawDatapointUpdateTrigger(Econet *parent, const std::string &sensor_id) {
+  parent->register_listener(sensor_id, [this](const EconetDatapoint &dp) { this->trigger(dp.value_raw); });
 }
 
 }  // namespace econet
