@@ -9,7 +9,7 @@ namespace econet {
 
 EconetRawDatapointUpdateTrigger::EconetRawDatapointUpdateTrigger(Econet *parent, std::string sensor_id) {
   parent->register_listener(sensor_id, [this](const EconetDatapoint &dp) {
-    // this->trigger(dp.value_raw);
+    this->trigger(dp.value_raw);
   });
 }
 
