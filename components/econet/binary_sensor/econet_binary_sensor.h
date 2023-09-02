@@ -1,20 +1,20 @@
 #pragma once
 
+#include "esphome/core/component.h"
 #include "esphome/components/binary_sensor/binary_sensor.h"
 #include "../econet.h"
 
 namespace esphome {
 namespace econet {
 
-class EconetBinarySensor : public PollingComponent, public EconetClient {
+class EconetBinarySensor : public binary_sensor::BinarySensor, public Component, public EconetClient {
  public:
-  void update() override;
+  void setup() override;
   void dump_config() override;
-
-  void set_binary_sensor(std::string key, binary_sensor::BinarySensor *sensor) { binary_sensors_[key] = sensor; }
+  void set_sensor_id(std::string sensor_id) { this->sensor_id_ = sensor_id; }
 
  protected:
-  std::map<std::string, binary_sensor::BinarySensor *> binary_sensors_;
+  std::string sensor_id_{""};
 };
 
 }  // namespace econet

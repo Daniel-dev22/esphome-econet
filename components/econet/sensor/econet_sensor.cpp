@@ -1,3 +1,4 @@
+#include "esphome/core/log.h"
 #include "econet_sensor.h"
 
 namespace esphome {
@@ -5,29 +6,22 @@ namespace econet {
 
 static const char *const TAG = "econet.sensor";
 
-void EconetSensor::update() {
-  for (const auto &kv : this->float_sensors_) {
-    float value = this->econet->get_float_value(kv.first);
-    if (kv.first == "FLOWRATE") {
-      // Convert liters per minute to gpm
-      value /= 3.785;
+void EconetSensor::setup() {
+  this->parent_->register_listener(this->sensor_id_, [this](const EconetDatapoint &datapoint) {
+    if (datapoint.type == EconetDatapointType::FLOAT) {
+      ESP_LOGV(TAG, "MCU reported sensor %s is: %f", this->sensor_id_.c_str(), datapoint.value_float);
+      this->publish_state(datapoint.value_float);
+    } else if (datapoint.type == EconetDatapointType::ENUM_TEXT) {
+      ESP_LOGV(TAG, "MCU reported sensor %s is: %u", this->sensor_id_.c_str(), datapoint.value_enum);
+      this->publish_state(datapoint.value_enum);
     }
-    kv.second->publish_state(value);
-  }
-
-  for (const auto &kv : this->enum_sensors_) {
-    kv.second->publish_state(this->econet->get_int_value(kv.first));
-  }
-
-  if (this->cc_blower_cfm_sensor_ != nullptr) {
-    this->cc_blower_cfm_sensor_->publish_state(this->econet->get_cc_blower_cfm());
-  }
-  if (this->cc_blower_rpm_sensor_ != nullptr) {
-    this->cc_blower_rpm_sensor_->publish_state(this->econet->get_cc_blower_rpm());
-  }
+  });
 }
 
-void EconetSensor::dump_config() { ESP_LOGCONFIG(TAG, "Econet Sensors:"); }
+void EconetSensor::dump_config() {
+  LOG_SENSOR("", "Econet Sensor", this);
+  ESP_LOGCONFIG(TAG, "  Sensor has datapoint ID %s", this->sensor_id_.c_str());
+}
 
 }  // namespace econet
 }  // namespace esphome

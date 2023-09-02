@@ -1,21 +1,19 @@
 #pragma once
 
-#include <map>
-#include "esphome/components/climate/climate.h"
-#include "esphome/components/uart/uart.h"
 #include "esphome/core/component.h"
 #include "../econet.h"
+#include "esphome/components/climate/climate.h"
 
 namespace esphome {
 namespace econet {
 
-class EconetClimate : public climate::Climate, public PollingComponent, public EconetClient {
+class EconetClimate : public climate::Climate, public Component, public EconetClient {
  public:
-  void update() override;
+  void setup() override;
   void dump_config() override;
-  void control(const climate::ClimateCall &call) override;
 
  protected:
+  void control(const climate::ClimateCall &call) override;
   climate::ClimateTraits traits() override;
 };
 

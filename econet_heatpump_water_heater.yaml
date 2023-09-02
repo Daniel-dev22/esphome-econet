@@ -25,25 +25,23 @@ api:
 ota:
 
 logger:
-  baud_rate: 0  # Disable UART logger if using UART0 (pins 1,3)
+  baud_rate: 0 # Make sure logging is not using the serial port
   level: INFO
   tx_buffer_size: 2000
 
 external_components:
-  - source: github://Daniel-dev22/esphome-econet
-  # - source: components
+  # - source: github://Daniel-dev22/esphome-econet
+  - source: components
 
 uart:
   id: uart_0
   baud_rate: 38400
   rx_buffer_size: 1500
-  tx_pin: 
-    number: ${tx_pin}
-  rx_pin:
-    number: ${rx_pin}
+  tx_pin: ${tx_pin}
+  rx_pin: ${rx_pin}
 
 econet:
-  uart: uart_0
+  uart_id: uart_0
   model: "Heatpump"
 
 climate:
@@ -52,36 +50,84 @@ climate:
 
 sensor:
   - platform: econet
-    hot_water:
-      name: "Hot Water"
-    ambient_temp:
-      name: "Ambient Temperature"
-    lower_water_heater_temp:
-      name: "Lower Tank Temperature"
-    upper_water_heater_temp:
-      name: "Upper Tank Temperature"
-    power_watt:
-      name: "Power"
-    evap_temp:
-      name: "Evaporator Temperature"
-    suction_temp:
-      name: "Suction Temperature"
-    discharge_temp:
-      name: "Discharge Temperature"
-  - platform: wifi_signal
-    name: "WiFi Signal Strength"
-    update_interval: 30s
+    name: "Hot Water"
+    sensor_datapoint: HOTWATER
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    device_class: "moisture"
+    state_class: "measurement"
+    entity_category: "diagnostic"
+  - platform: econet
+    name: "Ambient Temperature"
+    sensor_datapoint: AMBIENTT
+    unit_of_measurement: "°F"
+    accuracy_decimals: 1
+    device_class: "temperature"
+    state_class: "measurement"
+    entity_category: "diagnostic"
+  - platform: econet
+    name: "Lower Tank Temperature"
+    sensor_datapoint: LOHTRTMP
+    unit_of_measurement: "°F"
+    accuracy_decimals: 1
+    device_class: "temperature"
+    state_class: "measurement"
+    entity_category: "diagnostic"
+  - platform: econet
+    name: "Upper Tank Temperature"
+    sensor_datapoint: UPHTRTMP
+    unit_of_measurement: "°F"
+    accuracy_decimals: 1
+    device_class: "temperature"
+    state_class: "measurement"
+    entity_category: "diagnostic"
+  - platform: econet
+    name: "Power"
+    sensor_datapoint: POWRWATT
+    unit_of_measurement: "W"
+    accuracy_decimals: 3
+    device_class: "power"
+    state_class: "measurement"
+    entity_category: "diagnostic"
+  - platform: econet
+    name: "Evaporator Temperature"
+    sensor_datapoint: EVAPTEMP
+    unit_of_measurement: "°F"
+    accuracy_decimals: 1
+    device_class: "temperature"
+    state_class: "measurement"
+    entity_category: "diagnostic"
+  - platform: econet
+    name: "Suction Temperature"
+    sensor_datapoint: SUCTIONT
+    unit_of_measurement: "°F"
+    accuracy_decimals: 1
+    device_class: "temperature"
+    state_class: "measurement"
+    entity_category: "diagnostic"
+  - platform: econet
+    name: "Discharge Temperature"
+    sensor_datapoint: DISCTEMP
+    unit_of_measurement: "°F"
+    accuracy_decimals: 1
+    device_class: "temperature"
+    state_class: "measurement"
+    entity_category: "diagnostic"
 
 binary_sensor:
   - platform: econet
-    enable_state:
-      name: "Water Heater Enabled (Sensor)"
-    comp_rly:
-      name: "Compressor Relay"
+    name: "Water Heater Enabled (Sensor)"
+    sensor_datapoint: WHTRENAB
+    device_class: "running"
+  - platform: econet
+    name: "Compressor Relay"
+    sensor_datapoint: COMP_RLY
+    device_class: "running"
 
 text_sensor:
   - platform: econet
-    water_heater_fan_speed:
-      name: "Water Heater Fan Speed"
-    water_heater_heating_element_state:
-      name: "Water Heater Heating Element State"
+    name: "Water Heater Fan Speed"
+    sensor_datapoint: FAN_CTRL
+  - platform: econet
+    name: "Water Heater Heating Element State"
+    sensor_datapoint: HEATCTRL

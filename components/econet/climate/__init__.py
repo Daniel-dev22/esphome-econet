@@ -1,33 +1,28 @@
-"""
-Econet ESPHome component config validation & code generation.
-"""
-
-import esphome.codegen as cg
-import esphome.config_validation as cv
 from esphome.components import climate
+import esphome.config_validation as cv
+import esphome.codegen as cg
 from esphome.const import CONF_ID
 
-from .. import CONF_ECONET_ID, ECONET_CLIENT_SCHEMA, EconetClient, econet_ns
+from .. import econet_ns, CONF_ECONET_ID, Econet
 
-EconetClimate = econet_ns.class_(
-    "EconetClimate", climate.Climate, cg.PollingComponent, EconetClient
-)
+DEPENDENCIES = ["econet"]
+
+EconetClimate = econet_ns.class_("EconetClimate", climate.Climate, cg.Component)
 
 CONFIG_SCHEMA = cv.All(
     climate.CLIMATE_SCHEMA.extend(
         {
             cv.GenerateID(): cv.declare_id(EconetClimate),
+            cv.GenerateID(CONF_ECONET_ID): cv.use_id(Econet),
         }
-    )
-    .extend(cv.polling_component_schema("5s"))
-    .extend(ECONET_CLIENT_SCHEMA)
+    ).extend(cv.COMPONENT_SCHEMA),
 )
 
 
 async def to_code(config):
-    """Generate code"""
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
     await climate.register_climate(var, config)
-    econet_var = await cg.get_variable(config[CONF_ECONET_ID])
-    cg.add(var.set_econet(econet_var))
+
+    paren = await cg.get_variable(config[CONF_ECONET_ID])
+    cg.add(var.set_econet_parent(paren))

@@ -1,29 +1,20 @@
 #pragma once
 
+#include "esphome/core/component.h"
 #include "esphome/components/sensor/sensor.h"
 #include "../econet.h"
-#include <map>
 
 namespace esphome {
 namespace econet {
 
-class EconetSensor : public PollingComponent, public EconetClient {
+class EconetSensor : public sensor::Sensor, public Component, public EconetClient {
  public:
-  void update() override;
+  void setup() override;
   void dump_config() override;
-
-  void set_float_sensor(std::string key, sensor::Sensor *sensor) { float_sensors_[key] = sensor; }
-  void set_enum_sensor(std::string key, sensor::Sensor *sensor) { enum_sensors_[key] = sensor; }
-
-  void set_cc_blower_cfm_sensor(sensor::Sensor *sensor) { this->cc_blower_cfm_sensor_ = sensor; }
-  void set_cc_blower_rpm_sensor(sensor::Sensor *sensor) { this->cc_blower_rpm_sensor_ = sensor; }
+  void set_sensor_id(std::string sensor_id) { this->sensor_id_ = sensor_id; }
 
  protected:
-  std::map<std::string, sensor::Sensor *> float_sensors_;
-  std::map<std::string, sensor::Sensor *> enum_sensors_;
-
-  sensor::Sensor *cc_blower_cfm_sensor_{nullptr};
-  sensor::Sensor *cc_blower_rpm_sensor_{nullptr};
+  std::string sensor_id_{""};
 };
 
 }  // namespace econet
