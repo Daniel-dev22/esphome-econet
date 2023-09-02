@@ -11,9 +11,7 @@ CONF_HVAC_WIFI_MODULE_CONNECTED = "hvac_wifi_module_connected"
 
 econet_ns = cg.esphome_ns.namespace("econet")
 Econet = econet_ns.class_("Econet", cg.Component, uart.UARTDevice)
-EconetClient = econet_ns.class_("EconetClient")
-uart_ns = cg.esphome_ns.namespace("uart")
-UARTComponent = uart_ns.class_("UARTComponent")
+
 ModelType = econet_ns.enum("ModelType")
 MODEL_TYPES = {
     "Tankless": ModelType.MODEL_TYPE_TANKLESS,
@@ -32,12 +30,6 @@ CONFIG_SCHEMA = (
     )
     .extend(cv.COMPONENT_SCHEMA)
     .extend(uart.UART_DEVICE_SCHEMA)
-)
-
-ECONET_CLIENT_SCHEMA = cv.Schema(
-    {
-        cv.GenerateID(CONF_ECONET_ID): cv.use_id(Econet),
-    }
 )
 
 
