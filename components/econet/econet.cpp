@@ -85,24 +85,6 @@ void Econet::dump_config() {
   }
 }
 
-void Econet::handle_binary(uint32_t src_adr, std::string obj_string, std::vector<uint8_t> data) {
-  if (src_adr == FURNACE) {
-    if (obj_string == "HWSTATUS") {
-      uint8_t heatcmd = data[11];  // 0 to 100 [0, 70, 100]
-      uint8_t coolcmd = data[12];  // [0, 2] Maybe 1 for 1st Stage?
-      uint16_t fan_cfm = (((uint16_t) data[13]) * 256) + data[14];
-      ESP_LOGI("econet", "  HeatCmd : %d %", heatcmd);
-      ESP_LOGI("econet", "  CoolCmd : %d %", coolcmd);
-      ESP_LOGI("econet", "  FanCFM? : %d cfm", fan_cfm);
-    }
-  } else if (src_adr == AIR_HANDLER) {
-    if (obj_string == "AIRHSTAT") {
-      // cc_blower_cfm = (data[16] << 8) + data[17];
-      // cc_blower_rpm = (data[20] << 8) + data[21];
-    }
-  }
-}
-
 void Econet::make_request() {
   uint32_t dst_adr = SMARTEC_TRANSLATOR;
   if (model_type_ == MODEL_TYPE_HEATPUMP) {
@@ -307,14 +289,15 @@ void Econet::parse_message(bool is_tx) {
   } else if (command == ACK) {
     if (read_req.dst_adr == src_adr && read_req.src_adr == dst_adr && read_req.awaiting_res == true) {
       if (read_req.obj_names.size() == 1) {
-        uint8_t item_type = pdata[0] & 0x7F;
-        if (item_type == 4) {
-          std::vector<uint8_t> dest;
+        EconetDatapointType item_type = EconetDatapointType(pdata[0] & 0x7F);
+        if (item_type == EconetDatapointType::RAW) {
+          std::vector<uint8_t> raw;
 
           for (int i = 0; i < data_len; i++) {
-            dest.push_back(pdata[i]);
+            raw.push_back(pdata[i]);
           }
-          handle_binary(src_adr, read_req.obj_names[0], dest);
+          std::string datapoint_id = read_req.obj_names[0];
+          this->send_datapoint_(datapoint_id, EconetDatapoint{.type = item_type, .value_raw = raw});
         }
       } else {
         int tpos = 0;
@@ -322,19 +305,17 @@ void Econet::parse_message(bool is_tx) {
 
         while (tpos < data_len) {
           uint8_t item_len = pdata[tpos];
-          uint8_t item_type = pdata[tpos + 1] & 0x7F;
+          EconetDatapointType item_type = EconetDatapointType(pdata[tpos + 1] & 0x7F);
 
-          if (item_type == 0 && tpos + 7 < data_len) {
+          if (item_type == EconetDatapointType::FLOAT && tpos + 7 < data_len) {
             float item_value = bytes_to_float(pdata[tpos + 4], pdata[tpos + 5], pdata[tpos + 6], pdata[tpos + 7]);
 
             if (item_num < read_req.obj_names.size()) {
               std::string datapoint_id = read_req.obj_names[item_num];
               ESP_LOGI("econet", "  %s : %f", datapoint_id.c_str(), item_value);
-              this->send_datapoint_(datapoint_id,
-                                    EconetDatapoint{.type = EconetDatapointType::FLOAT, .value_float = item_value});
+              this->send_datapoint_(datapoint_id, EconetDatapoint{.type = item_type, .value_float = item_value});
             }
-          } else if (item_type == 1) {
-            // Decode text only
+          } else if (item_type == EconetDatapointType::TEXT) {
             uint8_t item_text_len = item_len - 4;
 
             if (item_text_len > 0) {
@@ -350,13 +331,11 @@ void Econet::parse_message(bool is_tx) {
 
               if (item_num < read_req.obj_names.size()) {
                 std::string datapoint_id = read_req.obj_names[item_num];
-                // handle_text(src_adr, datapoint_id, s);
                 ESP_LOGI("econet", "  %s : (%s)", datapoint_id.c_str(), s.c_str());
+                // handle_text(src_adr, datapoint_id, s);
               }
             }
-          } else if (item_type == 2 && tpos + 5 < data_len) {
-            // Enumerated Text
-
+          } else if (item_type == EconetDatapointType::ENUM_TEXT && tpos + 5 < data_len) {
             uint8_t item_value = pdata[tpos + 4];
 
             uint8_t item_text_len = pdata[tpos + 5];
@@ -374,9 +353,8 @@ void Econet::parse_message(bool is_tx) {
               if (item_num < read_req.obj_names.size()) {
                 std::string datapoint_id = read_req.obj_names[item_num];
                 ESP_LOGI("econet", "  %s : %d (%s)", datapoint_id.c_str(), item_value, s.c_str());
-                this->send_datapoint_(datapoint_id, EconetDatapoint{.type = EconetDatapointType::ENUM_TEXT,
-                                                                    .value_enum = item_value,
-                                                                    .value_string = s});
+                this->send_datapoint_(datapoint_id,
+                                      EconetDatapoint{.type = item_type, .value_enum = item_value, .value_string = s});
               }
             }
           }
@@ -401,11 +379,10 @@ void Econet::parse_message(bool is_tx) {
 
     if (type == 1) {
       // WRITE DATA
-      uint8_t datatype = pdata[2];
+      EconetDatapointType datatype = EconetDatapointType(pdata[2]);
 
-      if (datatype == 0 || datatype == 2) {
-        // FLOAT
-        if (datatype == 0) {
+      if (datatype == EconetDatapointType::FLOAT || datatype == EconetDatapointType::ENUM_TEXT) {
+        if (datatype == EconetDatapointType::FLOAT) {
           ESP_LOGI("econet", "  DataType: %d (Float)", datatype);
         } else {
           ESP_LOGI("econet", "  DataType: %d (Enum Text)", datatype);
@@ -435,15 +412,8 @@ void Econet::parse_message(bool is_tx) {
 
         // 01.01.00.07.00.00.4F.43.4F.4D.4D.41.4E.44.42.48.00.00
         // Object - OCOMMAND
-        //
-      } else if (datatype == 2) {
-        // ENUM TEXT
-
-      } else if (datatype == 4) {
-        // BYTES
+      } else if (datatype == EconetDatapointType::RAW) {
         ESP_LOGI("econet", "  DataType: %d (Bytes)", datatype);
-
-        // if(
       } else {
         ESP_LOGI("econet", "  DataType: %d", datatype);
       }

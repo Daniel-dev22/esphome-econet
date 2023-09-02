@@ -44,6 +44,14 @@ econet:
   uart_id: uart_0
   model: "HVAC"
   hvac_wifi_module_connected: false
+  on_datapoint_update:
+    - sensor_datapoint: AIRHSTAT
+      datapoint_type: raw
+      then:
+        - lambda: |-
+            ESP_LOGD("main", "on_datapoint_update %s", format_hex_pretty(x).c_str());
+            id(blower_cfm).publish_state((x[16] << 8) + x[17]);
+            id(blower_rpm).publish_state((x[20] << 8) + x[21]);
 
 climate:
   - platform: econet
@@ -81,19 +89,6 @@ sensor:
     accuracy_decimals: 1
     device_class: "humidity"
     state_class: "measurement"
-  # TODO: Handle raw data similar to Tuya
-  # - platform: econet
-  #   name: "HVAC Air Handler CFM"
-  #   cc_blower_cfm:
-  #   unit_of_measurement: ""
-  #   accuracy_decimals: 0
-  #   entity_category: "diagnostic"
-  # - platform: econet
-  #   name: "HVAC Air Handler RPM"
-  #   cc_blower_rpm:
-  #   unit_of_measurement: ""
-  #   accuracy_decimals: 0
-  #   entity_category: "diagnostic"
   - platform: econet
     name: "HVAC ODU Outside Air Temperature "
     sensor_datapoint: TEMP_OAT
@@ -153,6 +148,18 @@ sensor:
     accuracy_decimals: 1
     device_class: "pressure"
     state_class: "measurement"
+    entity_category: "diagnostic"
+  - platform: template
+    name: "HVAC Air Handler CFM"
+    id: blower_cfm
+    unit_of_measurement: ""
+    accuracy_decimals: 0
+    entity_category: "diagnostic"
+  - platform: template
+    name: "HVAC Air Handler RPM"
+    id: blower_rpm
+    unit_of_measurement: ""
+    accuracy_decimals: 0
     entity_category: "diagnostic"
 
 text_sensor:

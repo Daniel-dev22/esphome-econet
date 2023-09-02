@@ -26,7 +26,9 @@ class ReadRequest {
 
 enum class EconetDatapointType : uint8_t {
   FLOAT = 0,
+  TEXT = 1,
   ENUM_TEXT = 2,
+  RAW = 4,
 };
 
 struct EconetDatapoint {
@@ -36,6 +38,7 @@ struct EconetDatapoint {
     uint8_t value_enum;
   };
   std::string value_string;
+  std::vector<uint8_t> value_raw;
 };
 inline bool operator==(const EconetDatapoint &lhs, const EconetDatapoint &rhs) {
   if (lhs.type != rhs.type) {
@@ -44,8 +47,12 @@ inline bool operator==(const EconetDatapoint &lhs, const EconetDatapoint &rhs) {
   switch (lhs.type) {
     case EconetDatapointType::FLOAT:
       return lhs.value_float == rhs.value_float;
+    case EconetDatapointType::TEXT:
+      return lhs.value_string == rhs.value_string;
     case EconetDatapointType::ENUM_TEXT:
       return lhs.value_enum == rhs.value_enum;
+    case EconetDatapointType::RAW:
+      return lhs.value_raw == rhs.value_raw;
   }
   return false;
 }
@@ -84,8 +91,6 @@ class Econet : public Component, public uart::UARTDevice {
   void parse_message(bool is_tx);
   void parse_rx_message();
   void parse_tx_message();
-
-  void handle_binary(uint32_t src_adr, std::string obj_string, std::vector<uint8_t> data);
 
   void transmit_message(uint32_t dst_adr, uint32_t src_adr, uint8_t command, std::vector<uint8_t> data);
   void request_strings(uint32_t dst_adr, uint32_t src_adr, std::vector<std::string> objects);
