@@ -105,8 +105,8 @@ void Econet::make_request() {
       case EconetDatapointType::FLOAT:
         this->write_value(dst_adr, src_adr, kv->first, EconetDatapointType::FLOAT, kv->second.value_float);
         break;
-        this->write_value(dst_adr, src_adr, kv->first, EconetDatapointType::ENUM_TEXT, kv->second.value_enum);
       case EconetDatapointType::ENUM_TEXT:
+        this->write_value(dst_adr, src_adr, kv->first, EconetDatapointType::ENUM_TEXT, kv->second.value_enum);
         break;
     }
     this->pending_writes_.erase(kv->first);
