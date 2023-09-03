@@ -58,7 +58,7 @@ inline bool operator==(const EconetDatapoint &lhs, const EconetDatapoint &rhs) {
 }
 
 struct EconetDatapointListener {
-  const std::string &datapoint_id;
+  std::string datapoint_id;
   std::function<void(EconetDatapoint)> on_datapoint;
 };
 
