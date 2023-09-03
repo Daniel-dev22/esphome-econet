@@ -1,9 +1,9 @@
-from esphome.components import binary_sensor
-import esphome.config_validation as cv
 import esphome.codegen as cg
+import esphome.config_validation as cv
+from esphome.components import binary_sensor
 from esphome.const import CONF_SENSOR_DATAPOINT
 
-from .. import econet_ns, CONF_ECONET_ID, ECONET_CLIENT_SCHEMA, EconetClient
+from .. import CONF_ECONET_ID, ECONET_CLIENT_SCHEMA, EconetClient, econet_ns
 
 DEPENDENCIES = ["econet"]
 

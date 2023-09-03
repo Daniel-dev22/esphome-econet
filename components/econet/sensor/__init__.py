@@ -1,8 +1,9 @@
-from esphome.components import sensor
-import esphome.config_validation as cv
 import esphome.codegen as cg
+import esphome.config_validation as cv
+from esphome.components import sensor
 from esphome.const import CONF_ID, CONF_SENSOR_DATAPOINT
-from .. import econet_ns, CONF_ECONET_ID, ECONET_CLIENT_SCHEMA, EconetClient
+
+from .. import CONF_ECONET_ID, ECONET_CLIENT_SCHEMA, EconetClient, econet_ns
 
 DEPENDENCIES = ["econet"]
 

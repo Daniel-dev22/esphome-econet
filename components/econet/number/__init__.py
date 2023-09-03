@@ -1,14 +1,10 @@
-from esphome.components import number
-import esphome.config_validation as cv
 import esphome.codegen as cg
-from esphome.const import (
-    CONF_ID,
-    CONF_NUMBER_DATAPOINT,
-    CONF_MAX_VALUE,
-    CONF_MIN_VALUE,
-    CONF_STEP,
-)
-from .. import econet_ns, CONF_ECONET_ID, ECONET_CLIENT_SCHEMA, EconetClient
+import esphome.config_validation as cv
+from esphome.components import number
+from esphome.const import (CONF_ID, CONF_MAX_VALUE, CONF_MIN_VALUE,
+                           CONF_NUMBER_DATAPOINT, CONF_STEP)
+
+from .. import CONF_ECONET_ID, ECONET_CLIENT_SCHEMA, EconetClient, econet_ns
 
 DEPENDENCIES = ["econet"]
 
