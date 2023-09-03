@@ -75,11 +75,16 @@ void Econet::dump_config() {
     switch (kv.second.type) {
       case EconetDatapointType::FLOAT:
         ESP_LOGCONFIG(TAG, "  Datapoint %s: float value (value: %f)", kv.first.c_str(), kv.second.value_float);
-
+        break;
+      case EconetDatapointType::TEXT:
+        ESP_LOGCONFIG(TAG, "  Datapoint %s: text value (value: %s)", kv.first.c_str(), kv.second.value_string.c_str());
         break;
       case EconetDatapointType::ENUM_TEXT:
         ESP_LOGCONFIG(TAG, "  Datapoint %s: enum value (value: %d : %s)", kv.first.c_str(), kv.second.value_enum,
                       kv.second.value_string.c_str());
+        break;
+      case EconetDatapointType::RAW:
+        ESP_LOGCONFIG(TAG, "  Datapoint %s: raw value (value: %s)", kv.first.c_str(), format_hex_pretty(kv.second.value_raw).c_str());
         break;
     }
   }
@@ -107,6 +112,10 @@ void Econet::make_request() {
         break;
       case EconetDatapointType::ENUM_TEXT:
         this->write_value(dst_adr, src_adr, kv->first, EconetDatapointType::ENUM_TEXT, kv->second.value_enum);
+        break;
+      case EconetDatapointType::TEXT:
+      case EconetDatapointType::RAW:
+        ESP_LOGW(TAG, "Unexpected pending write: datapoint %s", kv->first.c_str());
         break;
     }
     this->pending_writes_.erase(kv->first);
