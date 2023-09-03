@@ -84,7 +84,8 @@ void Econet::dump_config() {
                       kv.second.value_string.c_str());
         break;
       case EconetDatapointType::RAW:
-        ESP_LOGCONFIG(TAG, "  Datapoint %s: raw value (value: %s)", kv.first.c_str(), format_hex_pretty(kv.second.value_raw).c_str());
+        ESP_LOGCONFIG(TAG, "  Datapoint %s: raw value (value: %s)", kv.first.c_str(),
+                      format_hex_pretty(kv.second.value_raw).c_str());
         break;
     }
   }
@@ -678,6 +679,13 @@ void Econet::register_listener(const std::string &datapoint_id, const std::funct
       .on_datapoint = func,
   };
   this->listeners_.push_back(listener);
+
+  // Run through existing datapoints
+  for (auto &kv : this->datapoints_) {
+    if (kv.first == datapoint_id) {
+      func(kv.second);
+    }
+  }
 }
 
 }  // namespace econet
