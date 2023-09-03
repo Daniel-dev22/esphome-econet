@@ -433,9 +433,7 @@ void Econet::parse_message(bool is_tx) {
       }
     } else if (type == 7) {
       // TIME AND DATA
-    }
-
-    else if (type == 9) {
+    } else if (type == 9) {
       // SYSTEM HANDLER - LISTING OF ADDRESSES ON BUS
       // 09.01.00.00.03.80.00.00.03.40.00.00.05.00
       // 00 00 03 80
