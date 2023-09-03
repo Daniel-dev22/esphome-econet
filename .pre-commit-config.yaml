@@ -11,7 +11,7 @@ repos:
           - --quiet
         files: ^((components|esphome|script|tests)/.+)?[^/]+\.py$
   - repo: https://github.com/PyCQA/flake8
-    rev: 6.0.0
+    rev: 6.1.0
     hooks:
       - id: flake8
         additional_dependencies:
@@ -24,6 +24,6 @@ repos:
       - id: pyupgrade
         args: [--py39-plus]
   - repo: https://github.com/pre-commit/mirrors-clang-format
-    rev: V16.0.6
+    rev: v16.0.6
     hooks:
       - id: clang-format
