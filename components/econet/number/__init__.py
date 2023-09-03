@@ -8,11 +8,13 @@ from esphome.const import (
     CONF_MIN_VALUE,
     CONF_STEP,
 )
-from .. import econet_ns, CONF_ECONET_ID, Econet
+from .. import econet_ns, CONF_ECONET_ID, ECONET_CLIENT_SCHEMA, EconetClient
 
 DEPENDENCIES = ["econet"]
 
-EconetNumber = econet_ns.class_("EconetNumber", number.Number, cg.Component)
+EconetNumber = econet_ns.class_(
+    "EconetNumber", number.Number, cg.Component, EconetClient
+)
 
 
 def validate_min_max(config):
@@ -25,13 +27,13 @@ CONFIG_SCHEMA = cv.All(
     number.number_schema(EconetNumber)
     .extend(
         {
-            cv.GenerateID(CONF_ECONET_ID): cv.use_id(Econet),
             cv.Required(CONF_NUMBER_DATAPOINT): cv.string,
             cv.Required(CONF_MAX_VALUE): cv.float_,
             cv.Required(CONF_MIN_VALUE): cv.float_,
             cv.Required(CONF_STEP): cv.positive_float,
         }
     )
+    .extend(ECONET_CLIENT_SCHEMA)
     .extend(cv.COMPONENT_SCHEMA),
     validate_min_max,
 )

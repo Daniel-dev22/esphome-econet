@@ -3,22 +3,22 @@ import esphome.config_validation as cv
 import esphome.codegen as cg
 from esphome.const import CONF_SENSOR_DATAPOINT
 
-from .. import econet_ns, CONF_ECONET_ID, Econet
+from .. import econet_ns, CONF_ECONET_ID, ECONET_CLIENT_SCHEMA, EconetClient
 
 DEPENDENCIES = ["econet"]
 
 EconetBinarySensor = econet_ns.class_(
-    "EconetBinarySensor", binary_sensor.BinarySensor, cg.Component
+    "EconetBinarySensor", binary_sensor.BinarySensor, cg.Component, EconetClient
 )
 
 CONFIG_SCHEMA = (
     binary_sensor.binary_sensor_schema(EconetBinarySensor)
     .extend(
         {
-            cv.GenerateID(CONF_ECONET_ID): cv.use_id(Econet),
             cv.Required(CONF_SENSOR_DATAPOINT): cv.string,
         }
     )
+    .extend(ECONET_CLIENT_SCHEMA)
     .extend(cv.COMPONENT_SCHEMA)
 )
 

@@ -15,6 +15,7 @@ CONF_DATAPOINT_TYPE = "datapoint_type"
 
 econet_ns = cg.esphome_ns.namespace("econet")
 Econet = econet_ns.class_("Econet", cg.Component, uart.UARTDevice)
+EconetClient = econet_ns.class_("EconetClient")
 
 DPTYPE_RAW = "raw"
 
@@ -45,7 +46,6 @@ MODEL_TYPES = {
     "HVAC": ModelType.MODEL_TYPE_HVAC,
 }
 
-CONF_ECONET_ID = "econet_id"
 CONFIG_SCHEMA = (
     cv.Schema(
         {
@@ -68,6 +68,13 @@ CONFIG_SCHEMA = (
     )
     .extend(cv.COMPONENT_SCHEMA)
     .extend(uart.UART_DEVICE_SCHEMA)
+)
+
+CONF_ECONET_ID = "econet_id"
+ECONET_CLIENT_SCHEMA = cv.Schema(
+    {
+        cv.GenerateID(CONF_ECONET_ID): cv.use_id(Econet),
+    }
 )
 
 

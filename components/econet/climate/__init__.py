@@ -3,19 +3,22 @@ import esphome.config_validation as cv
 import esphome.codegen as cg
 from esphome.const import CONF_ID
 
-from .. import econet_ns, CONF_ECONET_ID, Econet
+from .. import econet_ns, CONF_ECONET_ID, ECONET_CLIENT_SCHEMA, EconetClient
 
 DEPENDENCIES = ["econet"]
 
-EconetClimate = econet_ns.class_("EconetClimate", climate.Climate, cg.Component)
+EconetClimate = econet_ns.class_(
+    "EconetClimate", climate.Climate, cg.Component, EconetClient
+)
 
 CONFIG_SCHEMA = cv.All(
     climate.CLIMATE_SCHEMA.extend(
         {
             cv.GenerateID(): cv.declare_id(EconetClimate),
-            cv.GenerateID(CONF_ECONET_ID): cv.use_id(Econet),
         }
-    ).extend(cv.COMPONENT_SCHEMA),
+    )
+    .extend(cv.COMPONENT_SCHEMA)
+    .extend(ECONET_CLIENT_SCHEMA)
 )
 
 
