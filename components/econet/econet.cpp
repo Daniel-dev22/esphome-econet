@@ -10,8 +10,9 @@ uint16_t gen_crc16(const uint8_t *data, uint16_t size) {
   int bits_read = 0, bit_flag;
 
   /* Sanity check: */
-  if (data == NULL)
+  if (data == NULL) {
     return 0;
+  }
 
   while (size > 0) {
     bit_flag = out >> 15;
@@ -29,8 +30,9 @@ uint16_t gen_crc16(const uint8_t *data, uint16_t size) {
     }
 
     /* Cycle check: */
-    if (bit_flag)
+    if (bit_flag) {
       out ^= 0x8005;
+    }
   }
 
   // item b) "push out" the last 16 bits
@@ -38,8 +40,9 @@ uint16_t gen_crc16(const uint8_t *data, uint16_t size) {
   for (i = 0; i < 16; ++i) {
     bit_flag = out >> 15;
     out <<= 1;
-    if (bit_flag)
+    if (bit_flag) {
       out ^= 0x8005;
+    }
   }
 
   // item c) reverse the bits
@@ -47,8 +50,9 @@ uint16_t gen_crc16(const uint8_t *data, uint16_t size) {
   i = 0x8000;
   int j = 0x0001;
   for (; i != 0; i >>= 1, j <<= 1) {
-    if (i & out)
+    if (i & out) {
       crc |= j;
+    }
   }
 
   return crc;
@@ -668,8 +672,9 @@ void Econet::send_datapoint_(const std::string &datapoint_id, EconetDatapoint va
   }
   datapoints_[datapoint_id] = value;
   for (auto &listener : this->listeners_) {
-    if (listener.datapoint_id == datapoint_id)
+    if (listener.datapoint_id == datapoint_id) {
       listener.on_datapoint(value);
+    }
   }
 }
 
