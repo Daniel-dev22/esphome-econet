@@ -1,11 +1,10 @@
 #pragma once
 
-#include "esphome/components/uart/uart.h"
 #include "esphome/core/component.h"
 #include "esphome/core/helpers.h"
+#include "esphome/components/uart/uart.h"
 #include <map>
-#ifndef MAINECONETH
-#define MAINECONETH
+#include <vector>
 
 namespace esphome {
 namespace econet {
@@ -21,18 +20,49 @@ class ReadRequest {
   uint8_t src_bus;
 
   bool awaiting_res = false;
-  // uint8_t read_class;
-  // uint8_t read_prop;
 
   std::vector<std::string> obj_names;
 };
 
-struct DatapointListener {
-  uint8_t datapoint_id;
-  std::function<void(float)> on_datapoint;
+enum class EconetDatapointType : uint8_t {
+  FLOAT = 0,
+  TEXT = 1,
+  ENUM_TEXT = 2,
+  RAW = 4,
 };
 
-class Econet : public Component {
+struct EconetDatapoint {
+  EconetDatapointType type;
+  union {
+    float value_float;
+    uint8_t value_enum;
+  };
+  std::string value_string;
+  std::vector<uint8_t> value_raw;
+};
+inline bool operator==(const EconetDatapoint &lhs, const EconetDatapoint &rhs) {
+  if (lhs.type != rhs.type) {
+    return false;
+  }
+  switch (lhs.type) {
+    case EconetDatapointType::FLOAT:
+      return lhs.value_float == rhs.value_float;
+    case EconetDatapointType::TEXT:
+      return lhs.value_string == rhs.value_string;
+    case EconetDatapointType::ENUM_TEXT:
+      return lhs.value_enum == rhs.value_enum;
+    case EconetDatapointType::RAW:
+      return lhs.value_raw == rhs.value_raw;
+  }
+  return false;
+}
+
+struct EconetDatapointListener {
+  std::string datapoint_id;
+  std::function<void(EconetDatapoint)> on_datapoint;
+};
+
+class Econet : public Component, public uart::UARTDevice {
  public:
   void loop() override;
   void dump_config() override;
@@ -40,30 +70,21 @@ class Econet : public Component {
   void set_model_type(ModelType model_type) { model_type_ = model_type; }
   ModelType get_model_type() { return model_type_; }
 
-  void set_uart(uart::UARTComponent *econet_uart) { this->econet_uart = econet_uart; }
   void set_hvac_wifi_module_connected(bool hvac_wifi_module_connected) {
     hvac_wifi_module_connected_ = hvac_wifi_module_connected;
   }
 
-  float get_float_value(std::string key) { return values_float_[key]; }
-  uint8_t get_int_value(std::string key) { return values_int_[key]; }
-  std::string get_string_value(std::string key) { return values_string_[key]; }
+  void set_float_datapoint_value(const std::string &datapoint_id, float value);
+  void set_enum_datapoint_value(const std::string &datapoint_id, uint8_t value);
 
-  void write_float_value(std::string key, float value) { pending_float_writes_[key] = value; }
-  void write_int_value(std::string key, uint8_t value) { pending_int_writes_[key] = value; }
-
-  float get_cc_blower_cfm() { return this->cc_blower_cfm; }
-  float get_cc_blower_rpm() { return this->cc_blower_rpm; }
-
-  void register_listener(uint8_t datapoint_id, const std::function<void(float)> &func);
+  void register_listener(const std::string &datapoint_id, const std::function<void(EconetDatapoint)> &func);
 
  protected:
   ModelType model_type_;
-  std::vector<DatapointListener> listeners_;
+  std::vector<EconetDatapointListener> listeners_;
   ReadRequest read_req;
-  void dump_state();
-  void check_uart_settings();
-  void send_datapoint(uint8_t datapoint_id, float value);
+  void set_datapoint_(const std::string &datapoint_id, EconetDatapoint value);
+  void send_datapoint_(const std::string &datapoint_id, EconetDatapoint value);
 
   void make_request();
   void read_buffer(int bytes_available);
@@ -71,23 +92,14 @@ class Econet : public Component {
   void parse_rx_message();
   void parse_tx_message();
 
-  void handle_binary(uint32_t src_adr, std::string obj_string, std::vector<uint8_t> data);
+  void transmit_message(uint32_t dst_adr, uint32_t src_adr, uint8_t command, const std::vector<uint8_t> &data);
+  void request_strings(uint32_t dst_adr, uint32_t src_adr, const std::vector<std::string> &objects);
+  void write_value(uint32_t dst_adr, uint32_t src_adr, const std::string &object, EconetDatapointType type,
+                   float value);
 
-  void transmit_message(uint32_t dst_adr, uint32_t src_adr, uint8_t command, std::vector<uint8_t> data);
-  void request_strings(uint32_t dst_adr, uint32_t src_adr, std::vector<std::string> objects);
-  void write_value(uint32_t dst_adr, uint32_t src_adr, std::string object, uint8_t type, float value);
+  std::map<std::string, EconetDatapoint> datapoints_{};
+  std::map<std::string, EconetDatapoint> pending_writes_{};
 
-  uart::UARTComponent *econet_uart{nullptr};
-
-  std::map<std::string, float> values_float_{};
-  std::map<std::string, uint8_t> values_int_{};
-  std::map<std::string, std::string> values_string_{};
-
-  std::map<std::string, float> pending_float_writes_{};
-  std::map<std::string, uint8_t> pending_int_writes_{};
-
-  float cc_blower_cfm = 0;
-  float cc_blower_rpm = 0;
   bool hvac_wifi_module_connected_ = true;
 
   uint8_t req_id = 0;
@@ -104,15 +116,14 @@ class Econet : public Component {
   uint8_t wbuffer[max_message_size];
   uint16_t wmsg_len = 0;
 
-  uint32_t COMPUTER = 192;                   // 80 00 00 C0
-  uint32_t FURNACE = 0x1c0;                  // 80 00 01 C0
-  uint32_t UNKNOWN_HANDLER = 241;            // 80 00 00 F1
-  uint32_t WIFI_MODULE = 832;                // 80 00 03 40
-  uint32_t SMARTEC_TRANSLATOR = 4160;        // 80 00 10 40
-  uint32_t INTERNAL = 4736;                  // 80 00 10 40
-  uint32_t HEAT_PUMP_WATER_HEATER = 0x1280;  // 80 00 12 80
-  uint32_t AIR_HANDLER = 0x3c0;              // 80 00 03 C0
-  uint32_t CONTROL_CENTER = 0x380;           // 80 00 03 80
+  uint32_t COMPUTER = 0xC0;
+  uint32_t FURNACE = 0x1c0;
+  uint32_t UNKNOWN_HANDLER = 0xF1;
+  uint32_t WIFI_MODULE = 0x340;
+  uint32_t SMARTEC_TRANSLATOR = 0x1040;
+  uint32_t HEAT_PUMP_WATER_HEATER = 0x1280;
+  uint32_t AIR_HANDLER = 0x3c0;
+  uint32_t CONTROL_CENTER = 0x380;
   uint32_t OUTDOOR_UNIT = 0x400;
 
   uint8_t DST_ADR_POS = 0;
@@ -126,22 +137,18 @@ class Econet : public Component {
   uint8_t BYTES_BETWEEN_ADRS = 5;
   uint8_t MSG_CRC_SIZE = 2;
 
-  uint8_t ACK = 6;
-  uint8_t READ_COMMAND = 30;
-  uint8_t WRITE_COMMAND = 31;
-
-  uint8_t FLOAT = 0;
-  uint8_t ENUM_TEXT = 2;
+  uint8_t ACK = 0x06;
+  uint8_t READ_COMMAND = 0x1E;   // 30
+  uint8_t WRITE_COMMAND = 0x1F;  // 31
 };
 
 class EconetClient {
  public:
-  void set_econet(Econet *econet) { this->econet = econet; }
+  void set_econet_parent(Econet *parent) { this->parent_ = parent; }
 
  protected:
-  Econet *econet;
+  Econet *parent_;
 };
 
 }  // namespace econet
 }  // namespace esphome
-#endif
