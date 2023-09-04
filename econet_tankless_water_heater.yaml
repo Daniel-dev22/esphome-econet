@@ -1,12 +1,19 @@
 substitutions:
   name: "econet-twh"
+  friendly_name: "Tankless Water Heater"
   device_description: "Rheem Tankless Water Heater"
   tx_pin: GPIO19
   rx_pin: GPIO22
+  min_temperature: "43.3333"
+  max_temperature: "60"
 
 esphome:
   name: ${name}
+  friendly_name: ${friendly_name}
   comment: ${device_description}
+  project:
+    name: "daniel-dev22.econet"
+    version: 0.1.9
 
 preferences:
   flash_write_interval: "24h"
@@ -30,8 +37,7 @@ logger:
   tx_buffer_size: 2000
 
 external_components:
-  # - source: github://Daniel-dev22/esphome-econet
-  - source: components
+  - source: github://Daniel-dev22/esphome-econet
 
 uart:
   id: uart_0
@@ -47,6 +53,10 @@ econet:
 climate:
   - platform: econet
     name: "Water Heater"
+    visual:
+      min_temperature: ${min_temperature}
+      max_temperature: ${max_temperature}
+      temperature_step: 1.0f
 
 sensor:
   - platform: econet
@@ -78,6 +88,7 @@ sensor:
     unit_of_measurement: "kbtu"
     accuracy_decimals: 3
     entity_category: "diagnostic"
+    icon: "mdi:flash"
   - platform: econet
     name: "Water Used"
     sensor_datapoint: WTR_USED
@@ -96,15 +107,21 @@ sensor:
     filters:
       # Convert liters per minute to gpm
       - multiply: 0.264172
+    icon: "mdi:water"
   - platform: econet
     name: "Ignition Cycles"
     sensor_datapoint: IGNCYCLS
     unit_of_measurement: ""
     accuracy_decimals: 0
     entity_category: "diagnostic"
+    icon: "mdi:heating-coil"
+  - platform: wifi_signal
+    name: "WiFi Signal Strength"
+    update_interval: 30s
+    entity_category: "diagnostic"
 
 binary_sensor:
   - platform: econet
-    name: "Water Heater Enabled (Sensor)"
+    name: "Water Heater Enabled"
     sensor_datapoint: WHTRENAB
     device_class: "running"
