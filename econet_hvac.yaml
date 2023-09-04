@@ -4,8 +4,6 @@ substitutions:
   device_description: "Rheem HVAC"
   tx_pin: GPIO19
   rx_pin: GPIO22
-  min_temperature: "10"
-  max_temperature: "32.2222"
 
 esphome:
   name: ${name}
@@ -38,6 +36,7 @@ logger:
 
 external_components:
   - source: github://Daniel-dev22/esphome-econet
+  # - source: components
 
 uart:
   id: uart_0
@@ -63,8 +62,8 @@ climate:
   - platform: econet
     name: "HVAC"
     visual:
-      min_temperature: ${min_temperature}
-      max_temperature: ${max_temperature}
+      min_temperature: "10"
+      max_temperature: "32.2222"
       temperature_step: 1.0f
 
 sensor:
