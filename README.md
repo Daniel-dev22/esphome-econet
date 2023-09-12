@@ -1,5 +1,8 @@
 # esphome-econet
 
+## Archived Repo
+- This repo is being archived in favor of consolidating future development in a single repo located [here](https://github.com/esphome-econet/esphome-econet).
+
 This ESPHome package creates a local network connection to econet-based devices, such as an HVAC system or water heaters such as the Rheem Heat Pump Water Heater (HPWH), and creates entities in Home Assistant to control and monitor the devices. This package provides more detailed sensors and control capability than the Rheem econet cloud-based integration available in Home Assistant. However, both can coexist.
 
 ## Get Started
