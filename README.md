@@ -19,9 +19,6 @@ Example commands to change a heat pump water heater settings [here](https://gith
 
 Decode this into Charcode [here](https://gchq.github.io/CyberChef/#recipe=From_Charcode('Space',16)Strings('Single%20byte',4,'Alphanumeric%20%2B%20punctuation%20(A)',false,false,false/disabled)&input=MHg4MCwgMHgwMCwgMHgxMiwgMHg4MCwgMHgwMCwgMHg4MCwgMHgwMCwgMHgwMywgMHg0MCwgMHgwMCwgMHgxMiwgMHgwMCwgMHgwMCwgMHgxRiwgMHgwMSwgMHgwMSwgMHgwMCwgMHgwNywgMHgwMCwgMHgwMCwgMHg1NywgMHg0OCwgMHg1NCwgMHg1MiwgMHg1MywgMHg0NSwgMHg1NCwgMHg1MCwgMHg0MiwgMHhGOCwgMHgwMCwgMHgwMCwgMHhFNCwgMHhFRQ)
 
-## Sponsor
-- [Daniel](https://www.paypal.com/donate/?business=H2M8JWAA27RDS&currency_code=USD)
-
 Credits:
 
 - This project is a fork of [Stockmopar's Repo](https://github.com/stockmopar/esphome-econet) It has been modified with additional features that the original project does not have. I also want to thank Stockmopar for his work on laying the foundation for this project and decoding the protocol as none of this would have existed without his help.
